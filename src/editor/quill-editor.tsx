@@ -321,7 +321,7 @@ export default class QuillEditor extends React.Component<
       loading = 'Please Wait ...',
     } = this.props;
 
-    console.log('quill-editor: ', webviewContent);
+    //console.log('quill-editor: ', webviewContent);
     if (container === false) {
       if (!webviewContent) return <Text>Please wait...</Text>;
       return this.renderWebview(webviewContent, style, webview);

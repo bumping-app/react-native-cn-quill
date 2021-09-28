@@ -76,7 +76,7 @@ export const editor_js = `
   var insertText = function (index, text, formats={}) {
     console.log('InsertText TS');
     var ind = index;
-    if (ind == null) {
+    if (ind === -1) {
       var range = quill.getSelection();
       if (range) { 
       ind = range.index;
