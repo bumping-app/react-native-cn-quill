@@ -70,7 +70,14 @@ export const editor_js = `
   }
 
   var insertEmbed = function (index, type, value) {
-    quill.insertEmbed(index, type, value);
+    var ind = index;
+    if (ind === -1) {
+      var range = quill.getSelection();
+      if (range) { 
+      ind = range.index;
+      }
+    }
+    quill.insertEmbed(ind, type, value);
   }
 
   var insertText = function (index, text, formats={}) {
