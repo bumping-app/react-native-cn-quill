@@ -1,6 +1,17 @@
 import * as React from 'react';
-import { WebView, WebViewProps } from 'react-native-webview';
-import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  WebView,
+  WebViewMessageEvent,
+  WebViewProps,
+} from 'react-native-webview';
+import {
+  View,
+  Text,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  Platform,
+} from 'react-native';
 import { createHtml } from '../utils/editor-utils';
 import type {
   CustomFont,
@@ -15,14 +26,17 @@ import type {
   EditorChangeData,
   TextChangeData,
   HtmlChangeData,
+  DimensionsChangeData,
 } from '../constants/editor-event';
 import { Loading } from './loading';
 
 export interface EditorState {
   webviewContent: string | null;
+  height?: number;
 }
 
 export interface EditorProps {
+  autoSize?: boolean;
   style?: StyleProp<ViewStyle>;
   quill?: QuillConfig;
   customFonts?: Array<CustomFont>;
@@ -33,14 +47,16 @@ export interface EditorProps {
   containerId?: string;
   theme?: { background: string; color: string; placeholder: string };
   loading?: string | React.ReactNode;
-  container: boolean | React.ComponentType;
+  container?: boolean | React.ComponentType;
   onSelectionChange?: (data: SelectionChangeData) => void;
   onTextChange?: (data: TextChangeData) => void;
   onHtmlChange?: (data: HtmlChangeData) => void;
   onEditorChange?: (data: EditorChangeData) => void;
+  onDimensionsChange?: (data: DimensionsChangeData) => void;
   webview?: WebViewProps;
   onBlur?: () => void;
   onFocus?: () => void;
+  customJS?: string;
 }
 
 export default class QuillEditor extends React.Component<
@@ -68,6 +84,7 @@ export default class QuillEditor extends React.Component<
       onEditorChange,
       onTextChange,
       onHtmlChange,
+      onDimensionsChange,
       onBlur,
       onFocus,
     } = this.props;
@@ -82,6 +99,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onHtmlChange) {
       this.on('html-change', onHtmlChange);
+    }
+    if (onDimensionsChange) {
+      this.on('dimensions-change', onDimensionsChange);
     }
     if (onBlur) {
       this.on('blur', onBlur);
@@ -112,13 +132,16 @@ export default class QuillEditor extends React.Component<
       customFonts = [],
       customStyles = [],
       defaultFontFamily = undefined,
+      customJS = '',
     } = this.props;
 
     return createHtml({
       initialHtml,
+      autoSize: this.props.autoSize,
       placeholder: quill.placeholder,
       theme: quill.theme ? quill.theme : 'snow',
       toolbar: JSON.stringify(quill.modules?.toolbar),
+      clipboard: quill.modules?.clipboard,
       libraries: import3rdParties,
       editorId: quill.id ? quill.id : 'editor-container',
       defaultFontFamily,
@@ -128,6 +151,7 @@ export default class QuillEditor extends React.Component<
       backgroundColor: theme.background,
       placeholderColor: theme.placeholder,
       customStyles,
+      customJS,
     });
   };
 
@@ -165,13 +189,19 @@ export default class QuillEditor extends React.Component<
     return message;
   };
 
-  private onMessage = (event: any) => {
+  private onMessage = (event: WebViewMessageEvent) => {
     const message = this.toMessage(event.nativeEvent.data);
-
+    const { autoSize } = this.props;
     const response = message.key
       ? this._promises.find((x) => x.key === message.key)
       : undefined;
     switch (message.type) {
+      case 'dimensions-change':
+        if (autoSize === true) this.setState({ height: message.data.height });
+        this._handlers
+          .filter((x) => x.event === message.type)
+          .forEach((item) => item.handler(message.data));
+        break;
       case 'format-change':
       case 'text-change':
       case 'selection-change':
@@ -187,12 +217,20 @@ export default class QuillEditor extends React.Component<
       case 'get-contents':
       case 'get-text':
       case 'get-length':
+      case 'get-bounds':
+      case 'get-selection':
+      case 'get-dimensions':
       case 'get-html':
         if (response) {
           response.resolve(message.data);
           this._promises = this._promises.filter((x) => x.key !== message.key);
         }
         break;
+      default:
+        // Allow catching messages using the passed webview props
+        if (this.props.webview?.onMessage) {
+          this.props.webview?.onMessage(event);
+        }
     }
   };
 
@@ -202,6 +240,10 @@ export default class QuillEditor extends React.Component<
 
   focus = () => {
     this.post({ command: 'focus' });
+
+    if (Platform.OS === 'android') {
+      this._webview.current?.requestFocus();
+    }
   };
 
   hasFocus = (): Promise<boolean> => {
@@ -228,6 +270,10 @@ export default class QuillEditor extends React.Component<
     this.post({ command: 'deleteText', index, length });
   };
 
+  getDimensions = (): Promise<any> => {
+    return this.postAwait<any>({ command: 'getDimensions' });
+  };
+
   getContents = (index?: number, length?: number): Promise<any> => {
     return this.postAwait<any>({ command: 'getContents', index, length });
   };
@@ -242,6 +288,18 @@ export default class QuillEditor extends React.Component<
 
   getText = (index?: number, length?: number): Promise<any> => {
     return this.postAwait<any>({ command: 'getText', index, length });
+  };
+
+  getBounds = (index: number, length?: number): Promise<any> => {
+    return this.postAwait<any>({ command: 'getBounds', index, length });
+  };
+
+  getSelection = (focus: boolean = false): Promise<any> => {
+    return this.postAwait<any>({ command: 'getSelection', focus });
+  };
+
+  setSelection = (index: number, length?: number, source?: String) => {
+    this.post({ command: 'setSelection', index, length, source });
   };
 
   insertEmbed = (index: number, type: string, value: any) => {
@@ -281,20 +339,18 @@ export default class QuillEditor extends React.Component<
     this.post({ command: 'dangerouslyPasteHTML', index, html });
   };
 
- 
-
-
   renderWebview = (
     content: string,
     style: StyleProp<ViewStyle>,
     props: WebViewProps = {}
   ) => (
     <WebView
-      scrollEnabled={false}
+      scrollEnabled={true}
       hideKeyboardAccessoryView={true}
       keyboardDisplayRequiresUserAction={false}
       originWhitelist={['*']}
       style={style}
+      nestedScrollEnabled={true}
       onError={(syntheticEvent) => {
         const { nativeEvent } = syntheticEvent;
         console.warn('WebView error: ', nativeEvent);
@@ -313,22 +369,23 @@ export default class QuillEditor extends React.Component<
   );
 
   render() {
-    const { webviewContent } = this.state;
+    const { webviewContent, height } = this.state;
     const {
       style,
       webview,
       container = false,
       loading = 'Please Wait ...',
+      autoSize = false,
     } = this.props;
-
-    //console.log('quill-editor: ', webviewContent);
     if (container === false) {
       if (!webviewContent) return <Text>Please wait...</Text>;
       return this.renderWebview(webviewContent, style, webview);
     } else {
       const ContainerComponent = container === true ? View : container;
       return (
-        <ContainerComponent style={style}>
+        <ContainerComponent
+          style={[style, autoSize && height ? { height } : {}]}
+        >
           {webviewContent ? (
             this.renderWebview(webviewContent, styles.webView, webview)
           ) : typeof loading === 'string' ? (
