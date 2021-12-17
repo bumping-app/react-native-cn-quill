@@ -8,6 +8,19 @@ export const editor_js = `
       else console.log(message)
   }
 
+  // Get the dimensions of the quill content field
+  var getDimensions = function (key) {
+    const dimensionsJson = JSON.stringify({
+      type: 'get-dimensions',
+      key: key,
+      data: {
+        width: quill.root.scrollWidth,
+        height: quill.root.scrollHeight
+      }
+    });
+    sendMessage(dimensionsJson);
+  }
+
   var getSelectedFormats = function () {
     var formats = quill.getFormat();
       var contentChanged = JSON.stringify({
@@ -25,7 +38,7 @@ export const editor_js = `
 
   var hasFocus = function (key) {
     var hs = quill.hasFocus();
- 
+
     var hsJson = JSON.stringify({
                 type: 'has-focus',
                 key: key,
@@ -65,8 +78,9 @@ export const editor_js = `
     var getHtmlJson = JSON.stringify({
       type: 'get-html',
       key: key,
-      data: html });
-      sendMessage(getHtmlJson);
+      data: html
+    });
+    sendMessage(getHtmlJson);
   }
 
   var insertEmbed = function (index, type, value) {
@@ -78,6 +92,7 @@ export const editor_js = `
       }
     }
     quill.insertEmbed(ind, type, value);
+
   }
 
   var insertText = function (index, text, formats={}) {
@@ -90,6 +105,7 @@ export const editor_js = `
       }
     }
     quill.insertText(ind, text, formats);
+
   }
 
   var setContents = function (delta) {
@@ -108,8 +124,31 @@ export const editor_js = `
     quill.clipboard.dangerouslyPasteHTML(index, html);
   }
 
+  var setSelection = function (index, length = 0, source = 'api') {
+    quill.setSelection(index, length, source);
+  }
+
+  var getBounds = function (key, index, length = 0) {
+    var boundsData = quill.getBounds(index, length);
+    var getBoundsJson = JSON.stringify({
+      type: 'get-bounds',
+      key: key,
+      data: boundsData });
+      sendMessage(getBoundsJson);
+  }
+
+  var getSelection = function (key, focus = false) {
+    var getSelectionData = quill.getSelection(focus);
+    var getSelectionJson = JSON.stringify({
+      type: 'get-selection',
+      key: key,
+      data: getSelectionData });
+      sendMessage(getSelectionJson);
+  }
+
+
   var getRequest = function (event) {
-    var msg = JSON.parse(event.data);    
+    var msg = JSON.parse(event.data);
     switch (msg.command) {
       case 'format':
         formatSelection(msg.name, msg.value);
@@ -129,11 +168,23 @@ export const editor_js = `
       case 'deleteText':
         quill.deleteText(msg.index, msg.length);
         break;
+      case 'getDimensions':
+        getDimensions(msg.key);
+        break;
       case 'getContents':
         getContents(msg.key, msg.index, msg.length);
         break;
       case 'getText':
         getText(msg.key, msg.index, msg.length);
+        break;
+      case 'getBounds':
+        getBounds(msg.key, msg.index, msg.length);
+        break;
+      case 'getSelection':
+        getSelection(msg.key, msg.focus);
+        break;
+      case 'setSelection':
+        setSelection(msg.index, msg.length, msg.source);
         break;
       case 'getHtml':
         getHtml(msg.key);
@@ -166,7 +217,7 @@ export const editor_js = `
 
   document.addEventListener("message", getRequest, false);
   window.addEventListener("message", getRequest, false);
- 
+
   quill.on('editor-change', function(eventName, ...args) {
     if (eventName === 'text-change') {
       getSelectedFormats();
@@ -174,25 +225,39 @@ export const editor_js = `
       var range = quill.getSelection();
       if (range) {
         getSelectedFormats();
-      } 
+      }
     }
     var getEditorChange = JSON.stringify({
       type: 'editor-change',
-      data: { eventName, args } });
-      sendMessage(getEditorChange);
+      data: { eventName, args }
+    });
+    sendMessage(getEditorChange);
+
+    // Notify of dimensions update
+    const getDimensionsJson = JSON.stringify({
+      type: 'dimensions-change',
+      data: {
+        width: quill.root.scrollWidth,
+        height: quill.root.scrollHeight
+      }
+    });
+    sendMessage(getDimensionsJson);
   });
 
   quill.on('text-change', function(delta, oldDelta, source) {
     var getTextChange = JSON.stringify({
       type: 'text-change',
-      data: { delta, oldDelta, source } });
-      sendMessage(getTextChange);
+      data: { delta, oldDelta, source }
+    });
+    sendMessage(getTextChange);
 
-      var html = quill.root.innerHTML;
-      var getHtmlJson = JSON.stringify({
-        type: 'html-change',
-        data: { html } });
-        sendMessage(getHtmlJson);
+    // Notify of HTML update
+    var html = quill.root.innerHTML;
+    var getHtmlJson = JSON.stringify({
+      type: 'html-change',
+      data: { html }
+    });
+    sendMessage(getHtmlJson);
   });
 
   quill.on('selection-change', function(range, oldRange, source) {
@@ -201,7 +266,7 @@ export const editor_js = `
       data: { range, oldRange, source } });
       sendMessage(getSelectionChange)
   });
-  
+
   quill.root.addEventListener('blur', function () {
     sendMessage(JSON.stringify({type: 'blur'}));
   });
@@ -209,6 +274,20 @@ export const editor_js = `
   quill.root.addEventListener('focus', function () {
     sendMessage(JSON.stringify({type: 'focus'}));
   });
+
+
+
+  // Report initial dimensions when the editor is instantiated
+  setTimeout(() => {
+    const getDimensionsJson = JSON.stringify({
+      type: 'dimensions-change',
+      data: {
+        width: quill.root.scrollWidth,
+        height: quill.root.scrollHeight
+      }
+    });
+    sendMessage(getDimensionsJson);
+  }, 250)
 
 })(document)
 </script>

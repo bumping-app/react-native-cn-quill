@@ -1,9 +1,11 @@
 export const create_quill = (
   id: string,
   toolbar: 'false' | string,
+  clipboard: string,
   placeholder: string,
   theme: 'snow' | 'bubble',
-  customFonts: Array<string> = []
+  customFonts: Array<string> = [],
+  customJS: string
 ) => {
   let font = '';
   if (customFonts.length > 0) {
@@ -16,15 +18,20 @@ export const create_quill = (
 
     `;
   }
+  let clipboardModule = '';
+  if (clipboard) {
+    clipboardModule = `clipboard: ${clipboard},`;
+  }
 
   return `
   <script>
   
   ${font}
-  
+  ${customJS}
   var quill = new Quill('#${id}', {
     modules: {
-      toolbar: ${toolbar}
+      toolbar: ${toolbar} ,
+      ${clipboardModule}
     },
     placeholder: '${placeholder}',
     theme: '${theme}'
