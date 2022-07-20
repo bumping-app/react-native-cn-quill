@@ -370,13 +370,13 @@ export const quill_snow_css = (cdn: boolean) =>
      font-family: Monaco, Courier New, monospace;
    }
    .ql-editor .ql-size-small {
-     font-size: 0.75em;
+     font-size: 1.0em;
    }
    .ql-editor .ql-size-large {
      font-size: 1.5em;
    }
    .ql-editor .ql-size-huge {
-     font-size: 2.5em;
+     font-size: 1.75em;
    }
    .ql-editor .ql-direction-rtl {
      direction: rtl;
