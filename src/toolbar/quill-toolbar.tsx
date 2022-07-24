@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   View,
   KeyboardAvoidingView,
-  ScrollView,
+  //ScrollView,
   Dimensions,
   StyleSheet,
   Platform,
@@ -180,7 +180,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.editor?.format(name, value);
   };
 
-  show = (menu) => {
+  show = (menu:string) => {
     if (this.state.isAnimating) return;
 
     this.setState({menuType: menu});
@@ -222,11 +222,11 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   renderToolbar = () => {
     const { styles, custom } = this.props;
     const { toolSets, toolSetsAttach, menuType, theme, formats } = this.state;
-    const defaultStyles = makeStyles(theme);
+    // const defaultStyles = makeStyles(theme);
 
-    const toolbarStyle = styles?.toolbar?.root
-      ? styles?.toolbar?.root(defaultStyles.toolbar)
-      : defaultStyles.toolbar;
+    // const toolbarStyle = styles?.toolbar?.root
+    //   ? styles?.toolbar?.root(defaultStyles.toolbar)
+    //   : defaultStyles.toolbar;
 
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
 
@@ -274,7 +274,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
                   console.log('looping', JSON.stringify(object));
                   return (
-                  object.length > 0 && object.map((grp, grpIndex) => {
+                  object.length > 0 && object.map((grp) => {
                     
                     if (grp.type === formatType.toggle) {
 
@@ -291,7 +291,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                     } else {
                       return (
                         object.length > 0 &&
-                        grp.values?.map((item, index) => {
+                        grp.values?.map((item:any, index:number) => {
                           console.log('looping 2', grp.name, JSON.stringify(item));
                           if (
                             item.type === formatType.color &&
