@@ -155,12 +155,12 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
         }}
       >
         <Animated.View
-          style={[
-            rootStyle,
-            {
-              height: this.animatedValue,
-            },
-          ]}
+          // style={[
+          //   rootStyle,
+          //   {
+          //     height: this.animatedValue,
+          //   },
+          // ]}
         >
           {children}
         </Animated.View>
