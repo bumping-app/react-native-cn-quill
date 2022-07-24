@@ -18,6 +18,7 @@ export interface ToggleData {
   name: string;
   valueOn: string | number | boolean;
   valueOff: string | number | boolean;
+  values: Array<ToggleData>;
   source: ImageSourcePropType;
   type: formatType.toggle | formatType.color | formatType.icon;
 }
