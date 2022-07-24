@@ -9,8 +9,7 @@ import {
   Text,
   TouchableOpacity,
   Animated,
-  Easing,
-  Button
+  Easing
 } from 'react-native';
 import { fullOptions, basicOptions } from '../constants/toolbar-options';
 import type {
@@ -25,11 +24,11 @@ import { lightTheme, darkTheme } from '../constants/themes';
 import { getToolbarData } from '../utils/toolbar-utils';
 import type QuillEditor from '../editor/quill-editor';
 import { ToolbarProvider } from './components/toolbar-context';
-import { SelectionBar } from './components/selection-bar';
-import { ToolSet } from './components/tool-set';
-import { ToolbarSeperator } from './components/toolbar-separator';
+//import { SelectionBar } from './components/selection-bar';
+//import { ToolSet } from './components/tool-set';
+//import { ToolbarSeperator } from './components/toolbar-separator';
 import type { FormatChangeData } from '../constants/editor-event';
-import { ToolbarConsumer } from './components/toolbar-context';
+//import { ToolbarConsumer } from './components/toolbar-context';
 import { ToggleTextButton } from './components/toggle-text-button';
 import { ToggleColorButton } from './components/toggle-color-button';
 import { ToggleIconButton } from './components/toggle-icon-button';
@@ -39,19 +38,19 @@ const WIDTH = Dimensions.get('window').width;
 
 
 
-export const ToolbarMenu: React.FC<Props> = ({ title, children }) => {
-  return (
+// export const ToolbarMenu: React.FC<Props> = ({ title, children }) => {
+//   return (
 
-    <View style={{ flexDirection: 'column', borderWidth: 0, marginBottom: 0 }}>
-      <ScrollView>
-        {children}
-      </ScrollView>
-      <View style={{ borderWidth: 0 }}>
-        <Text>{title}</Text>
-      </View>
-    </View>
-  );
-};
+//     <View style={{ flexDirection: 'column', borderWidth: 0, marginBottom: 0 }}>
+//       <ScrollView>
+//         {children}
+//       </ScrollView>
+//       <View style={{ borderWidth: 0 }}>
+//         <Text>{title}</Text>
+//       </View>
+//     </View>
+//   );
+// };
 
 
 
@@ -63,7 +62,7 @@ interface QuillToolbarProps {
   theme: ToolbarTheme | 'dark' | 'light';
   custom?: ToolbarCustom;
   container?: false | 'avoiding-view' | React.ComponentType;
-  popUp?: Any;
+  // popUp?: Any;
 }
 
 interface ToolbarState {
