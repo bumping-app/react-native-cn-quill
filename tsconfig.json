@@ -10,11 +10,11 @@
     "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": ["esnext"],
+    // "lib": ["esnext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noImplicitUseStrict": false,
     "noStrictGenericChecks": false,
     "noUnusedLocals": false,
@@ -23,7 +23,11 @@
     "skipLibCheck": true,
     "strict": false,
     "target": "esnext",
-    "declaration": true,
-    "outDir": "lib"
+    "declaration": false,
+    "outDir": "lib",
+    "lib": [
+      "es2017",
+      "dom"
+    ]
   }
 }
