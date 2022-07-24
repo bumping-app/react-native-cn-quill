@@ -44,7 +44,7 @@ const makeStyles = (theme: ToolbarTheme) =>
     },
     tool: {
       borderRadius: 3,
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'center',
       paddingHorizontal: 4,
       marginRight: 4,
