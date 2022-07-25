@@ -79,6 +79,7 @@ interface ToolbarState {
   keyboardHeight: number;
   shortHeight: number;
   normalHeight: number;
+  heightAux: number;
 }
 
 export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
@@ -109,7 +110,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
       isAnimating: false,
       keyboardHeight: 0,
       shortHeight: 0,
-      normalHeight: 0
+      normalHeight: 0,
+      heightAux: 0
     };
     this.animatedValue = new Animated.Value(0);
     this.animatedValueOut = new Animated.Value(43);
@@ -249,14 +251,14 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     const { theme } = this.props;
     if (theme) {
       this.setState({ isAnimating: true }, () => {
-       
-          Animated.timing(this.animatedValue, {
-            toValue: 0.4 * HEIGHT, // 2 * theme.size + 14,
-            duration: 200,
-            easing: Easing.linear,
-            useNativeDriver: false,
-          }).start(() => this.setState({ showMenu: true, isAnimating: false }));
-        });
+
+        Animated.timing(this.animatedValue, {
+          toValue: 0.4 * HEIGHT, // 2 * theme.size + 14,
+          duration: 200,
+          easing: Easing.linear,
+          useNativeDriver: false,
+        }).start(() => this.setState({ showMenu: true, isAnimating: false }));
+      });
 
     }
   };
@@ -283,6 +285,11 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   };
 
 
+  // onLayoutMenu = (event)=> {
+  //   const {x, y, height, width} = event.nativeEvent.layout;
+  //   this.setState({heightAux: HEIGHT-y});
+    
+  // }
 
 
 
@@ -328,7 +335,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
           {/* <View style={toolbarStyle}> */}
           <TouchableOpacity style={{ width: WIDTH, borderWidth: 0, marginBottom: 0 }} onPress={this.hide}>
-            <Animated.View pointerEvents={'box-none'} style={{ borderWidth: 0, marginBottom: 0, flex: 1, height:this.state.showMenu ? 0.6*HEIGHT : null, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+            <Animated.View pointerEvents={'box-none'} style={{ borderWidth: 0, marginBottom: 0, flex: 1, height: this.state.showMenu ? 0.1 * HEIGHT: null, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}></Animated.View>
+            <Animated.View pointerEvents={'box-none'}  style={{ borderWidth: 0, marginBottom: 0, flex: 1, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               {/* This scrollView is for the main toolbar */}
 
               {this.state.isAnimating || this.state.showMenu ?
