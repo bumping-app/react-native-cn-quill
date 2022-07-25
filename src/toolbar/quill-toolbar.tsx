@@ -422,12 +422,14 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 </Animated.ScrollView> : null}
 
 
+              
+              <View style={{ flexDirection: 'row', alignItems: 'center', borderColor:'#dddddd', borderTopWidth:0.25, justifyContent: 'flex-end', height: 40,  borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
 
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', height: 40, width: 100, borderWidth: 0, backgroundColor: 'rgba(255,255,255,0)' }}>
-
+                <View style={{flex: 1, height:'100%',marginRight:10,  borderWidth: 0,  backgroundColor:'rgba(255,255,255,1)'}}></View>
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
 
                   <Image style={{ padding: 5, height: 30, width: 33 }} source={require('./components/Attach.png')} />
+
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}>
@@ -436,6 +438,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 </TouchableOpacity>
 
               </View>
+              
             </Animated.View>
           </TouchableOpacity>
         </ToolbarProvider>
