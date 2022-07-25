@@ -256,12 +256,12 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
               </Button>
 
             )}
-          </ToolbarConsumer> */}
+          </ToolbarConsumer> marginTop:this.animatedValue */}
 
 
           {/* <View style={toolbarStyle}> */}
-          <TouchableOpacity style={{width:WIDTH,  borderWidth:0}} onPress={this.hide}>
-          <Animated.View pointerEvents={'box-none'} style={{borderWidth:0, marginTop:this.animatedValue , flexDirection:'column', alignItems:'flex-end' ,justifyContent:'flex-end' }}>
+          <TouchableOpacity style={{width:WIDTH,  borderWidth:0, marginBottom:0}} onPress={this.hide}>
+          <Animated.View pointerEvents={'box-none'} style={{borderWidth:0, height:'100%', flexDirection:'column', alignItems:'flex-end' ,justifyContent:'flex-end' }}>
             {/* This scrollView is for the main toolbar */}
 
             {this.state.isAnimating || this.state.showMenu ?
