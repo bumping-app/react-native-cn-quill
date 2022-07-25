@@ -3,6 +3,7 @@ import { TouchableWithoutFeedback, View, Text, StyleSheet } from 'react-native';
 import type { ToolbarTheme } from '../../types';
 import { useToolbar } from './toolbar-context';
 
+
 interface Props {
   valueName: string;
   valueOn: string | number | boolean;
@@ -27,8 +28,9 @@ export const ToggleTextButton: React.FC<Props> = (props) => {
     : defaultStyles.text;
   return (
     <TouchableWithoutFeedback onPress={handlePresss}>
-      <View style={toolStyle}>
-        <Text style={textStyle}>{valueName}</Text>
+      <View style={[toolStyle, {flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:'100%'}]}>
+        <Text style={textStyle}>{valueName} font</Text>
+        
         {selected && <View style={overlayStyle} />}
       </View>
     </TouchableWithoutFeedback>
@@ -53,7 +55,8 @@ const makeStyles = (theme: ToolbarTheme) =>
     },
     text: {
       color: theme.color,
-      fontWeight: 'bold',
+      fontWeight: 'normal',
+      textTransform: 'capitalize',
     },
   });
 

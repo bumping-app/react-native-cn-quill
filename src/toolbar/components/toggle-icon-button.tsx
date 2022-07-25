@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   ImageSourcePropType,
+  Text
 } from 'react-native';
 import type { ToolbarTheme } from '../../types';
 import { useToolbar } from './toolbar-context';
@@ -33,8 +34,8 @@ export const ToggleIconButton: React.FC<Props> = (props) => {
     : defaultStyles.image;
   return (
     <TouchableWithoutFeedback onPress={handlePresss}>
-      <View style={toolStyle}>
-        <Image source={source} style={imageStyle} />
+      <View style={[toolStyle, {flexDirection:'row', justifyContent:'space-between', width:'100%'}]}>
+        <Text style={{textTransform: 'capitalize'}}>{name}</Text><Image source={source} style={imageStyle} />
         {selected && <View style={overlayStyle} />}
       </View>
     </TouchableWithoutFeedback>

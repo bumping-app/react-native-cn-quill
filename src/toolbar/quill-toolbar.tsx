@@ -9,7 +9,8 @@ import {
   Text,
   TouchableOpacity,
   Animated,
-  Easing
+  Easing,
+  Image
 } from 'react-native';
 import { fullOptions, basicOptions } from '../constants/toolbar-options';
 import type {
@@ -188,7 +189,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     if (theme) {
       this.setState({ isAnimating: true }, () => {
         Animated.timing(this.animatedValue, {
-          toValue: 400, // 2 * theme.size + 14,
+          toValue: 350, // 2 * theme.size + 14,
           duration: 200,
           easing: Easing.linear,
           useNativeDriver: false,
@@ -259,7 +260,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
 
           {/* <View style={toolbarStyle}> */}
-          <View style={{ flexDirection:'column', alignItems:'flex-end' ,justifyContent:'flex-end' }}>
+          <TouchableOpacity style={{width:WIDTH,  borderWidth:0}} onPress={this.hide}>
+          <Animated.View pointerEvents={'box-none'} style={{borderWidth:0, marginTop:this.animatedValue , flexDirection:'column', alignItems:'flex-end' ,justifyContent:'flex-end' }}>
             {/* This scrollView is for the main toolbar */}
 
             {this.state.isAnimating || this.state.showMenu ?
@@ -267,7 +269,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 horizontal={false}
                 bounces={false}
                 showsHorizontalScrollIndicator={false}
-                style={{ width: 300, padding:10,  borderWidth: 0.25, borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.2)', maxHeight: this.animatedValue }}
+                style={{ width: 300, margin:10, paddingLeft:10, paddingRight:10,  borderWidth: 0.25, borderRadius: 10, backgroundColor: 'rgba(255,255,255,1)', maxHeight: this.animatedValue }}
               >
                 
                 {toolSetsSelected.map((object, index) => {
@@ -275,8 +277,14 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                   console.log('looping', JSON.stringify(object));
                   return (
                   object.length > 0 && object.map((grp) => {
+
+                    if (grp.name === 'separator') {
+                      return (
+                        <View style={{height:2, backgroundColor:'rgba(0,0,0,0.1)'}} />
+                      )
+                    }
                     
-                    if (grp.type === formatType.toggle) {
+                    else if (grp.type === formatType.toggle) {
 
                       return (
 
@@ -340,15 +348,21 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
               
 
               
-            <View style={{ flexDirection:'row', justifyContent:'flex-end', height: 40, width: 100, borderWidth: 0.25, backgroundColor: 'rgba(255,255,255,1)' }}>
+            <View style={{ flexDirection:'row',alignItems:'center', justifyContent:'flex-end', height: 40, width: 100, borderWidth: 0, backgroundColor: 'rgba(255,255,255,0)' }}>
+              
+            <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
+                
+                <Image style={{ padding:5,height:30, width:33}} source={require('./components/Attach.png')} />
+              </TouchableOpacity>
+              
               <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}>
-                <Text>Format</Text>
+                
+                <Image style={{padding:10, marginLeft:10, marginRight:10, height:27, width:38}} source={require('./components/Format.png')} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
-                <Text>Attach</Text>
-              </TouchableOpacity>
+              
             </View>
-          </View>
+          </Animated.View>
+          </TouchableOpacity>
         </ToolbarProvider>
       </>
     );

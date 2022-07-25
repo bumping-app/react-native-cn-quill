@@ -111,6 +111,7 @@ export default class QuillEditor extends React.Component<
     if (onFocus) {
       this.on('focus', onFocus);
     }
+    
   }
 
   private getInitalHtml = (): string => {
