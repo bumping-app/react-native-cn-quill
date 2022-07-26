@@ -54,6 +54,10 @@ const HEIGHT = Dimensions.get('window').height;
 //   );
 // };
 
+export interface Counts {
+  wordCount: number;
+  characterCount: number;
+}
 
 
 interface QuillToolbarProps {
@@ -64,7 +68,7 @@ interface QuillToolbarProps {
   theme: ToolbarTheme | 'dark' | 'light';
   custom?: ToolbarCustom;
   container?: false | 'avoiding-view' | React.ComponentType;
-  counts?: object;
+  counts?: Counts;
   // popUp?: Any;
 }
 
