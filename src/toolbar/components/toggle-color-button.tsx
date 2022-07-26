@@ -25,11 +25,11 @@ export const ToggleColorButton: React.FC<Props> = (props) => {
     ? styles.selection.colorToggle.noColor(defaultStyles.noColor)
     : defaultStyles.noColor;
 
-  React.useEffect(() => {
-    if (valueOn === '#000000') {
-      handlePresss();
-    }
-  },[]);
+  // React.useEffect(() => {
+  //   if (valueOn === '#000000') {
+  //     handlePresss();
+  //   }
+  // },[]);
 
   return (
 

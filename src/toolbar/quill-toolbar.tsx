@@ -134,7 +134,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => this._keyboardDidShow(e));
     this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', (e) => this._keyboardDidHide(e));
 
-
+    this.format('color', '#000000');
+    this.setState({ formats: {"color": "#000000"} });
 
   }
 
@@ -243,13 +244,14 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   };
 
   private onFormatChange = (data: FormatChangeData) => {
+    console.log('onFormatChange', JSON.stringify(data));
     if (!(data && data.formats // 👈 null and undefined check
-        && Object.keys(data.formats).length === 0
-        && Object.getPrototypeOf(data.formats) === Object.prototype)) {
-
-        
-    this.setState({ formats: data.formats });
-        }
+      && Object.keys(data.formats).length === 0
+      && Object.getPrototypeOf(data.formats) === Object.prototype)) {
+      
+      this.setState({ formats: data.formats });
+      
+    }
   };
 
   private format = (name: string, value: any) => {
@@ -300,7 +302,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   // onLayoutMenu = (event)=> {
   //   const {x, y, height, width} = event.nativeEvent.layout;
   //   this.setState({heightAux: HEIGHT-y});
-    
+
   // }
 
 
@@ -347,8 +349,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
           {/* <View style={toolbarStyle}> */}
           <TouchableOpacity style={{ width: WIDTH, borderWidth: 0, marginBottom: 0 }} onPress={this.hide}>
-            <Animated.View pointerEvents={'box-none'} style={{ borderWidth: 0, marginBottom: 0, flex: 1, height: this.state.showMenu ? 0.1 * HEIGHT: null, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}></Animated.View>
-            <Animated.View pointerEvents={'box-none'}  style={{ borderWidth: 0, marginBottom: 0, flex: 1, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+            <Animated.View pointerEvents={'box-none'} style={{ borderWidth: 0, marginBottom: 0, flex: 1, height: this.state.showMenu ? 0.1 * HEIGHT : null, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}></Animated.View>
+            <Animated.View pointerEvents={'box-none'} style={{ borderWidth: 0, marginBottom: 0, flex: 1, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               {/* This scrollView is for the main toolbar */}
 
               {this.state.isAnimating || this.state.showMenu ?
@@ -434,12 +436,12 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 </Animated.ScrollView> : null}
 
 
-              
-              <View style={{ flexDirection: 'row', alignItems: 'center', borderColor:'#dddddd', borderTopWidth:0.25, justifyContent: 'flex-end', height: 40,  borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
 
-                <View style={{flex: 1, flexDirection: 'row',alignItems:'center', justifyContent:'center', height:'100%',marginRight:10,  borderWidth: 0,  backgroundColor:'rgba(255,255,255,1)'}}>
-                  <Text style={{fontSize:12}}>Words: {this.props.counts.wordCount} </Text>
-                  <Text style={{fontSize:12}}>Chars: {this.props.counts.characterCount}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.25, justifyContent: 'flex-end', height: 40, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
+
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
+                  <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
+                  <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text>
                 </View>
 
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
@@ -454,7 +456,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 </TouchableOpacity>
 
               </View>
-              
+
             </Animated.View>
           </TouchableOpacity>
         </ToolbarProvider>
