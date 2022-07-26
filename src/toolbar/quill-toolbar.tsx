@@ -64,6 +64,7 @@ interface QuillToolbarProps {
   theme: ToolbarTheme | 'dark' | 'light';
   custom?: ToolbarCustom;
   container?: false | 'avoiding-view' | React.ComponentType;
+  counts?: object;
   // popUp?: Any;
 }
 
@@ -306,7 +307,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
 
     //const {  options, hide, selectionName } = useToolbar();
-    console.log('Toolbar:renderToolbar', JSON.stringify(toolSets), '*******', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
+    //console.log('Toolbar:renderToolbar', JSON.stringify(toolSets), '*******', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
 
     return (
       <>
@@ -425,7 +426,10 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
               
               <View style={{ flexDirection: 'row', alignItems: 'center', borderColor:'#dddddd', borderTopWidth:0.25, justifyContent: 'flex-end', height: 40,  borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
 
-                <View style={{flex: 1, height:'100%',marginRight:10,  borderWidth: 0,  backgroundColor:'rgba(255,255,255,1)'}}></View>
+                <View style={{flex: 1, flexDirection: 'row',alignItems:'center', justifyContent:'center', height:'100%',marginRight:10,  borderWidth: 0,  backgroundColor:'rgba(255,255,255,1)'}}>
+                  <Text style={{fontSize:12}}>Words: {this.props.counts.wordCount} </Text>
+                  <Text style={{fontSize:12}}>Chars: {this.props.counts.characterCount}</Text>
+                </View>
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
 
                   <Image style={{ padding: 5, height: 30, width: 33 }} source={require('./components/Attach.png')} />
