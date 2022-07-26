@@ -120,6 +120,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     };
     this.animatedValue = new Animated.Value(0);
     this.animatedValueOut = new Animated.Value(43);
+    console.log('quill-toolbar constructor');
   }
 
   editor?: QuillEditor;
@@ -242,7 +243,13 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   };
 
   private onFormatChange = (data: FormatChangeData) => {
+    if (!(data && data.formats // 👈 null and undefined check
+        && Object.keys(data.formats).length === 0
+        && Object.getPrototypeOf(data.formats) === Object.prototype)) {
+
+        
     this.setState({ formats: data.formats });
+        }
   };
 
   private format = (name: string, value: any) => {
@@ -311,7 +318,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
 
     //const {  options, hide, selectionName } = useToolbar();
-    //console.log('Toolbar:renderToolbar', JSON.stringify(toolSets), '*******', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
+    console.log('Toolbar:renderToolbar', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
 
     return (
       <>
@@ -354,13 +361,13 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
                   {toolSetsSelected.map((object, index) => {
 
-                    console.log('looping', JSON.stringify(object));
+                    //console.log('looping', JSON.stringify(object));
                     return (
-                      object.length > 0 && object.map((grp) => {
+                      object.length > 0 && object.map((grp, grpIndex) => {
 
                         if (grp.name === 'separator') {
                           return (
-                            <View style={{ height: 2, backgroundColor: 'rgba(0,0,0,0.1)' }} />
+                            <View key={`ToolVal_${index}_${grpIndex}`} style={{ height: 2, backgroundColor: 'rgba(0,0,0,0.1)' }} />
                           )
                         }
 
@@ -369,7 +376,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                           return (
 
                             <ToggleIconButton
-                              key={index}
+                              key={`ToolVal_${index}_${grpIndex}`}
                               name={grp.name}
                               source={grp.source}
                               valueOff={grp.valueOff}
@@ -380,7 +387,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                           return (
                             object.length > 0 &&
                             grp.values?.map((item: any, index: number) => {
-                              console.log('looping 2', grp.name, JSON.stringify(item));
+                              //console.log('looping 2', grp.name, JSON.stringify(item));
                               if (
                                 item.type === formatType.color &&
                                 item.valueOn !== true &&
@@ -388,7 +395,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                               ) {
                                 return (
                                   <ToggleColorButton
-                                    key={index}
+                                    key={`GrpVal_${index}`}
                                     name={grp.name}
                                     valueOff={false}
                                     valueOn={item.valueOn}
@@ -397,7 +404,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                               } else if (item.type === formatType.icon) {
                                 return (
                                   <ToggleIconButton
-                                    key={index}
+                                    key={`GrpVal_${index}`}
                                     source={item.source}
                                     name={grp.name}
                                     valueOff={false}
@@ -407,7 +414,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                               } else
                                 return (
                                   <ToggleTextButton
-                                    key={index}
+                                    key={`GrpVal_${index}`}
                                     name={grp.name}
                                     valueOff={false}
                                     valueOn={item.valueOn}
@@ -434,6 +441,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                   <Text style={{fontSize:12}}>Words: {this.props.counts.wordCount} </Text>
                   <Text style={{fontSize:12}}>Chars: {this.props.counts.characterCount}</Text>
                 </View>
+
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
 
                   <Image style={{ padding: 5, height: 30, width: 33 }} source={require('./components/Attach.png')} />

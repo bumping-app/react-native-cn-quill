@@ -24,6 +24,13 @@ export const ToggleColorButton: React.FC<Props> = (props) => {
   const noColorStyle = styles?.selection?.colorToggle?.noColor
     ? styles.selection.colorToggle.noColor(defaultStyles.noColor)
     : defaultStyles.noColor;
+
+  React.useEffect(() => {
+    if (valueOn === '#000000') {
+      handlePresss();
+    }
+  },[]);
+
   return (
 
     <TouchableWithoutFeedback onPress={handlePresss}>
