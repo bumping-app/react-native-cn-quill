@@ -106,6 +106,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   componentDidMount() {
     const { theme } = this.props;
     this.animatedValue = new Animated.Value(theme.size + 10);
+    this.apply('color', '#000000');
   }
 
   isSelected = (name: string, value: any = true): boolean => {
