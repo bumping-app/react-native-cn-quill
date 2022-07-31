@@ -61,18 +61,19 @@ export interface EditorProps {
   customJS?: string;
 }
 
-export default class QuillEditor extends React.Component<
-  EditorProps,
-  EditorState
-> {
-  private _webview: React.RefObject<WebView>;
-  private _handlers: Array<{
-    event: EditorEventType;
-    handler: EditorEventHandler;
-  }>;
-  private _promises: Array<EditorResponse>;
+//restore
+export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
+  public static defaultProps = {
+    theme: 'dark',
+  };
 
-  constructor(props: EditorProps) {
+  animatedValue: Animated.Value;
+  animatedValueOut: Animated.Value;
+  keyboardShowListener;
+  keyboardHideListener;
+  keyboardDidShowListener;
+
+  constructor(props: QuillToolbarProps) {
     super(props);
     this._webview = React.createRef();
     this.state = {
