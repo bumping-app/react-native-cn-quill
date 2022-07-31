@@ -358,7 +358,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                   horizontal={false}
                   bounces={false}
                   showsHorizontalScrollIndicator={false}
-                  style={{ width: 300, margin: 10, paddingLeft: 10, paddingRight: 10, borderWidth: 0.25, borderRadius: 10, backgroundColor: 'rgba(255,255,255,1)', maxHeight: this.animatedValue }}
+                  style={{ width: 240, margin: 10, paddingLeft: 10, paddingRight: 10, borderWidth: 0.25, borderRadius: 10, backgroundColor: 'rgba(255,255,255,1)', maxHeight: this.animatedValue }}
                 >
 
                   {toolSetsSelected.map((object, index) => {
