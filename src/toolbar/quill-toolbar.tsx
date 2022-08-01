@@ -446,13 +446,13 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
 
-                  <Image style={{ padding: 5, height: 30, width: 33 }} source={require('./components/Attach.png')} />
+                  <Image style={{ padding: 0, height: 18, width: 18 }} source={require('./components/Union.png')} />
 
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}>
 
-                  <Image style={{ padding: 10, marginLeft: 10, marginRight: 10, height: 27, width: 38 }} source={require('./components/Format.png')} />
+                  <Image style={{ borderWidth:0, padding: 0, marginLeft: 10, marginRight: 15, height: 18, width: 18 }} source={require('./components/a.png')} />
                 </TouchableOpacity>
 
               </View>
