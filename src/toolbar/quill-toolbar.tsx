@@ -69,6 +69,8 @@ interface QuillToolbarProps {
   custom?: ToolbarCustom;
   container?: false | 'avoiding-view' | React.ComponentType;
   counts?: Counts;
+  InfoField? : React.FC;
+  infoFieldPressed? : () => {};
   // popUp?: Any;
 }
 
@@ -309,7 +311,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
 
   renderToolbar = () => {
-    const { styles, custom } = this.props;
+    const { styles, custom, InfoField } = this.props;
     const { toolSets, toolSetsAttach, menuType, theme, formats } = this.state;
     // const defaultStyles = makeStyles(theme);
 
@@ -345,6 +347,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
             )}
           </ToolbarConsumer> marginTop:this.animatedValue */}
+
 
 
           {/* <View style={toolbarStyle}> */}
@@ -439,10 +442,14 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
               <View style={{ flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.25, justifyContent: 'flex-end', height: 40, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
 
+                <TouchableOpacity style={{flex:1, borderWidth:0}} onPress={() => { this.props.infoFieldPressed(); }} >
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
-                  <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
-                  <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text>
+                  <Image source={require('./components/ArrowUp.png')} style={{ marginLeft: 10, marginRight:20, width: 18, resizeMode:'contain'}} />
+                  <InfoField />
+                  {/* <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
+                  <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text> */}
                 </View>
+                </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
 
