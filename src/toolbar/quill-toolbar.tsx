@@ -122,7 +122,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     };
     this.animatedValue = new Animated.Value(0);
     this.animatedValueOut = new Animated.Value(43);
-    console.log('quill-toolbar constructor');
+    //console.log('quill-toolbar constructor');
   }
 
   editor?: QuillEditor;
@@ -322,7 +322,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
 
     //const {  options, hide, selectionName } = useToolbar();
-    console.log('Toolbar:renderToolbar', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
+    //console.log('Toolbar:renderToolbar', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
 
     return (
       <>
@@ -453,13 +453,13 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
 
-                  <Image style={{ padding: 0, height: 18, width: 18 }} source={require('./components/Union.png')} />
+                  <Image style={{ borderWidth:0, paddingLeft: 0, marginLeft:15,  height: 24, width: 24 }} source={require('./components/Union.png')} />
 
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}>
 
-                  <Image style={{ borderWidth:0, padding: 0, marginLeft: 10, marginRight: 15, height: 18, width: 18 }} source={require('./components/a.png')} />
+                  <Image style={{ borderWidth:0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/a.png')} />
                 </TouchableOpacity>
 
               </View>
