@@ -152,6 +152,7 @@
     ]
   },
   "dependencies": {
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-raw-bottom-sheet": "^2.2.0"
   }
 }
