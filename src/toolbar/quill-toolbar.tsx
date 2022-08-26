@@ -35,9 +35,13 @@ import { ToggleTextButton } from './components/toggle-text-button';
 import { ToggleColorButton } from './components/toggle-color-button';
 import { ToggleIconButton } from './components/toggle-icon-button';
 import { formatType } from '../constants/formats';
+import RBSheetModalless from '../utils/RBSheetModalless';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
+//const deviceHeight = Dimensions.get('window').height;
+
 
 
 // export const ToolbarMenu: React.FC<Props> = ({ title, children }) => {
@@ -60,6 +64,8 @@ export interface Counts {
 }
 
 
+
+
 interface QuillToolbarProps {
   options: Array<Array<string | object> | string | object> | 'full' | 'basic';
   optionsAttach: Array<Array<string | object> | string | object>;
@@ -69,8 +75,8 @@ interface QuillToolbarProps {
   custom?: ToolbarCustom;
   container?: false | 'avoiding-view' | React.ComponentType;
   counts?: Counts;
-  InfoField? : React.FC;
-  infoFieldPressed? : () => {};
+  InfoField?: React.FC;
+  infoFieldPressed?: () => {};
   // popUp?: Any;
 }
 
@@ -99,6 +105,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   keyboardShowListener;
   keyboardHideListener;
   keyboardDidShowListener;
+  RBSheetHolder;
+  scrollRef;
 
   constructor(props: QuillToolbarProps) {
     super(props);
@@ -137,7 +145,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', (e) => this._keyboardDidHide(e));
 
     this.format('color', '#000000');
-    this.setState({ formats: {"color": "#000000"} });
+    this.setState({ formats: { "color": "#000000" } });
 
   }
 
@@ -250,9 +258,9 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     if (!(data && data.formats // 👈 null and undefined check
       && Object.keys(data.formats).length === 0
       && Object.getPrototypeOf(data.formats) === Object.prototype)) {
-      
+
       this.setState({ formats: data.formats });
-      
+
     }
   };
 
@@ -260,45 +268,45 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.editor?.format(name, value);
   };
 
-  show = (menu: string) => {
-    if (this.state.isAnimating) return;
+  // show = (menu: string) => {
+  //   if (this.state.isAnimating) return;
 
-    this.setState({ menuType: menu });
-    const { theme } = this.props;
-    if (theme) {
-      this.setState({ isAnimating: true }, () => {
+  //   this.setState({ menuType: menu });
+  //   const { theme } = this.props;
+  //   if (theme) {
+  //     this.setState({ isAnimating: true }, () => {
 
-        Animated.timing(this.animatedValue, {
-          toValue: 0.4 * HEIGHT, // 2 * theme.size + 14,
-          duration: 200,
-          easing: Easing.linear,
-          useNativeDriver: false,
-        }).start(() => this.setState({ showMenu: true, isAnimating: false }));
-      });
+  //       Animated.timing(this.animatedValue, {
+  //         toValue: 0.4 * HEIGHT, // 2 * theme.size + 14,
+  //         duration: 200,
+  //         easing: Easing.linear,
+  //         useNativeDriver: false,
+  //       }).start(() => this.setState({ showMenu: true, isAnimating: false }));
+  //     });
 
-    }
-  };
+  //   }
+  // };
 
-  hide = () => {
-    if (this.state.isAnimating) return;
-    const { theme } = this.props;
-    if (theme) {
-      this.setState({ isAnimating: true }, () => {
-        Animated.timing(this.animatedValue, {
-          toValue: 0, //theme.size + 10,
-          duration: 200,
-          easing: Easing.linear,
-          useNativeDriver: false,
-        }).start(() => {
+  // hide = () => {
+  //   if (this.state.isAnimating) return;
+  //   const { theme } = this.props;
+  //   if (theme) {
+  //     this.setState({ isAnimating: true }, () => {
+  //       Animated.timing(this.animatedValue, {
+  //         toValue: 0, //theme.size + 10,
+  //         duration: 200,
+  //         easing: Easing.linear,
+  //         useNativeDriver: false,
+  //       }).start(() => {
 
-          this.setState({
-            showMenu: false,
-            isAnimating: false,
-          });
-        });
-      });
-    }
-  };
+  //         this.setState({
+  //           showMenu: false,
+  //           isAnimating: false,
+  //         });
+  //       });
+  //     });
+  //   }
+  // };
 
 
   // onLayoutMenu = (event)=> {
@@ -307,7 +315,27 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
   // }
 
-
+  // const rbStyle = {
+  //   container: {
+  //     overflow: 'hidden',
+  //     justifyContent: 'flex-start',
+  //     alignItems: 'flex-start',
+  //     paddingLeft: 0,
+  //     paddingRight: 0,
+  //     borderTopLeftRadius: 20,
+  //     borderTopRightRadius: 20,
+  //     backgroundColor: '#FFFFFF',
+  //     borderWidth: 0.5,
+  //     borderColor: '#AAAAAA',
+  //     flex:1
+  //   },
+  //   wrapper: {
+  //     flexGrow:1
+  //   },
+  //   draggableIcon: {
+  //     backgroundColor: 'grey',
+  //   },
+  // };
 
 
   renderToolbar = () => {
@@ -320,6 +348,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     //   : defaultStyles.toolbar;
 
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
+    const modalHeight = menuType === 'format' ? HEIGHT-110 : 200;
 
     //const {  options, hide, selectionName } = useToolbar();
     //console.log('Toolbar:renderToolbar', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
@@ -349,123 +378,174 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
           </ToolbarConsumer> marginTop:this.animatedValue */}
 
 
+          <RBSheetModalless
+            ref={ref => {
+              this.RBSheetHolder = ref;
+            }}
+            keyboardAvoidingViewEnabled={false} // Need to set to false otherwise blank space appears when keyboard disappears
+            closeOnDragDown={true}
+            dragFromTopOnly={true}
+            closeOnPressMask={true}
+            // width={WIDTH-30}
+            openDuration={250}
+            height={modalHeight}
+            customStyles={{
+              container: {
+                overflow: 'hidden',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                paddingLeft: 0,
+                paddingRight: 0,
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                backgroundColor: '#FFFFFF',
+                borderWidth: 0.5,
+                borderColor: '#AAAAAA',
+                flex: 1
+              },
+              wrapper: {
+                flexGrow: 1
+              },
+              draggableIcon: {
+                backgroundColor: 'grey',
+              },
+            }}
+            onClose={() => {this.setState({ showMenu: false})}}
+            onOpen={() => {this.setState({ showMenu: true})}}
+          >
 
-          {/* <View style={toolbarStyle}> */}
-          <TouchableOpacity style={{ width: WIDTH, borderWidth: 0, marginBottom: 0 }} onPress={this.hide}>
-            <Animated.View pointerEvents={'box-none'} style={{ borderWidth: 0, marginBottom: 0, flex: 1, height: this.state.showMenu ? 0.1 * HEIGHT : null, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}></Animated.View>
-            <Animated.View pointerEvents={'box-none'} style={{ borderWidth: 0, marginBottom: 0, flex: 1, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-              {/* This scrollView is for the main toolbar */}
+            <KeyboardAwareScrollView
+              ref={this.scrollRef}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
+              contentContainerStyle={{ borderWidth: 0, padding: 15, margin: 0, flex: 1 }}
+              style={{
+                borderWidth: 0,
+                borderColor: 'blue',
+                zIndex: 10,
+                backgroundColor: '#ffffff',
+                width: WIDTH,
+                flex: 1
+                // flexGrow: 1,
+              }}
+              viewIsInsideTabBar={false}
+              scrollEnabled={true}
+              nestedScrollEnabled={false}
+              extraHeight={0} // change it according to TextInput Height
+            >
 
-              {this.state.isAnimating || this.state.showMenu ?
-                <Animated.ScrollView
-                  horizontal={false}
-                  bounces={false}
-                  showsHorizontalScrollIndicator={false}
-                  style={{ width: 240, margin: 10, paddingLeft: 10, paddingRight: 10, borderWidth: 0.25, borderRadius: 10, backgroundColor: 'rgba(255,255,255,1)', maxHeight: this.animatedValue }}
-                >
+              {toolSetsSelected.map((object, index) => {
 
-                  {toolSetsSelected.map((object, index) => {
+                //console.log('looping', JSON.stringify(object));
+                return (
+                  object.length > 0 && object.map((grp, grpIndex) => {
 
-                    //console.log('looping', JSON.stringify(object));
-                    return (
-                      object.length > 0 && object.map((grp, grpIndex) => {
+                    if (grp.name === 'separator') {
+                      return (
+                        <View key={`ToolVal_${index}_${grpIndex}`} style={{ height: 2, backgroundColor: 'rgba(0,0,0,0.1)' }} />
+                      )
+                    }
 
-                        if (grp.name === 'separator') {
-                          return (
-                            <View key={`ToolVal_${index}_${grpIndex}`} style={{ height: 2, backgroundColor: 'rgba(0,0,0,0.1)' }} />
-                          )
-                        }
+                    else if (grp.type === formatType.toggle) {
 
-                        else if (grp.type === formatType.toggle) {
+                      return (
+                        <ToggleIconButton
+                          key={`ToolVal_${index}_${grpIndex}`}
+                          name={grp.name}
+                          source={grp.source}
+                          valueOff={grp.valueOff}
+                          valueOn={grp.valueOn}
+                        />
+                      )
 
-                          return (
+                    } else {
+                      return (
+                        object.length > 0 &&
+                        grp.values?.map((item: any, index: number) => {
+                          //console.log('looping 2', grp.name, JSON.stringify(item));
+                          if (
+                            item.type === formatType.color &&
+                            item.valueOn !== true &&
+                            typeof item.valueOn !== 'number'
+                          ) {
+                            return (
+                              <ToggleColorButton
+                                key={`GrpVal_${index}`}
+                                name={grp.name}
+                                valueOff={false}
+                                valueOn={item.valueOn}
+                              />
+                            );
+                          } else if (item.type === formatType.icon) {
+                            return (
+                              <ToggleIconButton
+                                key={`GrpVal_${index}`}
+                                source={item.source}
+                                name={grp.name}
+                                valueOff={false}
+                                valueOn={item.valueOn}
+                              />
+                            );
+                          } else
+                            return (
+                              <ToggleTextButton
+                                key={`GrpVal_${index}`}
+                                name={grp.name}
+                                valueOff={false}
+                                valueOn={item.valueOn}
+                                valueName={item.name}
+                              />
+                            );
+                        })
+                      )
+                    }
 
-                            <ToggleIconButton
-                              key={`ToolVal_${index}_${grpIndex}`}
-                              name={grp.name}
-                              source={grp.source}
-                              valueOff={grp.valueOff}
-                              valueOn={grp.valueOn}
-                            />
-                          )
-                        } else {
-                          return (
-                            object.length > 0 &&
-                            grp.values?.map((item: any, index: number) => {
-                              //console.log('looping 2', grp.name, JSON.stringify(item));
-                              if (
-                                item.type === formatType.color &&
-                                item.valueOn !== true &&
-                                typeof item.valueOn !== 'number'
-                              ) {
-                                return (
-                                  <ToggleColorButton
-                                    key={`GrpVal_${index}`}
-                                    name={grp.name}
-                                    valueOff={false}
-                                    valueOn={item.valueOn}
-                                  />
-                                );
-                              } else if (item.type === formatType.icon) {
-                                return (
-                                  <ToggleIconButton
-                                    key={`GrpVal_${index}`}
-                                    source={item.source}
-                                    name={grp.name}
-                                    valueOff={false}
-                                    valueOn={item.valueOn}
-                                  />
-                                );
-                              } else
-                                return (
-                                  <ToggleTextButton
-                                    key={`GrpVal_${index}`}
-                                    name={grp.name}
-                                    valueOff={false}
-                                    valueOn={item.valueOn}
-                                    valueName={item.name}
-                                  />
-                                );
-                            })
-                          )
-                        }
+                  }))
 
-                      }))
+              })}
+            </KeyboardAwareScrollView>
 
-                  })}
+          </RBSheetModalless>
 
 
 
-                </Animated.ScrollView> : null}
 
 
 
-              <View style={{ flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.25, justifyContent: 'flex-end', height: 40, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
 
-                <TouchableOpacity style={{flex:1, borderWidth:0}} onPress={() => { this.props.infoFieldPressed(); }} >
-                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
-                  <Image source={require('./components/ArrowUp.png')} style={{ marginLeft: 10, marginRight:20, width: 18, resizeMode:'contain'}} />
-                  <InfoField />
-                  {/* <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
+
+
+
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.25, justifyContent: 'flex-end', height: 40, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
+
+            <TouchableOpacity style={{ flex: 1, borderWidth: 0 }} onPress={() => { this.props.infoFieldPressed(); }} >
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
+                <Image source={require('./components/ArrowUp.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} />
+                <InfoField />
+                {/* <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
                   <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text> */}
-                </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}>
-
-                  <Image style={{ borderWidth:0, paddingLeft: 0, marginLeft:15,  height: 24, width: 24 }} source={require('./components/Union.png')} />
-
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}>
-
-                  <Image style={{ borderWidth:0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/a.png')} />
-                </TouchableOpacity>
-
               </View>
+            </TouchableOpacity>
 
-            </Animated.View>
-          </TouchableOpacity>
+            {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}> */}
+            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.close() : this.setState({menuType:'attach'}, () => this.RBSheetHolder.open())  }}>
+
+
+              <Image style={{ borderWidth: 0, paddingLeft: 0, marginLeft: 15, height: 24, width: 24 }} source={require('./components/Union.png')} />
+
+            </TouchableOpacity>
+
+            {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}> */}
+            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.close() : this.setState({menuType:'format'}, () => this.RBSheetHolder.open())   }}>
+
+              <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/a.png')} />
+            </TouchableOpacity>
+
+          </View>
+
+          {/* </Animated.View>
+          </TouchableOpacity> */}
         </ToolbarProvider>
       </>
     );
