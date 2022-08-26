@@ -193,6 +193,10 @@ export default class App extends React.Component<any, any> {
             [{ font: ['', customFonts[1].name] }],
             ['image', 'clock'],
           ]}
+          optionsAttach={[
+            //['username', 'hashtag', 'image', 'link'],
+            ['image', 'link'],
+          ]}
           custom={{
             handler: this.customHandler,
             actions: ['image', 'clock'],

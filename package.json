@@ -150,5 +150,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "react-native-raw-bottom-sheet": "^2.2.0"
   }
 }
