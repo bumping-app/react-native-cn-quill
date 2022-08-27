@@ -148,8 +148,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => this._keyboardDidShow(e));
     this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', (e) => this._keyboardDidHide(e));
 
-    this.format('color', '#000000');
-    this.setState({ formats: { "color": "#000000" } });
+    // this.format('color', '#000000');
+    // this.setState({ formats: { "color": "#000000" } });
 
   }
 
@@ -257,21 +257,26 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     }, 200);
   };
 
+  // private onFormatChange = (data: FormatChangeData) => {
+  //   console.log('onFormatChange', JSON.stringify(data));
+  //   if (!(data && data.formats // 👈 null and undefined check
+  //     && Object.keys(data.formats).length === 0
+  //     && Object.getPrototypeOf(data.formats) === Object.prototype)) {
+
+  //     this.setState({ formats: data.formats });
+      
+  //   }
+  // };
+
   private onFormatChange = (data: FormatChangeData) => {
-    console.log('onFormatChange', JSON.stringify(data));
-    if (!(data && data.formats // 👈 null and undefined check
-      && Object.keys(data.formats).length === 0
-      && Object.getPrototypeOf(data.formats) === Object.prototype)) {
-
-      this.setState({ formats: data.formats });
-
-    }
+    this.setState({ formats: data.formats });
   };
 
   private format = (name: string, value: any) => {
     console.log('quill-toolbar name value', name, value);
  
     this.editor?.format(name, value);
+    // this.setState({formats: {} });
   };
 
   // show = (menu: string) => {
