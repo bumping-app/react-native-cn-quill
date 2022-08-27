@@ -93,6 +93,8 @@ interface ToolbarState {
   shortHeight: number;
   normalHeight: number;
   heightAux: number;
+  borderWidth: number;
+  wrapperHeight: number;
 }
 
 export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
@@ -126,7 +128,9 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
       keyboardHeight: 0,
       shortHeight: 0,
       normalHeight: 0,
-      heightAux: 0
+      heightAux: 0,
+      borderWidth: 0,
+      wrapperHeight: 0
     };
     this.animatedValue = new Animated.Value(0);
     this.animatedValueOut = new Animated.Value(43);
@@ -265,6 +269,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   };
 
   private format = (name: string, value: any) => {
+    console.log('quill-toolbar name value', name, value);
+ 
     this.editor?.format(name, value);
   };
 
@@ -340,7 +346,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
   renderToolbar = () => {
     const { styles, custom, InfoField } = this.props;
-    const { toolSets, toolSetsAttach, menuType, theme, formats } = this.state;
+    const { toolSets, toolSetsAttach, menuType, theme, formats, borderWidth } = this.state;
     // const defaultStyles = makeStyles(theme);
 
     // const toolbarStyle = styles?.toolbar?.root
@@ -348,7 +354,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     //   : defaultStyles.toolbar;
 
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
-    const modalHeight = menuType === 'format' ? HEIGHT-110 : 200;
+    const modalHeight = menuType === 'format' ? HEIGHT-150 : 200;
+   
 
     //const {  options, hide, selectionName } = useToolbar();
     //console.log('Toolbar:renderToolbar', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
@@ -363,20 +370,6 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
           custom={custom}
           styles={styles}
         >
-          {/* <SelectionBar /> */}
-
-          {/* <ToolbarConsumer>
-            {({ options, selectionName }) => (
-              <Button
-                onPress={() => { console.log('Options', JSON.stringify(options)); }}
-                title={selectionName}
-              >
-
-              </Button>
-
-            )}
-          </ToolbarConsumer> marginTop:this.animatedValue */}
-
 
           <RBSheetModalless
             ref={ref => {
@@ -392,26 +385,38 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
             customStyles={{
               container: {
                 overflow: 'hidden',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
+                justifyContent: 'flex-end',
+                alignItems: 'flex-end',
                 paddingLeft: 0,
                 paddingRight: 0,
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
                 backgroundColor: '#FFFFFF',
-                borderWidth: 0.5,
+                borderLeftWidth: borderWidth,
+                borderRightWidth: borderWidth,
+                borderTopWidth: borderWidth,
+                borderBottomWidth: 0,
                 borderColor: '#AAAAAA',
-                flex: 1
+                width: WIDTH-150
+                
               },
               wrapper: {
-                flexGrow: 1
+                flex:1,
+                width: '100%',
+                alignItems: 'flex-end',
+                alightContent: 'flex-end',
+                justifyContent: 'flex-end',
+                borderWidth: 0,
+                borderColor: 'orange',
+                backgroundColor: 'rgba(0,0,0,0)',
+                
               },
               draggableIcon: {
                 backgroundColor: 'grey',
               },
             }}
-            onClose={() => {this.setState({ showMenu: false})}}
-            onOpen={() => {this.setState({ showMenu: true})}}
+            onClose={() => {this.setState({ showMenu: false, borderWidth: 0})}}
+            onOpen={() => {this.setState({ showMenu: true, borderWidth: 0.5})}}
           >
 
             <KeyboardAwareScrollView
@@ -424,7 +429,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 borderColor: 'blue',
                 zIndex: 10,
                 backgroundColor: '#ffffff',
-                width: WIDTH,
+                width: WIDTH-152,
                 flex: 1
                 // flexGrow: 1,
               }}
@@ -517,7 +522,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
 
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.25, justifyContent: 'flex-end', height: 40, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
+          <View style={{ width: WIDTH, flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.5, justifyContent: 'flex-end', height: 40, borderWidth: 1, backgroundColor: 'rgba(255,255,255,1)' }}>
 
             <TouchableOpacity style={{ flex: 1, borderWidth: 0 }} onPress={() => { this.props.infoFieldPressed(); }} >
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
@@ -558,12 +563,14 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     const { container = 'avoiding-view' } = this.props;
     if (container === 'avoiding-view')
       return (
-        <KeyboardAvoidingView
-          onTouchStart={(e) => e.stopPropagation()}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
+        // <KeyboardAvoidingView
+        //   onTouchStart={(e) => e.stopPropagation()}
+        //   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        // >
+        <>
           {this.renderToolbar()}
-        </KeyboardAvoidingView>
+          </>
+        // </KeyboardAvoidingView>
       );
     else if (container === false) return this.renderToolbar();
     else {
