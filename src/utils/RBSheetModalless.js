@@ -8,7 +8,8 @@ import {
   Animated,
   PanResponder,
   SafeAreaView,
-  Platform
+  Platform,
+  Dimensions
 } from "react-native";
 import { StyleSheet } from "react-native";
 import { rgbaToHex } from "@lottiefiles/lottie-js";
@@ -24,6 +25,10 @@ const SUPPORTED_ORIENTATIONS = [
 ];
 
 class RBSheetModalless extends Component {
+
+   WIDTH = Dimensions.get('window').width;
+   HEIGHT = Dimensions.get('window').height;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -119,9 +124,10 @@ class RBSheetModalless extends Component {
     //   >
     <SafeAreaView
         style={{
-          // flexGrow: 1,
-          flex: 1,
-          backgroundColor: '#FFFFFF', // Color.primaryBG,
+          flexGrow: 0,
+          
+          // width: customStyles.wrapper?.width ? customStyles.wrapper?.width :'100%',
+          backgroundColor: customStyles.wrapper?.backgroundColor ? customStyles.wrapper?.backgroundColor :'#FFFFFF', // Color.primaryBG,
         }}
       //onTouchStart={() => { console.log('onTouchStart called'); _ref.current?.blur();}} // NOTE: FOR SOME REASON, THIS IS REQUIRED OTHERWISE INSERT USERTAG IN RICH TEXT IS MISLOCATED - MOVED THIS TO RichTextEditor.tsx in onPressAutoComplete
       >
@@ -134,7 +140,7 @@ class RBSheetModalless extends Component {
             style={styles.mask}
             activeOpacity={1}
             onPress={() => (closeOnPressMask ? this.close() : null)}
-          />
+          >
           <Animated.View
             {...(!dragFromTopOnly && this.panResponder.panHandlers)}
             style={[panStyle, styles.container, { height: animatedHeight }, customStyles.container]}
@@ -149,6 +155,7 @@ class RBSheetModalless extends Component {
             )}
             {children}
           </Animated.View>
+          </TouchableOpacity>
         </KeyboardAvoidingView>
         </SafeAreaView>
     //   </Modal>
@@ -198,7 +205,11 @@ const styles = StyleSheet.create({
     },
     mask: {
       flex: 1,
-      backgroundColor: "transparent"
+      backgroundColor: "transparent",
+      borderWidth:0,
+      borderColor:'blue',
+      width: '100%',
+      alignItems:'flex-end',
     },
     container: {
       backgroundColor: "#fff",
