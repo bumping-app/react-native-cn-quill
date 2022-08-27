@@ -20,6 +20,7 @@ export interface ContextProps {
   selectionName: string;
   getSelected: (name: string) => any;
   styles?: CustomStyles;
+  
 }
 
 const ToolbarContext = React.createContext<ContextProps>({
@@ -33,6 +34,7 @@ const ToolbarContext = React.createContext<ContextProps>({
   options: [],
   selectionName: '',
   getSelected: () => false,
+  
 });
 
 export const ToolbarConsumer = ToolbarContext.Consumer;
@@ -43,6 +45,7 @@ interface ProviderProps {
   theme: ToolbarTheme;
   custom?: ToolbarCustom;
   styles?: CustomStyles;
+  modalRef? : any;
 }
 
 interface ProviderState {
@@ -122,13 +125,17 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   };
 
   apply = (name: string, value: any) => {
-    const { format, custom } = this.props;
+    const { format, custom, modalRef } = this.props;
 
     if (custom?.actions) custom.actions.find((x) => x === name);
     if (custom?.actions && custom?.actions?.indexOf(name) > -1) {
-      if (custom?.handler) custom.handler(name, value);
+      if (custom?.handler) {
+        custom.handler(name, value);
+        modalRef.current.close();
+      }
     } else {
       format(name, value);
+      modalRef.current.close();
     }
   };
 

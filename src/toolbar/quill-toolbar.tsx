@@ -108,7 +108,11 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   keyboardHideListener;
   keyboardDidShowListener;
   RBSheetHolder;
+  RBSheetHolderBound;
   scrollRef;
+
+
+  
 
   constructor(props: QuillToolbarProps) {
     super(props);
@@ -134,6 +138,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     };
     this.animatedValue = new Animated.Value(0);
     this.animatedValueOut = new Animated.Value(43);
+    this.RBSheetHolder = React.createRef();
     //console.log('quill-toolbar constructor');
   }
 
@@ -274,7 +279,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
   private format = (name: string, value: any) => {
     console.log('quill-toolbar name value', name, value);
- 
+    //this.RBSheetHolder?.close();
     this.editor?.format(name, value);
     // this.setState({formats: {} });
   };
@@ -374,11 +379,12 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
           selectedFormats={formats}
           custom={custom}
           styles={styles}
+          modalRef={this.RBSheetHolder}
         >
 
           <RBSheetModalless
             ref={ref => {
-              this.RBSheetHolder = ref;
+              this.RBSheetHolder.current = ref;
             }}
             keyboardAvoidingViewEnabled={false} // Need to set to false otherwise blank space appears when keyboard disappears
             closeOnDragDown={true}
@@ -539,7 +545,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
             </TouchableOpacity>
 
             {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}> */}
-            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.close() : this.setState({menuType:'attach'}, () => this.RBSheetHolder.open())  }}>
+            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({menuType:'attach'}, () => this.RBSheetHolder.current.open())  }}>
 
 
               <Image style={{ borderWidth: 0, paddingLeft: 0, marginLeft: 15, height: 24, width: 24 }} source={require('./components/Union.png')} />
@@ -547,7 +553,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
             </TouchableOpacity>
 
             {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}> */}
-            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.close() : this.setState({menuType:'format'}, () => this.RBSheetHolder.open())   }}>
+            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({menuType:'format'}, () => this.RBSheetHolder.current.open())   }}>
 
               <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/a.png')} />
             </TouchableOpacity>
