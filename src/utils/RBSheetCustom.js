@@ -7,14 +7,10 @@ import {
   TouchableOpacity,
   Animated,
   PanResponder,
-  SafeAreaView,
-  Platform,
-  Dimensions
+  Platform
 } from "react-native";
 import { StyleSheet } from "react-native";
-import { rgbaToHex } from "@lottiefiles/lottie-js";
-import { Color } from 'constants/styleConstant';
-//import styles from "./style";
+// import styles from "./style";
 
 const SUPPORTED_ORIENTATIONS = [
   "portrait",
@@ -24,11 +20,7 @@ const SUPPORTED_ORIENTATIONS = [
   "landscape-right"
 ];
 
-class RBSheetModalless extends Component {
-
-   WIDTH = Dimensions.get('window').width;
-   HEIGHT = Dimensions.get('window').height;
-
+class RBSheetCustom extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -113,23 +105,14 @@ class RBSheetModalless extends Component {
     };
 
     return (
-    //   <Modal
-    //     transparent
-    //     animationType={animationType}
-    //     visible={modalVisible}
-    //     supportedOrientations={SUPPORTED_ORIENTATIONS}
-    //     onRequestClose={() => {
-    //       if (closeOnPressBack) this.setModalVisible(false);
-    //     }}
-    //   >
-    <SafeAreaView
-        style={{
-          flexGrow: 0,
-          
-          // width: customStyles.wrapper?.width ? customStyles.wrapper?.width :'100%',
-          backgroundColor: customStyles.wrapper?.backgroundColor ? customStyles.wrapper?.backgroundColor :'#FFFFFF', // Color.primaryBG,
+      <Modal
+        transparent
+        animationType={animationType}
+        visible={modalVisible}
+        supportedOrientations={SUPPORTED_ORIENTATIONS}
+        onRequestClose={() => {
+          if (closeOnPressBack) this.setModalVisible(false);
         }}
-      //onTouchStart={() => { console.log('onTouchStart called'); _ref.current?.blur();}} // NOTE: FOR SOME REASON, THIS IS REQUIRED OTHERWISE INSERT USERTAG IN RICH TEXT IS MISLOCATED - MOVED THIS TO RichTextEditor.tsx in onPressAutoComplete
       >
         <KeyboardAvoidingView
           enabled={keyboardAvoidingViewEnabled}
@@ -157,13 +140,12 @@ class RBSheetModalless extends Component {
           </Animated.View>
           </TouchableOpacity>
         </KeyboardAvoidingView>
-        </SafeAreaView>
-    //   </Modal>
+      </Modal>
     );
   }
 }
 
-RBSheetModalless.propTypes = {
+RBSheetCustom.propTypes = {
   animationType: PropTypes.oneOf(["none", "slide", "fade"]),
   height: PropTypes.number,
   minClosingHeight: PropTypes.number,
@@ -180,7 +162,7 @@ RBSheetModalless.propTypes = {
   children: PropTypes.node
 };
 
-RBSheetModalless.defaultProps = {
+RBSheetCustom.defaultProps = {
   animationType: "none",
   height: 260,
   minClosingHeight: 0,
@@ -198,39 +180,42 @@ RBSheetModalless.defaultProps = {
 };
 
 
+
 const styles = StyleSheet.create({
-    wrapper: {
-      flex: 1,
-      backgroundColor: 'rgba(0,0,0,0)' //"#00000077"
-    },
-    mask: {
-      flex: 1,
-      backgroundColor: "transparent",
-      borderWidth:0,
-      borderColor:'blue',
-      width: '100%',
-      alignItems:'flex-end',
-    },
-    container: {
-      backgroundColor: "#fff",
-      width: "100%",
-      height: 0,
-      overflow: "hidden"
-    },
-    draggableContainer: {
-      width: "100%",
-      alignItems: "center",
-      backgroundColor: "transparent"
-    },
-    draggableIcon: {
-      width: 35,
-      height: 5,
-      borderRadius: 5,
-      margin: 10,
-      backgroundColor: "#ccc"
-    }
-  });
+  wrapper: {
+    flex: 1,
+    backgroundColor: "#00000077"
+  },
+  mask: {
+    flex: 1,
+    backgroundColor: "transparent",
+    flexDirection:'row',
+    alignContent:'flex-end',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    width: '100%',
+    borderWidth: 0,
+  },
+  container: {
+    backgroundColor: "#fff",
+    width: "100%",
+    height: 0,
+    overflow: "hidden"
+  },
+  draggableContainer: {
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "transparent"
+  },
+  draggableIcon: {
+    width: 35,
+    height: 5,
+    borderRadius: 5,
+    margin: 10,
+    backgroundColor: "#ccc"
+  }
+});
 
 
 
-export default RBSheetModalless;
+export default RBSheetCustom;

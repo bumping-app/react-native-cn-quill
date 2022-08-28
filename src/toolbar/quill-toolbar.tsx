@@ -35,7 +35,8 @@ import { ToggleTextButton } from './components/toggle-text-button';
 import { ToggleColorButton } from './components/toggle-color-button';
 import { ToggleIconButton } from './components/toggle-icon-button';
 import { formatType } from '../constants/formats';
-import RBSheetModalless from '../utils/RBSheetModalless';
+import RBSheetCustom from 'react-native-cn-quill/src/utils/RBSheetCustom';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const WIDTH = Dimensions.get('window').width;
@@ -155,6 +156,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
     // this.format('color', '#000000');
     // this.setState({ formats: { "color": "#000000" } });
+
 
   }
 
@@ -382,11 +384,11 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
           modalRef={this.RBSheetHolder}
         >
 
-          <RBSheetModalless
+          <RBSheetCustom
             ref={ref => {
               this.RBSheetHolder.current = ref;
             }}
-            keyboardAvoidingViewEnabled={false} // Need to set to false otherwise blank space appears when keyboard disappears
+            keyboardAvoidingViewEnabled={true} // Need to set to false otherwise blank space appears when keyboard disappears
             closeOnDragDown={true}
             dragFromTopOnly={true}
             closeOnPressMask={true}
@@ -415,7 +417,6 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 flex:1,
                 width: '100%',
                 alignItems: 'flex-end',
-                alightContent: 'flex-end',
                 justifyContent: 'flex-end',
                 borderWidth: 0,
                 borderColor: 'orange',
@@ -521,7 +522,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
               })}
             </KeyboardAwareScrollView>
 
-          </RBSheetModalless>
+          </RBSheetCustom>
 
 
 
