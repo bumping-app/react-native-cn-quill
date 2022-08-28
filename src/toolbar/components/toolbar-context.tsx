@@ -20,6 +20,7 @@ export interface ContextProps {
   selectionName: string;
   getSelected: (name: string) => any;
   styles?: CustomStyles;
+
   
 }
 
@@ -33,7 +34,7 @@ const ToolbarContext = React.createContext<ContextProps>({
   theme: lightTheme,
   options: [],
   selectionName: '',
-  getSelected: () => false,
+  getSelected: () => false
   
 });
 
@@ -57,6 +58,7 @@ interface ProviderState {
 
 export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   animatedValue: Animated.Value;
+
   constructor(props: ProviderProps) {
     super(props);
     this.state = {
@@ -106,6 +108,8 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
     }
   };
 
+
+
   componentDidMount() {
     const { theme } = this.props;
     this.animatedValue = new Animated.Value(theme.size + 10);
@@ -124,20 +128,24 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
     return selected ? selected : false;
   };
 
-  apply = (name: string, value: any) => {
+  apply = async (name: string, value: any) => {
     const { format, custom, modalRef } = this.props;
 
     if (custom?.actions) custom.actions.find((x) => x === name);
     if (custom?.actions && custom?.actions?.indexOf(name) > -1) {
       if (custom?.handler) {
-        custom.handler(name, value);
-        modalRef.current.close();
+        custom.handler(name, value, () => {
+          console.log('Toolbar-context:apply callback');
+          modalRef.current.close();
+        });
+        // modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
       }
     } else {
-      format(name, value);
+      await format(name, value);
       modalRef.current.close();
     }
   };
+
 
   render() {
     const { selectedFormats, children, theme, styles } = this.props;
