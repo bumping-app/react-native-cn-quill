@@ -35,7 +35,7 @@ import { ToggleTextButton } from './components/toggle-text-button';
 import { ToggleColorButton } from './components/toggle-color-button';
 import { ToggleIconButton } from './components/toggle-icon-button';
 import { formatType } from '../constants/formats';
-import RBSheetCustom from 'react-native-cn-quill/src/utils/RBSheetCustom';
+import RBSheetCustom from '../utils/RBSheetCustom';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
