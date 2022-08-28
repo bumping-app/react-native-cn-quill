@@ -69,7 +69,7 @@ export interface SampleArray {
 }
 
 export interface ToolbarCustom {
-  handler?: (name: string, value: any) => void;
+  handler?: (name: string, value: any, callback: ()=>{}) => void;
   actions?: Array<string>;
   icons?: Record<string, any>;
 }
