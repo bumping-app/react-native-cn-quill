@@ -9,7 +9,7 @@ export const editor_css = (
   containerId: string,
   autoSize: boolean,
   color = 'rgb(32, 35, 42)',
-  background = 'white',
+  background = 'rgba(255,255,255,0)',
   placeholder = 'rgba(0,0,0,0.6)',
   fonts: Array<CustomFont> = [],
   defaultFont: string | undefined = undefined

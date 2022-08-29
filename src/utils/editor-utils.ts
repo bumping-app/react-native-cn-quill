@@ -44,7 +44,7 @@ const Inital_Args = {
   autoSize: false,
   containerId: 'standalone-container',
   color: 'black',
-  backgroundColor: 'white',
+  backgroundColor: 'rgba(255,255,255,0)',
   placeholderColor: 'rgba(0,0,0,0.6)',
   customStyles: [],
   fonts: [],

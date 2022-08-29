@@ -120,7 +120,7 @@ export default class QuillEditor extends React.Component<
       import3rdParties = 'local',
       containerId = 'standalone-container',
       theme = {
-        background: 'white',
+        background: 'rgba(255,255,255,0)',
         color: 'rgb(32, 35, 42)',
         placeholder: 'rgba(0,0,0,0.6)',
       },
@@ -152,7 +152,7 @@ export default class QuillEditor extends React.Component<
       containerId,
       color: theme.color,
       fonts: customFonts,
-      backgroundColor: theme.background,
+      backgroundColor: 'rgba(255,255,255,0)',
       placeholderColor: theme.placeholder,
       customStyles,
       customJS,
