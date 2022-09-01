@@ -410,7 +410,9 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 borderTopWidth: borderWidth,
                 borderBottomWidth: 0,
                 borderColor: '#AAAAAA',
-                width: WIDTH-150
+                width: WIDTH-150,
+                minHeight: 300,
+                maxHeight: HEIGHT-50,
                 
               },
               wrapper: {
@@ -421,6 +423,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 borderWidth: 0,
                 borderColor: 'orange',
                 backgroundColor: 'rgba(0,0,0,0)',
+                
                 
               },
               draggableIcon: {
@@ -435,19 +438,20 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
               ref={this.scrollRef}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag"
-              contentContainerStyle={{ borderWidth: 0, padding: 15, margin: 0, flex: 1 }}
+              contentContainerStyle={{ borderWidth: 0, padding: 15, margin: 0, }} //do not put flex:1 here as it would prevent the scroll from working
               style={{
                 borderWidth: 0,
                 borderColor: 'blue',
                 zIndex: 10,
                 backgroundColor: '#ffffff',
                 width: WIDTH-152,
-                flex: 1
+                
+                // height: 300
                 // flexGrow: 1,
               }}
               viewIsInsideTabBar={false}
               scrollEnabled={true}
-              nestedScrollEnabled={false}
+              nestedScrollEnabled={true}
               extraHeight={0} // change it according to TextInput Height
             >
 
