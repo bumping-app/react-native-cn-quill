@@ -58,6 +58,7 @@ export interface EditorProps {
   webview?: WebViewProps;
   onBlur?: () => void;
   onFocus?: () => void;
+  onUndo?: () => void;
   customJS?: string;
 }
 
@@ -89,6 +90,7 @@ export default class QuillEditor extends React.Component<
       onDimensionsChange,
       onBlur,
       onFocus,
+      onUndo,
     } = this.props;
     if (onSelectionChange) {
       this.on('selection-change', onSelectionChange);
@@ -184,7 +186,7 @@ export default class QuillEditor extends React.Component<
   }
 
   private post = (obj: object) => {
-    console.log('quill-editor::post', JSON.stringify(obj));
+    // console.log('quill-editor::post', JSON.stringify(obj));
     const jsonString = JSON.stringify(obj);
     this._webview.current?.postMessage(jsonString);
   };
@@ -254,6 +256,12 @@ export default class QuillEditor extends React.Component<
       this._webview.current?.requestFocus();
     }
   };
+
+  undo = () => {
+    if (this.props.onUndo) {
+    this.props.onUndo();
+    }
+  }
 
   hasFocus = (): Promise<boolean> => {
     return this.postAwait<any>({ command: 'hasFocus' });
