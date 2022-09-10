@@ -35,13 +35,13 @@ export const ToggleColorButton: React.FC<Props> = (props) => {
 
     <TouchableWithoutFeedback onPress={handlePresss}>
       <View style={[toolStyle, {flexDirection:'row', justifyContent:'space-between', width:'100%'}]}>
-      <Text>{valueOn === '#000000' ? 'Black' : valueOn === '#33b04e' ? 'Green' : valueOn === '#8fa5f5' ? 'Blue' : 'Berry'}</Text>
+      <Text>{valueOn === '#000000' ? 'Black' : valueOn === '#33b04e' ? 'Green' : valueOn === '#8fa5f5' ? 'Blue' : valueOn === '#ffffff' ? 'White' : 'Berry'}</Text>
       <View style={selected ? overlayStyle : null}>
       <View
           style={[
             toolStyle,
             {
-              width: 30, height: 30, backgroundColor: valueOn,
+              width: 30, height: 30, borderWidth: 0.5, backgroundColor: valueOn,
             },
           ]}
         />
