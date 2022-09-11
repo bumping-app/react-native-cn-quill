@@ -597,13 +597,13 @@ export const quill_snow_css = (cdn: boolean) =>
      display: none;
    }
    .ql-snow .ql-editor h1 {
-     font-size: 2em;
-   }
-   .ql-snow .ql-editor h2 {
      font-size: 1.5em;
    }
+   .ql-snow .ql-editor h2 {
+     font-size: 1.3em;
+   }
    .ql-snow .ql-editor h3 {
-     font-size: 1.17em;
+     font-size: 1.1em;
    }
    .ql-snow .ql-editor h4 {
      font-size: 1em;
