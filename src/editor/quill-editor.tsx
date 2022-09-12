@@ -60,6 +60,7 @@ export interface EditorProps {
   onFocus?: () => void;
   onUndo?: () => void;
   customJS?: string;
+  
 }
 
 export default class QuillEditor extends React.Component<
@@ -160,6 +161,15 @@ export default class QuillEditor extends React.Component<
       customJS,
     });
   };
+
+
+  rebuildHtml = () => {
+
+    this.state = {
+      webviewContent: this.getInitalHtml(),
+    };
+
+  }
 
   private getKey(): string {
     var timestamp = new Date().getUTCMilliseconds();
