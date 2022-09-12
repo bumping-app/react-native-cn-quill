@@ -165,9 +165,11 @@ export default class QuillEditor extends React.Component<
 
   rebuildHtml = () => {
 
-    this.state = {
-      webviewContent: this.getInitalHtml(),
-    };
+    // this.state = {
+    //   webviewContent: this.getInitalHtml(),
+    // };
+    this._webview.current?.reload();
+    
 
   }
 
