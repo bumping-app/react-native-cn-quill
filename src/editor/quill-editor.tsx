@@ -163,15 +163,7 @@ export default class QuillEditor extends React.Component<
   };
 
 
-  rebuildHtml = () => {
-
-    // this.state = {
-    //   webviewContent: this.getInitalHtml(),
-    // };
-    this._webview.current?.reload();
-    
-
-  }
+  
 
   private getKey(): string {
     var timestamp = new Date().getUTCMilliseconds();
@@ -255,6 +247,17 @@ export default class QuillEditor extends React.Component<
           this.props.webview?.onMessage(event);
         }
     }
+  };
+
+
+  rebuildHtml = () => {
+
+    this.setState({
+      webviewContent: this.getInitalHtml(),
+    });
+    
+    
+
   };
 
   blur = () => {
