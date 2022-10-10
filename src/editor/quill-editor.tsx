@@ -132,6 +132,11 @@ export default class QuillEditor extends React.Component<
         placeholder: 'write here!',
         modules: {
           toolbar: false,
+          history: {
+            delay: 2000,
+            maxStack: 500,
+            userOnly: true
+          }
         },
         theme: 'snow',
       },
@@ -273,9 +278,17 @@ export default class QuillEditor extends React.Component<
   };
 
   undo = () => {
-    if (this.props.onUndo) {
-    this.props.onUndo();
-    }
+
+    const run = `
+      quill.history.undo();
+      true;
+    `;
+
+
+    this._webview.current?.injectJavaScript(run);
+    // if (this.props.onUndo) {
+    // this.props.onUndo();
+    // }
   }
 
   hasFocus = (): Promise<boolean> => {
