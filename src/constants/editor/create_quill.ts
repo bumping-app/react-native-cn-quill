@@ -41,6 +41,13 @@ export const create_quill = ({
   if (keyboard) {
     modules += `keyboard: ${keyboard},`;
   }
+  if (true) {
+    modules += `history: {
+      delay: 2000,
+      maxStack: 500,
+      userOnly: true
+    },`;
+  }
 
   return `
   <script>
