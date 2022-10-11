@@ -132,11 +132,6 @@ export default class QuillEditor extends React.Component<
         placeholder: 'write here!',
         modules: {
           toolbar: false,
-          history: {
-            delay: 2000,
-            maxStack: 500,
-            userOnly: true
-          }
         },
         theme: 'snow',
       },
