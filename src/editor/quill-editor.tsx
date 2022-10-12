@@ -28,6 +28,7 @@ import type {
   TextChangeData,
   HtmlChangeData,
   DimensionsChangeData,
+  ThumbnailPressData,
   Range,
 } from '../constants/editor-event';
 import { Loading } from './loading';
@@ -59,6 +60,7 @@ export interface EditorProps {
   onBlur?: () => void;
   onFocus?: () => void;
   onUndo?: () => void;
+  onThumbnailPress?: (data: ThumbnailPressData) => void;
   customJS?: string;
   
 }
@@ -92,7 +94,10 @@ export default class QuillEditor extends React.Component<
       onBlur,
       onFocus,
       onUndo,
+      onThumbnailPress,
     } = this.props;
+
+
     if (onSelectionChange) {
       this.on('selection-change', onSelectionChange);
     }
@@ -101,7 +106,10 @@ export default class QuillEditor extends React.Component<
     }
     if (onTextChange) {
       this.on('text-change', onTextChange);
-      this.on('playVideo', onTextChange);
+    }
+    if (onThumbnailPress) {
+      console.log('quill-editor onThumbnailPress');
+      this.on('playVideo', onThumbnailPress);
     }
     if (onHtmlChange) {
       this.on('html-change', onHtmlChange);

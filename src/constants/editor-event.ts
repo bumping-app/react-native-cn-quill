@@ -22,6 +22,11 @@ export interface TextChangeData {
   html: string;
 }
 
+export interface ThumbnailPressData {
+  eventName: string;
+  args: Array<any>;
+}
+
 export interface HtmlChangeData {
   html: string;
 }
