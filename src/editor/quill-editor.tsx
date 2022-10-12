@@ -97,6 +97,7 @@ export default class QuillEditor extends React.Component<
       onThumbnailPress,
     } = this.props;
 
+    console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
 
     if (onSelectionChange) {
       this.on('selection-change', onSelectionChange);
@@ -105,10 +106,11 @@ export default class QuillEditor extends React.Component<
       this.on('editor-change', onEditorChange);
     }
     if (onTextChange) {
+      console.log('quill-editor onTextChange');
       this.on('text-change', onTextChange);
     }
     if (onThumbnailPress) {
-      console.log('quill-editor onThumbnailPress');
+      console.log('quill-editor onThumbnailPress 2');
       this.on('playVideo', onThumbnailPress);
     }
     if (onHtmlChange) {
@@ -295,6 +297,14 @@ export default class QuillEditor extends React.Component<
     // if (this.props.onUndo) {
     // this.props.onUndo();
     // }
+  }
+
+  deleteBlot = (id:string) => {
+    const run = `
+      var elem = document.getElementById("${id}");
+      elem.remove();
+    `;
+    this._webview.current?.injectJavaScript(run);
   }
 
   hasFocus = (): Promise<boolean> => {
