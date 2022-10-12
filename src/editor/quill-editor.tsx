@@ -101,6 +101,7 @@ export default class QuillEditor extends React.Component<
     }
     if (onTextChange) {
       this.on('text-change', onTextChange);
+      this.on('playVideo', onTextChange);
     }
     if (onHtmlChange) {
       this.on('html-change', onHtmlChange);
@@ -201,6 +202,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
+    console.log('quill-editor onMessage', event.nativeEvent.data);
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -215,6 +217,7 @@ export default class QuillEditor extends React.Component<
         break;
       case 'format-change':
       case 'text-change':
+      case 'playVideo':
       case 'selection-change':
       case 'html-change':
       case 'editor-change':

@@ -6,6 +6,7 @@ export type EditorEventType =
   | 'html-change'
   | 'dimensions-change'
   | 'blur'
+  | 'playVideo'
   | 'focus';
 
 export interface SelectionChangeData {
