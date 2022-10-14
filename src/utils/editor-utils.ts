@@ -8,6 +8,8 @@ import {
   quill_js,
 } from '../constants/editor';
 
+import {long_press_event_js} from './long-press-event';
+
 export const getFontName = (font: string) => {
   return font.toLowerCase().replace(/\s/g, '-');
 };
@@ -92,6 +94,7 @@ export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
     </div>
   </div>
   ${quill_js(args.libraries === 'cdn')}
+  ${long_press_event_js()}
   ${create_quill({
     id: args.editorId,
     toolbar: args.toolbar,
