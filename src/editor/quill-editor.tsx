@@ -202,7 +202,7 @@ export default class QuillEditor extends React.Component<
   }
 
   private post = (obj: object) => {
-    // console.log('quill-editor::post', JSON.stringify(obj));
+    console.log('quill-editor::post', JSON.stringify(obj));
     const jsonString = JSON.stringify(obj);
     this._webview.current?.postMessage(jsonString);
   };
@@ -213,7 +213,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    //console.log('quill-editor onMessage', event.nativeEvent.data);
+    console.log('quill-editor onMessage', event.nativeEvent.data);
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -305,14 +305,59 @@ export default class QuillEditor extends React.Component<
 
   getScrollIndexForElementId = (id:string) => {
     const run = `
+
+      var elem = document.getElementById("${id}");
+      var parent = elem.parentNode;
+      let blot = parent.__blot.blot;
+      let index = blot.offset(quill.scroll);
+      alert('getScrollIndexForElementId' + index);
+      
+      // window.ReactNativeWebView.postMessage(JSON.stringify({getBlot: index}));
+
+      true;
+
+    `;
+    this._webview.current?.injectJavaScript(run);
+  }
+
+  // quill.insertEmbed(index, '${type}', JSON.parse(${blotstr}));
+  replaceBlot = (id: string, type: string, blotstr: string) => {
+    console.log('replaceBlot', id, type, blotstr );
+    const run = `
     var elem = document.getElementById("${id}");
     var parent = elem.parentNode;
     let blot = parent.__blot.blot;
     let index = blot.offset(quill.scroll);
 
-    alert('getScrollIndexForElementId' + index);
-    return index;
-    `
+    elem.remove();
+    parent.remove();
+
+    // const blotstr = {
+    //   imgBase64:null,
+    //   imgLocalPath:null,
+    //   imgRemotePath:"https://bumping-files.s3.ap-east-1.amazonaws.com/uploads%2F3a4ifa2skx836z3l9xn28-Bump-bump-imageimage.jpg",
+    //   imgName:"IMG_0003.JPG",
+    //   imgMime:"image/jpeg",
+    //   vidLocalPath:null,
+    //   vidRemotePath:"EMPTY-beb4dd14-8344-4646-8148-b39191b06089",
+    //   vidMime:"EMPTY-cbaa13d7-1dc9-4d9e-bf51-6c93a925b079",
+    //   height:"auto",
+    //   width:"100%",
+    //   assetHeight:"2002",
+    //   assetWidth:"3000",
+    //   key:null
+    // };
+
+    // const obj = { "command": "insertEmbed", "index":index, "type":"pbThumbnail", "value":blotstr };
+    // const jsonString = JSON.stringify(obj);
+    // window.ReactNativeWebView.postMessage(jsonString);
+    quill.insertEmbed(index, "${type}", ${blotstr})
+
+    true;
+  
+    `;
+    this._webview.current?.injectJavaScript(run);
+
   }
 
   deleteBlot = (id:string) => {
@@ -322,10 +367,10 @@ export default class QuillEditor extends React.Component<
 
       var elem = document.getElementById("${id}");
       var parent = elem.parentNode;
-      let blot = parent.__blot.blot;
-      let index = blot.offset(quill.scroll);
 
-      alert('deleteBlot' + index);
+      // let blot = parent.__blot.blot;
+      // let index = blot.offset(quill.scroll);x
+      // alert('deleteBlot' + index);
 
       elem.remove();
       parent.remove();
