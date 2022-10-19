@@ -61,6 +61,7 @@ export interface EditorProps {
   onFocus?: () => void;
   onUndo?: () => void;
   onThumbnailPress?: (data: ThumbnailPressData) => void;
+  //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   
 }
@@ -263,8 +264,11 @@ export default class QuillEditor extends React.Component<
   };
 
 
-  rebuildHtml = () => {
+  rebuildHtml =  () => {
 
+    // if (html && this.props.updateInitialHtml) {
+    //   await this.props.updateInitialHtml(html);
+    // }
     this.setState({
       webviewContent: this.getInitalHtml(),
     });
@@ -299,10 +303,33 @@ export default class QuillEditor extends React.Component<
     // }
   }
 
+  getScrollIndexForElementId = (id:string) => {
+    const run = `
+    var elem = document.getElementById("${id}");
+    var parent = elem.parentNode;
+    let blot = parent.__blot.blot;
+    let index = blot.offset(quill.scroll);
+
+    alert('getScrollIndexForElementId' + index);
+    return index;
+    `
+  }
+
   deleteBlot = (id:string) => {
     const run = `
+      // import Quill from 'quill';
+      
+
       var elem = document.getElementById("${id}");
+      var parent = elem.parentNode;
+      let blot = parent.__blot.blot;
+      let index = blot.offset(quill.scroll);
+
+      alert('deleteBlot' + index);
+
       elem.remove();
+      parent.remove();
+      
     `;
     this._webview.current?.injectJavaScript(run);
   }
