@@ -325,12 +325,12 @@ export default class QuillEditor extends React.Component<
     console.log('replaceBlot', id, type, blotstr );
     const run = `
     var elem = document.getElementById("${id}");
-    // var parent = elem.parentNode;
+    //var parent = elem.parentNode;
     let blot = elem.__blot.blot;
     let index = blot.offset(quill.scroll);
 
     elem.remove();
-    // parent.remove();
+    //parent.remove();
 
     // const blotstr = {
     //   imgBase64:null,
@@ -351,7 +351,7 @@ export default class QuillEditor extends React.Component<
     // const obj = { "command": "insertEmbed", "index":index, "type":"pbThumbnail", "value":blotstr };
     // const jsonString = JSON.stringify(obj);
     // window.ReactNativeWebView.postMessage(jsonString);
-    quill.insertEmbed(index, "${type}", ${blotstr})
+    quill.insertEmbed(index, "${type}", ${blotstr});
 
     true;
   
