@@ -202,7 +202,7 @@ export default class QuillEditor extends React.Component<
   }
 
   private post = (obj: object) => {
-    console.log('quill-editor::post', JSON.stringify(obj));
+    //console.log('quill-editor::post', JSON.stringify(obj));
     const jsonString = JSON.stringify(obj);
     this._webview.current?.postMessage(jsonString);
   };
@@ -213,7 +213,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    console.log('quill-editor onMessage', event.nativeEvent.data);
+    // console.log('quill-editor onMessage', event.nativeEvent.data);
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -325,12 +325,12 @@ export default class QuillEditor extends React.Component<
     console.log('replaceBlot', id, type, blotstr );
     const run = `
     var elem = document.getElementById("${id}");
-    var parent = elem.parentNode;
-    let blot = parent.__blot.blot;
+    // var parent = elem.parentNode;
+    let blot = elem.__blot.blot;
     let index = blot.offset(quill.scroll);
 
     elem.remove();
-    parent.remove();
+    // parent.remove();
 
     // const blotstr = {
     //   imgBase64:null,
@@ -359,6 +359,36 @@ export default class QuillEditor extends React.Component<
     this._webview.current?.injectJavaScript(run);
 
   }
+
+
+  addCustomAttributes = (id: string, value: string) => {
+    console.log('addCustomAttributes', id,  value );
+    const run = `
+    var elem = document.getElementById("${id}");
+    var parent = elem.parentNode;
+    let blot = parent.__blot.blot;
+    let index = blot.offset(quill.scroll);
+
+    // import Parchment from 'parchment';
+    let Parchment = Quill.import('parchment');
+
+    let VidRemotePath = new Parchment.Attributor.Attribute('vidRemotePath', 'vidRemotePath', {
+      scope: Parchment.Scope.BLOCK
+    });
+    Quill.register(VidRemotePath);
+    VidRemotePath.add(elem, 'Doreimon');
+
+    let BugsBunny = new Parchment.Attributor.Attribute('bugsBunny', 'bugsBunny');
+    Quill.register(BugsBunny);
+    BugsBunny.add(elem, 'RogerRabbit');
+
+    true;
+  
+    `;
+    this._webview.current?.injectJavaScript(run);
+
+  }
+
 
   deleteBlot = (id:string) => {
     const run = `
