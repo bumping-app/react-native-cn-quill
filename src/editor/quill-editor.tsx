@@ -29,6 +29,7 @@ import type {
   HtmlChangeData,
   DimensionsChangeData,
   ThumbnailPressData,
+  ReplaceBlotData,
   Range,
 } from '../constants/editor-event';
 import { Loading } from './loading';
@@ -61,6 +62,7 @@ export interface EditorProps {
   onFocus?: () => void;
   onUndo?: () => void;
   onThumbnailPress?: (data: ThumbnailPressData) => void;
+  onReplaceBlot?: (data: ReplaceBlotData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   
@@ -96,6 +98,7 @@ export default class QuillEditor extends React.Component<
       onFocus,
       onUndo,
       onThumbnailPress,
+      onReplaceBlot
     } = this.props;
 
     console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -111,8 +114,10 @@ export default class QuillEditor extends React.Component<
       this.on('text-change', onTextChange);
     }
     if (onThumbnailPress) {
-      console.log('quill-editor onThumbnailPress 2');
       this.on('playVideo', onThumbnailPress);
+    }
+    if (onReplaceBlot) {
+      this.on('replaceBlot', onReplaceBlot);
     }
     if (onHtmlChange) {
       this.on('html-change', onHtmlChange);
@@ -213,7 +218,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    // console.log('quill-editor onMessage', event.nativeEvent.data);
+    //console.log('quill-editor onMessage', event.nativeEvent.data);
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -229,6 +234,7 @@ export default class QuillEditor extends React.Component<
       case 'format-change':
       case 'text-change':
       case 'playVideo':
+      case 'replaceBlot':
       case 'selection-change':
       case 'html-change':
       case 'editor-change':
@@ -326,8 +332,8 @@ export default class QuillEditor extends React.Component<
     const run = `
     var elem = document.getElementById("${id}");
     //var parent = elem.parentNode;
-    let blot = elem.__blot.blot;
-    let index = blot.offset(quill.scroll);
+    var blot = elem.__blot.blot;
+    var index = blot.offset(quill.scroll);
 
     elem.remove();
     //parent.remove();
@@ -352,6 +358,11 @@ export default class QuillEditor extends React.Component<
     // const jsonString = JSON.stringify(obj);
     // window.ReactNativeWebView.postMessage(jsonString);
     quill.insertEmbed(index, "${type}", ${blotstr});
+
+    // Attempt to notify caller that procedure is done.
+    var obj = { "command": "replaceBlot", "value": ${blotstr} };
+    window.ReactNativeWebView.postMessage(JSON.stringify(obj));
+
 
     true;
   

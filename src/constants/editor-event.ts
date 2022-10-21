@@ -7,6 +7,7 @@ export type EditorEventType =
   | 'dimensions-change'
   | 'blur'
   | 'playVideo'
+  | 'replaceBlot'
   | 'focus';
 
 export interface SelectionChangeData {
@@ -23,6 +24,11 @@ export interface TextChangeData {
 }
 
 export interface ThumbnailPressData {
+  eventName: string;
+  args: Array<any>;
+}
+
+export interface ReplaceBlotData {
   eventName: string;
   args: Array<any>;
 }
