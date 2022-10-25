@@ -58,6 +58,7 @@ export interface EditorProps {
   onEditorChange?: (data: EditorChangeData) => void;
   onDimensionsChange?: (data: DimensionsChangeData) => void;
   webview?: WebViewProps;
+  webviewBaseUrl?: string;
   onBlur?: () => void;
   onFocus?: () => void;
   onUndo?: () => void;
@@ -131,6 +132,8 @@ export default class QuillEditor extends React.Component<
     if (onFocus) {
       this.on('focus', onFocus);
     }
+
+    console.log('quill-editor this.props.webviewBaseUrl', this.props.webviewBaseUrl);
     
   }
 
@@ -372,6 +375,112 @@ export default class QuillEditor extends React.Component<
   }
 
 
+  formatRemoteSource = (id: string, type: string, imgPath: string, vidPath: string) => {
+
+    
+    
+    console.log('formatImageBlot', id, type, imgPath, vidPath );
+    const run = `
+
+    function stringify (x) {
+      return (Object.prototype.toString.call(x));
+    }
+
+    
+    
+
+    var elem = document.getElementById("${id}");
+
+    // var elemAttribs = elem.attributes;
+    // var arr = Array.from(elemAttribs);
+
+    // var attribStr = '';
+    // var arrAttribs = arr.map(elem => {
+    //   if (elem.name !== "src") {
+    //   attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
+    //   }
+    // });
+
+    // alert('formatRemoteSource elem: ' + elem.constructor.name);
+
+    //var parent = elem.parentNode;
+    var blot = elem.__blot.blot;
+    var index = blot.offset(quill.scroll);
+
+    // alert('formatRemoteSource blot: ' + blot.constructor.name);
+
+    // var arrBlot = Array.from(blot);
+    // var attribStr = '';
+    // var arrAttribs = arrBlot.map(elem => {
+    //     attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
+    //   });
+
+    // for(var property in blot) {
+    //   alert(property + "=" + blot[property]);
+    // }
+
+    // alert('formatRemoteSource: ' + index + ', ' +  blot.statics.getMouse());
+
+    // if (${type} === 'image') {
+    //   blot.format("vidRemotePath", null);
+    //   blot.format("imgRemotePath", "${imgPath}");
+    //   blot.format("src", "${imgPath}");
+    //   blot.format("imgBase64", null);
+    // } else {
+      blot.format("vidRemotePath", "${vidPath}");
+      blot.format("imgRemotePath", "${imgPath}");
+      blot.format("src", "${imgPath}");
+      blot.format("imgBase64", null);
+    // }
+
+    // elemAttribs = elem.attributes;
+    // arr = Array.from(elemAttribs);
+    // attribStr = '';
+    // arrAttribs = arr.map(elem => {
+    //   if (elem.name !== "src") {
+    //   attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
+    //   }
+    // });
+
+    // alert('formatRemoteSource: ' + attribStr);
+
+    // elem.remove();
+   
+
+    // const blotstr = {
+    //   imgBase64:null,
+    //   imgLocalPath:null,
+    //   imgRemotePath:"https://bumping-files.s3.ap-east-1.amazonaws.com/uploads%2F3a4ifa2skx836z3l9xn28-Bump-bump-imageimage.jpg",
+    //   imgName:"IMG_0003.JPG",
+    //   imgMime:"image/jpeg",
+    //   vidLocalPath:null,
+    //   vidRemotePath:"EMPTY-beb4dd14-8344-4646-8148-b39191b06089",
+    //   vidMime:"EMPTY-cbaa13d7-1dc9-4d9e-bf51-6c93a925b079",
+    //   height:"auto",
+    //   width:"100%",
+    //   assetHeight:"2002",
+    //   assetWidth:"3000",
+    //   key:null
+    // };
+
+    
+
+    // Attempt to notify caller that procedure is done.
+    var obj = { "command": "formatRemoteSource", "value": '${id}' };
+    window.ReactNativeWebView.postMessage(JSON.stringify(obj));
+
+
+    true;
+  
+    `;
+    this._webview.current?.injectJavaScript(run);
+
+  }
+
+
+
+
+
   addCustomAttributes = (id: string, value: string) => {
     console.log('addCustomAttributes', id,  value );
     const run = `
@@ -407,14 +516,14 @@ export default class QuillEditor extends React.Component<
       
 
       var elem = document.getElementById("${id}");
-      var parent = elem.parentNode;
+      //var parent = elem.parentNode;
 
       // let blot = parent.__blot.blot;
       // let index = blot.offset(quill.scroll);x
       // alert('deleteBlot' + index);
 
       elem.remove();
-      parent.remove();
+      //parent.remove();
       
     `;
     this._webview.current?.injectJavaScript(run);
@@ -569,7 +678,7 @@ export default class QuillEditor extends React.Component<
       dataDetectorTypes="none"
       {...props}
       javaScriptEnabled={true}
-      source={{ html: content }}
+      source={{ html: content, baseUrl: this.props.webviewBaseUrl}}
       ref={this._webview}
       onMessage={this.onMessage}
     />
