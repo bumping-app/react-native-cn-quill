@@ -422,7 +422,7 @@ export default class QuillEditor extends React.Component<
     // alert('formatRemoteSource: ' + index + ', ' +  blot.statics.getMouse());
 
     // if (${type} === 'image') {
-    //   blot.format("vidRemotePath", null);
+    //   blot.format("vidRemotePath", "EMPTY");
     //   blot.format("imgRemotePath", "${imgPath}");
     //   blot.format("src", "${imgPath}");
     //   blot.format("imgBase64", null);
@@ -510,6 +510,19 @@ export default class QuillEditor extends React.Component<
   }
 
 
+  insertLine = (id:string) => {
+    console.log('insertLine', id );
+    const run = `
+      var elem = document.getElementById("${id}");
+      var blot = elem.__blot.blot;
+      var index = blot.offset(quill.scroll);
+      quill.insertText(index + 1, "\\n");
+      true;
+    `;
+    this._webview.current?.injectJavaScript(run);
+  }
+
+
   deleteBlot = (id:string) => {
     const run = `
       // import Quill from 'quill';
@@ -519,7 +532,7 @@ export default class QuillEditor extends React.Component<
       //var parent = elem.parentNode;
 
       // let blot = parent.__blot.blot;
-      // let index = blot.offset(quill.scroll);x
+      // let index = blot.offset(quill.scroll);
       // alert('deleteBlot' + index);
 
       elem.remove();
