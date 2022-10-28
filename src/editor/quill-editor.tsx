@@ -195,7 +195,14 @@ export default class QuillEditor extends React.Component<
         console.log('FILE WRITTEN!');
         return path;
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        console.log(err.message);
+        return null;
+      });
+    
+    return null;
+      
+      
 
   };
 
