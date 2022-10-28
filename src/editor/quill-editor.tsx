@@ -33,6 +33,7 @@ import type {
   Range,
 } from '../constants/editor-event';
 import { Loading } from './loading';
+import * as RNFS from 'react-native-fs';
 
 export interface EditorState {
   webviewContent: string | null;
@@ -137,7 +138,7 @@ export default class QuillEditor extends React.Component<
 
   }
 
-  private getInitalHtml = (): string => {
+  private getInitalHtml = async (): string => {
     const {
       initialHtml = '',
       import3rdParties = 'local',
@@ -161,7 +162,7 @@ export default class QuillEditor extends React.Component<
       customJS = '',
     } = this.props;
 
-    return createHtml({
+    const createdHtml = await createHtml({
       initialHtml,
       autoSize: this.props.autoSize,
       placeholder: quill.placeholder,
@@ -180,6 +181,22 @@ export default class QuillEditor extends React.Component<
       customStyles,
       customJS,
     });
+
+
+    var path = await RNFS.DocumentDirectoryPath + '/createdHtml.txt';
+    const exists = await RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
+
+    if (exists) {
+      await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+    }
+
+    RNFS.writeFile(path, createdHtml, 'utf8')
+      .then(() => {
+        console.log('FILE WRITTEN!');
+        return path;
+      })
+      .catch((err) => console.log(err.message));
+
   };
 
 
@@ -702,7 +719,8 @@ export default class QuillEditor extends React.Component<
       dataDetectorTypes="none"
       {...props}
       javaScriptEnabled={true}
-      source={{ html: content, baseUrl: this.props.webviewBaseUrl }}
+      // source={{ html: content, baseUrl: this.props.webviewBaseUrl }}
+      source={{uri: content, baseUrl: this.props.webviewBaseUrl}}
       ref={this._webview}
       onMessage={this.onMessage}
     />
