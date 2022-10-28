@@ -138,7 +138,7 @@ export default class QuillEditor extends React.Component<
 
   }
 
-  private getInitalHtml = async (): string => {
+  private getInitalHtml =  (): string => {
     const {
       initialHtml = '',
       import3rdParties = 'local',
@@ -162,7 +162,7 @@ export default class QuillEditor extends React.Component<
       customJS = '',
     } = this.props;
 
-    const createdHtml = await createHtml({
+    const createdHtml = createHtml({
       initialHtml,
       autoSize: this.props.autoSize,
       placeholder: quill.placeholder,
@@ -183,11 +183,11 @@ export default class QuillEditor extends React.Component<
     });
 
 
-    var path = await RNFS.DocumentDirectoryPath + '/createdHtml.txt';
-    const exists = await RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
+    var path =  RNFS.DocumentDirectoryPath + '/createdHtml.txt';
+    const exists =  RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
 
     if (exists) {
-      await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+       RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
     }
 
     RNFS.writeFile(path, createdHtml, 'utf8')
