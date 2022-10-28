@@ -85,8 +85,9 @@ export default class QuillEditor extends React.Component<
     super(props);
     this._webview = React.createRef();
     this.state = {
-      webviewContent: this.getInitalHtml(),
+      webviewContent: '',
     };
+    
 
     this._handlers = [];
     this._promises = [];
@@ -138,7 +139,16 @@ export default class QuillEditor extends React.Component<
 
   }
 
-  private getInitalHtml =  (): string => {
+  componentDidMount(): void {
+    this.getInitalHtml((path) => {
+      console.log('quill-editor:componentDidMount', path);
+      this.setState({
+        webviewContent: path
+      });
+    });
+  }
+
+  private getInitalHtml = async (callback) => {
     const {
       initialHtml = '',
       import3rdParties = 'local',
@@ -162,7 +172,7 @@ export default class QuillEditor extends React.Component<
       customJS = '',
     } = this.props;
 
-    const createdHtml = createHtml({
+    const createdHtml = await createHtml({
       initialHtml,
       autoSize: this.props.autoSize,
       placeholder: quill.placeholder,
@@ -183,26 +193,30 @@ export default class QuillEditor extends React.Component<
     });
 
 
-    var path =  RNFS.DocumentDirectoryPath + '/createdHtml.txt';
-    const exists =  RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
-
+    var path = await RNFS.DocumentDirectoryPath + '/createdHtml.html';
+    
+    const exists = await RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
+    console.log('File exists or not: ', exists);
     if (exists) {
-       RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+      await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
     }
-
-    RNFS.writeFile(path, createdHtml, 'utf8')
+    console.log('getInitalHtml createdHtml', createdHtml);
+    await RNFS.writeFile(path, createdHtml, 'utf8')
       .then(() => {
         console.log('FILE WRITTEN!');
-        return path;
+        if (callback) {
+          callback(path);
+        }
+        // return Promise.resolve(path);
+        //return path;
       })
       .catch((err) => {
         console.log(err.message);
-        return null;
+        // return Promise.reject(JSON.stringify(err));
       });
-    
-    return null;
-      
-      
+
+    //return Promise.reject('');
+
 
   };
 
@@ -304,14 +318,16 @@ export default class QuillEditor extends React.Component<
     // }
     var deltaOps = await this.getContents();
 
-    this.setState({
-      webviewContent: this.getInitalHtml(),
-    }, () => {
-      setTimeout(() => {
-        //console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
-        this.setContents(deltaOps);
-      }, 500);
-    });
+    this.getInitalHtml((path) => {
+      this.setState({
+        webviewContent: path,
+      }, () => {
+        setTimeout(() => {
+          //console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
+          this.setContents(deltaOps);
+        }, 500);
+      });
+    })
 
 
 
@@ -727,9 +743,10 @@ export default class QuillEditor extends React.Component<
       {...props}
       javaScriptEnabled={true}
       // source={{ html: content, baseUrl: this.props.webviewBaseUrl }}
-      source={{uri: content, baseUrl: this.props.webviewBaseUrl}}
+      source={{ uri: 'file://' + content, baseUrl: this.props.webviewBaseUrl }}
       ref={this._webview}
       onMessage={this.onMessage}
+      allowingReadAccessToURL={this.props.webviewBaseUrl}
     />
   );
 
