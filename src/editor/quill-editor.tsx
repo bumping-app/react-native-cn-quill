@@ -429,6 +429,8 @@ export default class QuillEditor extends React.Component<
     // } else {
       blot.format("vidRemotePath", "${vidPath}");
       blot.format("imgRemotePath", "${imgPath}");
+      blot.format("vidLocalPath", null);
+      blot.format("imgLocalPath", null);
       blot.format("src", "${imgPath}");
       blot.format("imgBase64", null);
     // }
