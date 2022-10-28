@@ -66,7 +66,7 @@ export interface EditorProps {
   onReplaceBlot?: (data: ReplaceBlotData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
-  
+
 }
 
 export default class QuillEditor extends React.Component<
@@ -134,7 +134,7 @@ export default class QuillEditor extends React.Component<
     }
 
     console.log('quill-editor this.props.webviewBaseUrl', this.props.webviewBaseUrl);
-    
+
   }
 
   private getInitalHtml = (): string => {
@@ -183,7 +183,7 @@ export default class QuillEditor extends React.Component<
   };
 
 
-  
+
 
   private getKey(): string {
     var timestamp = new Date().getUTCMilliseconds();
@@ -193,7 +193,7 @@ export default class QuillEditor extends React.Component<
   private postAwait<T>(data: any): Promise<T> {
     const key = this.getKey();
     let resolveFn: (value: T | PromiseLike<T>) => void;
-    resolveFn = () => {};
+    resolveFn = () => { };
     const promise = new Promise<T>((resolve) => {
       resolveFn = resolve;
     });
@@ -273,16 +273,25 @@ export default class QuillEditor extends React.Component<
   };
 
 
-  rebuildHtml =  () => {
+  rebuildHtml = async () => {
 
     // if (html && this.props.updateInitialHtml) {
     //   await this.props.updateInitialHtml(html);
     // }
+    var deltaOps = await this.getContents();
+
     this.setState({
       webviewContent: this.getInitalHtml(),
+    }, () => {
+      setTimeout(() => {
+        //console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
+        this.setContents(deltaOps);
+      }, 500);
     });
-    
-    
+
+
+
+
 
   };
 
@@ -312,7 +321,7 @@ export default class QuillEditor extends React.Component<
     // }
   }
 
-  getScrollIndexForElementId = (id:string) => {
+  getScrollIndexForElementId = (id: string) => {
     const run = `
 
       var elem = document.getElementById("${id}");
@@ -331,7 +340,7 @@ export default class QuillEditor extends React.Component<
 
   // quill.insertEmbed(index, '${type}', JSON.parse(${blotstr}));
   replaceBlot = (id: string, type: string, blotstr: string) => {
-    console.log('replaceBlot', id, type, blotstr );
+    console.log('replaceBlot', id, type, blotstr);
     const run = `
     var elem = document.getElementById("${id}");
     //var parent = elem.parentNode;
@@ -377,9 +386,9 @@ export default class QuillEditor extends React.Component<
 
   formatRemoteSource = (id: string, type: string, imgPath: string, vidPath: string) => {
 
-    
-    
-    console.log('formatImageBlot', id, type, imgPath, vidPath );
+
+
+    console.log('formatImageBlot', id, type, imgPath, vidPath);
     const run = `
 
     function stringify (x) {
@@ -484,7 +493,7 @@ export default class QuillEditor extends React.Component<
 
 
   addCustomAttributes = (id: string, value: string) => {
-    console.log('addCustomAttributes', id,  value );
+    console.log('addCustomAttributes', id, value);
     const run = `
     var elem = document.getElementById("${id}");
     var parent = elem.parentNode;
@@ -512,8 +521,8 @@ export default class QuillEditor extends React.Component<
   }
 
 
-  insertLine = (id:string) => {
-    console.log('insertLine', id );
+  insertLine = (id: string) => {
+    console.log('insertLine', id);
     const run = `
       var elem = document.getElementById("${id}");
       var blot = elem.__blot.blot;
@@ -525,7 +534,7 @@ export default class QuillEditor extends React.Component<
   }
 
 
-  deleteBlot = (id:string) => {
+  deleteBlot = (id: string) => {
     const run = `
       // import Quill from 'quill';
       
@@ -693,7 +702,7 @@ export default class QuillEditor extends React.Component<
       dataDetectorTypes="none"
       {...props}
       javaScriptEnabled={true}
-      source={{ html: content, baseUrl: this.props.webviewBaseUrl}}
+      source={{ html: content, baseUrl: this.props.webviewBaseUrl }}
       ref={this._webview}
       onMessage={this.onMessage}
     />
