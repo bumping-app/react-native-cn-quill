@@ -65,6 +65,7 @@ export interface EditorProps {
   onUndo?: () => void;
   onThumbnailPress?: (data: ThumbnailPressData) => void;
   onReplaceBlot?: (data: ReplaceBlotData) => void;
+  onQuillLoaded?: () => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
 
@@ -101,7 +102,8 @@ export default class QuillEditor extends React.Component<
       onFocus,
       onUndo,
       onThumbnailPress,
-      onReplaceBlot
+      onReplaceBlot,
+      onQuillLoaded,
     } = this.props;
 
     console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -133,6 +135,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onFocus) {
       this.on('focus', onFocus);
+    }
+    if (onQuillLoaded) {
+      this.on('quillLoaded', onQuillLoaded);
     }
 
     console.log('quill-editor this.props.webviewBaseUrl', this.props.webviewBaseUrl);
@@ -287,6 +292,7 @@ export default class QuillEditor extends React.Component<
       case 'selection-change':
       case 'html-change':
       case 'editor-change':
+      case 'quillLoaded':
       case 'blur':
       case 'focus':
         this._handlers

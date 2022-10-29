@@ -8,6 +8,7 @@ export type EditorEventType =
   | 'blur'
   | 'playVideo'
   | 'replaceBlot'
+  | 'quillLoaded'
   | 'focus';
 
 export interface SelectionChangeData {
