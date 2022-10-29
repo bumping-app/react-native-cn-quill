@@ -148,7 +148,7 @@ export default class QuillEditor extends React.Component<
     });
   }
 
-  private getInitalHtml = async (callback) => {
+  private getInitalHtml = async (callback?) => {
     const {
       initialHtml = '',
       import3rdParties = 'local',
@@ -192,8 +192,16 @@ export default class QuillEditor extends React.Component<
       customJS,
     });
 
+    var htmlFileName = this.getKey() + '.html';
+    var htmlDirectory = await RNFS.DocumentDirectoryPath + '/htmlDirectory';
+    var path = htmlDirectory + '/' + htmlFileName;
 
-    var path = await RNFS.DocumentDirectoryPath + '/createdHtml.html';
+    const existsHtmlDirectory = await RNFS.exists(htmlDirectory); 
+    if (existsHtmlDirectory) {
+      await RNFS.unlink(htmlDirectory); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+    }
+    RNFS.mkdir(htmlDirectory);
+
     
     const exists = await RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
     console.log('File exists or not: ', exists);
@@ -208,7 +216,7 @@ export default class QuillEditor extends React.Component<
           callback(path);
         }
         // return Promise.resolve(path);
-        //return path;
+        // return path;
       })
       .catch((err) => {
         console.log(err.message);

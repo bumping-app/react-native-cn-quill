@@ -352,6 +352,12 @@ export const editor_js = `
       }
     });
     sendMessage(getDimensionsJson);
+
+    //Set the first line to be a header
+    quill.focus();
+    quill.setSelection(0);
+    quill.format('header', 1);
+
   }, 250)
 
 })(document)
