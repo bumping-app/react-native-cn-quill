@@ -38,6 +38,7 @@ import * as RNFS from 'react-native-fs';
 export interface EditorState {
   webviewContent: string | null;
   height?: number;
+  renderedOnce?: boolean;
 }
 
 export interface EditorProps {
@@ -87,6 +88,7 @@ export default class QuillEditor extends React.Component<
     this._webview = React.createRef();
     this.state = {
       webviewContent: '',
+      renderedOnce: false
     };
     
 
@@ -151,6 +153,8 @@ export default class QuillEditor extends React.Component<
         webviewContent: path
       });
     });
+
+  // this.setState({ renderedOnce: true });
   }
 
   private getInitalHtml = async (callback?) => {
@@ -733,6 +737,10 @@ export default class QuillEditor extends React.Component<
     this.post({ command: 'dangerouslyPasteHTML', index, html });
   };
 
+  updateSrc=()=>{
+    this.setState({renderedOnce: true});
+  }
+
   renderWebview = (
     content: string,
     style: StyleProp<ViewStyle>,
@@ -757,10 +765,11 @@ export default class QuillEditor extends React.Component<
       {...props}
       javaScriptEnabled={true}
       // source={{ html: content, baseUrl: this.props.webviewBaseUrl }}
-      source={{ uri: 'file://' + content, baseUrl: this.props.webviewBaseUrl }}
+      source={this.state.renderedOnce ? { uri: 'file://' + content, baseUrl: this.props.webviewBaseUrl }:undefined}
       ref={this._webview}
       onMessage={this.onMessage}
       allowingReadAccessToURL={this.props.webviewBaseUrl}
+      onLoad={this.updateSrc}
     />
   );
 
