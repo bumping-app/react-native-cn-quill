@@ -542,7 +542,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
             <TouchableOpacity style={{ flex: 1, borderWidth: 0 }} onPress={() => { this.props.infoFieldPressed(); }} >
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
-                <Image source={require('./components/ArrowUp.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} />
+                <Image source={require('./components/Toolbar_Menu.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} />
                 <InfoField />
                 {/* <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
                   <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text> */}
@@ -550,17 +550,38 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
             </TouchableOpacity>
 
             {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}> */}
+
+            <TouchableOpacity onPress={() => this.editor?.undo()}>
+                <Image
+                  source={require('./components/Toolbar_Undo.png')}
+                  style={
+                    {
+                      width: 24,
+                      height: 24,
+                      marginRight: 15,
+                      tintColor: "#000000",
+                    }
+                  }
+                />
+              </TouchableOpacity>
+
+
             <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({menuType:'attach'}, () => this.RBSheetHolder.current.open())  }}>
 
 
-              <Image style={{ borderWidth: 0, paddingLeft: 0, marginLeft: 15, height: 24, width: 24 }} source={require('./components/Union.png')} />
+              <Image style={{ borderWidth: 0, paddingLeft: 0, marginLeft: 0, height: 24, width: 24 }} source={require('./components/Toolbar_Attach.png')} />
 
             </TouchableOpacity>
 
             {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}> */}
             <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({menuType:'format'}, () => this.RBSheetHolder.current.open())   }}>
 
-              <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/a.png')} />
+              <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Format.png')} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {  this.editor?.blur()   }}>
+
+              <Image style={{ borderWidth: 0, padding: 0, marginLeft: 0, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Down.png')} />
             </TouchableOpacity>
 
           </View>
