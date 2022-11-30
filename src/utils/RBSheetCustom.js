@@ -21,6 +21,9 @@ const SUPPORTED_ORIENTATIONS = [
 ];
 
 class RBSheetCustom extends Component {
+
+  modalRef;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +31,8 @@ class RBSheetCustom extends Component {
       animatedHeight: new Animated.Value(0),
       pan: new Animated.ValueXY()
     };
+
+    this.modalRef = React.createRef();
 
     this.createPanResponder(props);
   }
@@ -49,11 +54,13 @@ class RBSheetCustom extends Component {
         toValue: minClosingHeight,
         duration: closeDuration
       }).start(() => {
+        console.log('RBSheetCustom:modalClosed');
         pan.setValue({ x: 0, y: 0 });
         this.setState({
           modalVisible: visible,
           animatedHeight: new Animated.Value(0)
         });
+        
 
         if (typeof onClose === "function") onClose(props);
       });
@@ -106,6 +113,7 @@ class RBSheetCustom extends Component {
 
     return (
       <Modal
+        ref={ref => {this.modalRef.current = ref}}
         transparent
         animationType={animationType}
         visible={modalVisible}

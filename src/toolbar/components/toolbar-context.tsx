@@ -47,6 +47,7 @@ interface ProviderProps {
   custom?: ToolbarCustom;
   styles?: CustomStyles;
   modalRef? : any;
+  editor? : any;
 }
 
 interface ProviderState {
@@ -129,14 +130,16 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   };
 
   apply = async (name: string, value: any) => {
-    const { format, custom, modalRef } = this.props;
-
+    const { format, custom, modalRef, editor } = this.props;
+    
     if (custom?.actions) custom.actions.find((x) => x === name);
     if (custom?.actions && custom?.actions?.indexOf(name) > -1) {
       if (custom?.handler) {
-        custom.handler(name, value, () => {
+        custom.handler(name, value, async () => {
           console.log('Toolbar-context:apply callback');
           modalRef.current.close();
+          //editor?.focus();
+
         });
         // modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
       }

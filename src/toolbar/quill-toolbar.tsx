@@ -36,6 +36,7 @@ import { ToggleColorButton } from './components/toggle-color-button';
 import { ToggleIconButton } from './components/toggle-icon-button';
 import { formatType } from '../constants/formats';
 import RBSheetCustom from '../utils/RBSheetCustom';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -140,6 +141,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.animatedValue = new Animated.Value(0);
     this.animatedValueOut = new Animated.Value(43);
     this.RBSheetHolder = React.createRef();
+    this.renderToolbar = this.renderToolbar.bind(this);
     //console.log('quill-toolbar constructor');
   }
 
@@ -382,19 +384,20 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
           custom={custom}
           styles={styles}
           modalRef={this.RBSheetHolder}
+          editor={this.editor}
         >
 
           <RBSheetCustom
             ref={ref => {
               this.RBSheetHolder.current = ref;
             }}
-            keyboardAvoidingViewEnabled={true} // Need to set to false otherwise blank space appears when keyboard disappears
+            keyboardAvoidingViewEnabled={false} // Need to set to false otherwise blank space appears when keyboard disappears
             closeOnDragDown={true}
-            dragFromTopOnly={true}
+            dragFromTopOnly={false}
             closeOnPressMask={true}
             // width={WIDTH-30}
             openDuration={250}
-            height={modalHeight}
+            height={modalHeight} // modalHeight
             customStyles={{
               container: {
                 overflow: 'hidden',
@@ -430,7 +433,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 backgroundColor: 'grey',
               },
             }}
-            onClose={() => {this.setState({ showMenu: false, borderWidth: 0})}}
+            onClose={() => {this.setState({ showMenu: false, borderWidth: 0}); console.log('quill-toolbar:onClose');}}
             onOpen={() => {this.setState({ showMenu: true, borderWidth: 0.5})}}
           >
 
@@ -505,6 +508,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                                 name={grp.name}
                                 valueOff={false}
                                 valueOn={item.valueOn}
+                                modalRef={this.RBSheetHolder}
                               />
                             );
                           } else
