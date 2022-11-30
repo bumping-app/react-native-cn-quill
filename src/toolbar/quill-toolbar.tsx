@@ -508,7 +508,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                                 name={grp.name}
                                 valueOff={false}
                                 valueOn={item.valueOn}
-                                modalRef={this.RBSheetHolder}
+                                
                               />
                             );
                           } else
