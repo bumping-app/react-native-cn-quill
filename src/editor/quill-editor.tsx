@@ -147,7 +147,8 @@ export default class QuillEditor extends React.Component<
   }
 
   componentDidMount(): void {
-    this.getInitalHtml((path) => {
+    const loadInitialHtml = true;
+    this.getInitalHtml(loadInitialHtml, (path) => {
       console.log('quill-editor:componentDidMount', path);
       this.setState({
         webviewContent: path
@@ -157,7 +158,7 @@ export default class QuillEditor extends React.Component<
   // this.setState({ renderedOnce: true });
   }
 
-  private getInitalHtml = async (callback?) => {
+  private getInitalHtml = async (loadInitialHtml?, callback?) => {
     const {
       initialHtml = '',
       import3rdParties = 'local',
@@ -182,7 +183,7 @@ export default class QuillEditor extends React.Component<
     } = this.props;
 
     const createdHtml = await createHtml({
-      initialHtml,
+      initialHtml: loadInitialHtml ? initialHtml : '',
       autoSize: this.props.autoSize,
       placeholder: quill.placeholder,
       theme: quill.theme ? quill.theme : 'snow',
@@ -335,8 +336,8 @@ export default class QuillEditor extends React.Component<
     //   await this.props.updateInitialHtml(html);
     // }
     var deltaOps = await this.getContents();
-
-    this.getInitalHtml((path) => {
+    const loadInitialHtml = false;
+    this.getInitalHtml(loadInitialHtml, (path) => {
       this.setState({
         webviewContent: path,
       }, () => {
