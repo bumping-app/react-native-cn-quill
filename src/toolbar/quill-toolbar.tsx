@@ -558,7 +558,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                     {
                       width: 24,
                       height: 24,
-                      marginRight: 15,
+                      marginRight: 15
                     }
                   }
                 />
