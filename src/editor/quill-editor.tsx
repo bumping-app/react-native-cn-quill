@@ -183,7 +183,7 @@ export default class QuillEditor extends React.Component<
     } = this.props;
 
     const createdHtml = await createHtml({
-      initialHtml: loadInitialHtml ? initialHtml : '',
+      //initialHtml: loadInitialHtml ? initialHtml : '',
       autoSize: this.props.autoSize,
       placeholder: quill.placeholder,
       theme: quill.theme ? quill.theme : 'snow',
@@ -218,7 +218,7 @@ export default class QuillEditor extends React.Component<
     if (exists) {
       await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
     }
-    console.log('getInitalHtml createdHtml', createdHtml);
+    //console.log('getInitalHtml createdHtml', createdHtml);
     await RNFS.writeFile(path, createdHtml, 'utf8')
       .then(() => {
         console.log('FILE WRITTEN!');
@@ -336,14 +336,17 @@ export default class QuillEditor extends React.Component<
     //   await this.props.updateInitialHtml(html);
     // }
     var deltaOps = await this.getContents();
+    console.log('rebuildHtml', JSON.stringify(deltaOps));
     const loadInitialHtml = false;
     this.getInitalHtml(loadInitialHtml, (path) => {
       this.setState({
         webviewContent: path,
       }, () => {
-        setTimeout(() => {
+        setTimeout( async () => {
           //console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
-          this.setContents(deltaOps);
+           await this.setContents(deltaOps);
+           this.setSelection(0, 0);
+          
         }, 500);
       });
     })
