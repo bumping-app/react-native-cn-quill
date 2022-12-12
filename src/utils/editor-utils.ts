@@ -90,7 +90,7 @@ export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
   <body>
   <div id="${args.containerId}">
     <div id="${args.editorId}">
-      ${args.initialHtml}
+      
     </div>
   </div>
   ${quill_js(args.libraries === 'cdn')}
