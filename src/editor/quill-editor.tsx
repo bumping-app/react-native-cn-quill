@@ -514,7 +514,7 @@ export default class QuillEditor extends React.Component<
 
     //var parent = elem.parentNode;
     var blot = elem.__blot.blot;
-    var index = blot.offset(quill.scroll);
+    //var index = blot.offset(quill.scroll);
 
     // alert('formatRemoteSource blot: ' + blot.constructor.name);
 

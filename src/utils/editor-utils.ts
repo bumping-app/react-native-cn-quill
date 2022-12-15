@@ -81,10 +81,10 @@ export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
     args.customStyles &&
     args.customStyles
       .map((style) => {
-        const styleTag = style.includes(".ql-container {color:") ? '<style>' : '<style id="fontcolor">';
+        //const styleTag = style.includes(".ql-container {color:") ? '<style>' : '<style id="fontcolor">';
         return style.toLocaleLowerCase().trim().startsWith('<style>')
           ? style
-          : `${styleTag}${style}</style>`;
+          : `<style>${style}</style>`;
       })
       .join('\n')
   }
