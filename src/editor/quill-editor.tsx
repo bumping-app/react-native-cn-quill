@@ -69,6 +69,7 @@ export interface EditorProps {
   onQuillLoaded?: () => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
+  customJSwithquill? : string;
 
 }
 
@@ -180,6 +181,7 @@ export default class QuillEditor extends React.Component<
       customStyles = [],
       defaultFontFamily = undefined,
       customJS = '',
+      customJSwithquill = '',
     } = this.props;
 
     const createdHtml = await createHtml({
@@ -200,6 +202,7 @@ export default class QuillEditor extends React.Component<
       placeholderColor: theme.placeholder,
       customStyles,
       customJS,
+      customJSwithquill,
     });
 
     var htmlFileName = this.getKey() + '.html';
@@ -343,7 +346,7 @@ export default class QuillEditor extends React.Component<
         webviewContent: path,
       }, () => {
         setTimeout( async () => {
-          //console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
+           console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
            await this.setContents(deltaOps);
            this.setSelection(0, 0);
           
@@ -382,6 +385,41 @@ export default class QuillEditor extends React.Component<
     // this.props.onUndo();
     // }
   }
+
+
+  changeHeadStyle = (fontColor: string) => {
+    const run = `
+      // alert('changeheadStyle' + '${fontColor}');
+      var head = document.head || document.getElementsById('head')[0];
+      // alert('changeheadstyle 1' + JSON.stringify(head.innerHTML));
+
+      //var element = document.getElementById("fontcolor");
+      document.getElementById("fontcolor").remove();
+      var css = '.ql-container {color: ${fontColor};}';
+      var style = document.createElement('style');
+      style.setAttribute("id", "fontcolor");
+      style.type = 'text/css';
+
+      head.appendChild(style);
+      
+      if (style.styleSheet){
+        // This is required for IE8 and below.
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+
+      alert('changeheadstyle 2' + JSON.stringify(head.innerHTML));
+
+      // element.classList.remove("ql-container");
+      // document.getElementById("fontcolor").textContent += ".ql-container {color: #F00;}";
+      // // alert('changeheadStyle element', element);
+
+      true;
+    `;
+    this._webview.current?.injectJavaScript(run);
+  }
+
 
   getScrollIndexForElementId = (id: string) => {
     const run = `
