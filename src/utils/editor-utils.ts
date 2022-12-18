@@ -32,6 +32,7 @@ interface CreateHtmlArgs {
   fonts: Array<CustomFont>;
   defaultFontFamily?: string;
   customJS?: string;
+  customJSwithquill?: string;
 }
 
 const Inital_Args = {
@@ -51,6 +52,7 @@ const Inital_Args = {
   customStyles: [],
   fonts: [],
   customJS: '',
+  customJSwithquill: '',
 } as CreateHtmlArgs;
 
 export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
@@ -79,6 +81,7 @@ export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
     args.customStyles &&
     args.customStyles
       .map((style) => {
+        //const styleTag = style.includes(".ql-container {color:") ? '<style>' : '<style id="fontcolor">';
         return style.toLocaleLowerCase().trim().startsWith('<style>')
           ? style
           : `<style>${style}</style>`;
@@ -90,7 +93,7 @@ export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
   <body>
   <div id="${args.containerId}">
     <div id="${args.editorId}">
-      ${args.initialHtml}
+      
     </div>
   </div>
   ${quill_js(args.libraries === 'cdn')}
@@ -104,6 +107,7 @@ export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
     theme: args.theme,
     customFonts: args.fonts.map((f) => getFontName(f.name)),
     customJS: args.customJS ? args.customJS : '',
+    customJSwithquill: args.customJSwithquill ? args.customJSwithquill : '',
   })}
   ${editor_js}
   </body>

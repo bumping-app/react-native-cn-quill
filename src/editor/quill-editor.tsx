@@ -69,6 +69,7 @@ export interface EditorProps {
   onQuillLoaded?: () => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
+  customJSwithquill? : string;
 
 }
 
@@ -180,10 +181,11 @@ export default class QuillEditor extends React.Component<
       customStyles = [],
       defaultFontFamily = undefined,
       customJS = '',
+      customJSwithquill = '',
     } = this.props;
 
     const createdHtml = await createHtml({
-      initialHtml: loadInitialHtml ? initialHtml : '',
+      //initialHtml: loadInitialHtml ? initialHtml : '',
       autoSize: this.props.autoSize,
       placeholder: quill.placeholder,
       theme: quill.theme ? quill.theme : 'snow',
@@ -200,6 +202,7 @@ export default class QuillEditor extends React.Component<
       placeholderColor: theme.placeholder,
       customStyles,
       customJS,
+      customJSwithquill,
     });
 
     var htmlFileName = this.getKey() + '.html';
@@ -218,7 +221,7 @@ export default class QuillEditor extends React.Component<
     if (exists) {
       await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
     }
-    console.log('getInitalHtml createdHtml', createdHtml);
+    //console.log('getInitalHtml createdHtml', createdHtml);
     await RNFS.writeFile(path, createdHtml, 'utf8')
       .then(() => {
         console.log('FILE WRITTEN!');
@@ -336,14 +339,17 @@ export default class QuillEditor extends React.Component<
     //   await this.props.updateInitialHtml(html);
     // }
     var deltaOps = await this.getContents();
+    console.log('rebuildHtml', JSON.stringify(deltaOps));
     const loadInitialHtml = false;
     this.getInitalHtml(loadInitialHtml, (path) => {
       this.setState({
         webviewContent: path,
       }, () => {
-        setTimeout(() => {
-          //console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
-          this.setContents(deltaOps);
+        setTimeout( async () => {
+           console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
+           await this.setContents(deltaOps);
+           this.setSelection(0, 0);
+          
         }, 500);
       });
     })
@@ -379,6 +385,41 @@ export default class QuillEditor extends React.Component<
     // this.props.onUndo();
     // }
   }
+
+
+  changeHeadStyle = (fontColor: string) => {
+    const run = `
+      // alert('changeheadStyle' + '${fontColor}');
+      var head = document.head || document.getElementsById('head')[0];
+      // alert('changeheadstyle 1' + JSON.stringify(head.innerHTML));
+
+      //var element = document.getElementById("fontcolor");
+      document.getElementById("fontcolor").remove();
+      var css = '.ql-container {color: ${fontColor};}';
+      var style = document.createElement('style');
+      style.setAttribute("id", "fontcolor");
+      style.type = 'text/css';
+
+      head.appendChild(style);
+      
+      if (style.styleSheet){
+        // This is required for IE8 and below.
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+
+      alert('changeheadstyle 2' + JSON.stringify(head.innerHTML));
+
+      // element.classList.remove("ql-container");
+      // document.getElementById("fontcolor").textContent += ".ql-container {color: #F00;}";
+      // // alert('changeheadStyle element', element);
+
+      true;
+    `;
+    this._webview.current?.injectJavaScript(run);
+  }
+
 
   getScrollIndexForElementId = (id: string) => {
     const run = `
@@ -473,7 +514,7 @@ export default class QuillEditor extends React.Component<
 
     //var parent = elem.parentNode;
     var blot = elem.__blot.blot;
-    var index = blot.offset(quill.scroll);
+    //var index = blot.offset(quill.scroll);
 
     // alert('formatRemoteSource blot: ' + blot.constructor.name);
 
