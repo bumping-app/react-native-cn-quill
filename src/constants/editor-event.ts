@@ -8,6 +8,7 @@ export type EditorEventType =
   | 'blur'
   | 'playVideo'
   | 'replaceBlot'
+  | 'formatRemoteSource'
   | 'quillLoaded'
   | 'focus';
 

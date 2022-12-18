@@ -67,6 +67,7 @@ export interface EditorProps {
   onThumbnailPress?: (data: ThumbnailPressData) => void;
   onReplaceBlot?: (data: ReplaceBlotData) => void;
   onQuillLoaded?: () => void;
+  onFormatRemoteSource?: () => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill? : string;
@@ -107,6 +108,7 @@ export default class QuillEditor extends React.Component<
       onThumbnailPress,
       onReplaceBlot,
       onQuillLoaded,
+      onFormatRemoteSource,
     } = this.props;
 
     console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -126,6 +128,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
+    }
+    if (onFormatRemoteSource) {
+      this.on('formatRemoteSource', onFormatRemoteSource);
     }
     if (onHtmlChange) {
       this.on('html-change', onHtmlChange);
@@ -297,6 +302,7 @@ export default class QuillEditor extends React.Component<
       case 'text-change':
       case 'playVideo':
       case 'replaceBlot':
+      case 'formatRemoteSource':
       case 'selection-change':
       case 'html-change':
       case 'editor-change':
