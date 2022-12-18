@@ -584,7 +584,9 @@ export default class QuillEditor extends React.Component<
 
     // Attempt to notify caller that procedure is done.
     var obj = { "command": "formatRemoteSource", "value": '${id}' };
-    window.ReactNativeWebView.postMessage(JSON.stringify(obj));
+    //sendMessage(JSON.stringify({type:'formatRemoteSource'}));
+    window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatRemoteSource'}));
+    //window.ReactNativeWebView.postMessage(JSON.stringify(obj));
 
 
     true;
