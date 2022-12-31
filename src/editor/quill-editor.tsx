@@ -29,6 +29,7 @@ import type {
   HtmlChangeData,
   DimensionsChangeData,
   ThumbnailPressData,
+  AttachLocPressData,
   ReplaceBlotData,
   Range,
 } from '../constants/editor-event';
@@ -68,6 +69,7 @@ export interface EditorProps {
   onReplaceBlot?: (data: ReplaceBlotData) => void;
   onQuillLoaded?: () => void;
   onFormatRemoteSource?: () => void;
+  onAttachLocPress?: (data: AttachLocPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill? : string;
@@ -109,6 +111,7 @@ export default class QuillEditor extends React.Component<
       onReplaceBlot,
       onQuillLoaded,
       onFormatRemoteSource,
+      onAttachLocPress,
     } = this.props;
 
     console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -125,6 +128,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onThumbnailPress) {
       this.on('playVideo', onThumbnailPress);
+    }
+    if (onAttachLocPress) {
+      this.on('attachLoc', onAttachLocPress);
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
@@ -301,6 +307,7 @@ export default class QuillEditor extends React.Component<
       case 'format-change':
       case 'text-change':
       case 'playVideo':
+      case 'attachLoc':
       case 'replaceBlot':
       case 'formatRemoteSource':
       case 'selection-change':
@@ -597,6 +604,68 @@ export default class QuillEditor extends React.Component<
   }
 
 
+
+  embedLocation = (object: any, currIndex: number) => {
+
+
+
+    console.log('embedLocation', object, currIndex);
+    const run = `
+
+    function stringify (x) {
+      return (Object.prototype.toString.call(x));
+    }
+
+    
+    
+
+    var elem = document.getElementById("${id}");
+    //var parent = elem.parentNode;
+    var blot = elem.__blot.blot;
+
+    // var elemAttribs = elem.attributes;
+    // var arr = Array.from(elemAttribs);
+
+    // var attribStr = '';
+    // var arrAttribs = arr.map(elem => {
+    //   if (elem.name !== "src") {
+    //   attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
+    //   }
+    // });
+
+
+    
+    //var index = blot.offset(quill.scroll);
+
+    // var arrBlot = Array.from(blot);
+    // var attribStr = '';
+    // var arrAttribs = arrBlot.map(elem => {
+    //     attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
+    //   });
+
+ 
+      blot.format("vidRemotePath", "${vidPath}");
+      blot.format("imgRemotePath", "${imgPath}");
+      blot.format("vidLocalPath", null);
+      blot.format("imgLocalPath", null);
+      blot.format("src", "${imgPath}");
+      blot.format("imgBase64", null);
+    
+
+
+    // Attempt to notify caller that procedure is done.
+    var obj = { "command": "formatRemoteSource", "value": '${id}' };
+    
+    window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatRemoteSource'}));
+    
+
+
+    true;
+  
+    `;
+    this._webview.current?.injectJavaScript(run);
+
+  }
 
 
 

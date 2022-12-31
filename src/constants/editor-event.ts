@@ -7,6 +7,7 @@ export type EditorEventType =
   | 'dimensions-change'
   | 'blur'
   | 'playVideo'
+  | 'attachLoc'
   | 'replaceBlot'
   | 'formatRemoteSource'
   | 'quillLoaded'
@@ -26,6 +27,11 @@ export interface TextChangeData {
 }
 
 export interface ThumbnailPressData {
+  eventName: string;
+  args: Array<any>;
+}
+
+export interface AttachLocPressData {
   eventName: string;
   args: Array<any>;
 }

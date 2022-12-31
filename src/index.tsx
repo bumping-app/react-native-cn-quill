@@ -8,6 +8,9 @@ import type {
   FormatChangeData,
   HtmlChangeData,
   DimensionsChangeData,
+  ThumbnailPressData,
+  AttachLocPressData,
+  ReplaceBlotData
 } from './constants/editor-event';
 export default QuillEditor;
 export { QuillToolbar };
@@ -19,4 +22,7 @@ export type {
   FormatChangeData,
   HtmlChangeData,
   DimensionsChangeData,
+  ThumbnailPressData,
+  AttachLocPressData,
+  ReplaceBlotData
 };
