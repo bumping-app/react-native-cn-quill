@@ -605,67 +605,67 @@ export default class QuillEditor extends React.Component<
 
 
 
-  embedLocation = (object: any, currIndex: number) => {
+  // embedLocation = (object: any, currIndex: number) => {
 
 
 
-    console.log('embedLocation', object, currIndex);
-    const run = `
+  //   console.log('embedLocation', object, currIndex);
+  //   const run = `
 
-    function stringify (x) {
-      return (Object.prototype.toString.call(x));
-    }
-
-    
-    
-
-    var elem = document.getElementById("${id}");
-    //var parent = elem.parentNode;
-    var blot = elem.__blot.blot;
-
-    // var elemAttribs = elem.attributes;
-    // var arr = Array.from(elemAttribs);
-
-    // var attribStr = '';
-    // var arrAttribs = arr.map(elem => {
-    //   if (elem.name !== "src") {
-    //   attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
-    //   }
-    // });
-
+  //   function stringify (x) {
+  //     return (Object.prototype.toString.call(x));
+  //   }
 
     
-    //var index = blot.offset(quill.scroll);
+    
 
-    // var arrBlot = Array.from(blot);
-    // var attribStr = '';
-    // var arrAttribs = arrBlot.map(elem => {
-    //     attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
-    //   });
+  //   var elem = document.getElementById("${id}");
+  //   //var parent = elem.parentNode;
+  //   var blot = elem.__blot.blot;
+
+  //   // var elemAttribs = elem.attributes;
+  //   // var arr = Array.from(elemAttribs);
+
+  //   // var attribStr = '';
+  //   // var arrAttribs = arr.map(elem => {
+  //   //   if (elem.name !== "src") {
+  //   //   attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
+  //   //   }
+  //   // });
+
+
+    
+  //   //var index = blot.offset(quill.scroll);
+
+  //   // var arrBlot = Array.from(blot);
+  //   // var attribStr = '';
+  //   // var arrAttribs = arrBlot.map(elem => {
+  //   //     attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
+  //   //   });
 
  
-      blot.format("vidRemotePath", "${vidPath}");
-      blot.format("imgRemotePath", "${imgPath}");
-      blot.format("vidLocalPath", null);
-      blot.format("imgLocalPath", null);
-      blot.format("src", "${imgPath}");
-      blot.format("imgBase64", null);
+  //     blot.format("vidRemotePath", "${vidPath}");
+  //     blot.format("imgRemotePath", "${imgPath}");
+  //     blot.format("vidLocalPath", null);
+  //     blot.format("imgLocalPath", null);
+  //     blot.format("src", "${imgPath}");
+  //     blot.format("imgBase64", null);
     
 
 
-    // Attempt to notify caller that procedure is done.
-    var obj = { "command": "formatRemoteSource", "value": '${id}' };
+  //   // Attempt to notify caller that procedure is done.
+  //   var obj = { "command": "formatRemoteSource", "value": '${id}' };
     
-    window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatRemoteSource'}));
+  //   window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatRemoteSource'}));
     
 
 
-    true;
+  //   true;
   
-    `;
-    this._webview.current?.injectJavaScript(run);
+  //   `;
+  //   this._webview.current?.injectJavaScript(run);
 
-  }
+  // }
 
 
 
