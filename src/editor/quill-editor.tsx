@@ -793,8 +793,8 @@ export default class QuillEditor extends React.Component<
     this.post({ command: 'setSelection', index, length, source });
   };
 
-  insertEmbed = (index: number, type: string, value: any) => {
-    this.post({ command: 'insertEmbed', index, type, value });
+  insertEmbed = (index: number, type: string, value: any, source: string = 'api') => {
+    this.post({ command: 'insertEmbed', index, type, value, source});
   };
 
   insertText = (index: number, text: string, formats?: Record<string, any>) => {

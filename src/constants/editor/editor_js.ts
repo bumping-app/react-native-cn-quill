@@ -88,7 +88,7 @@ export const editor_js = `
     sendMessage(getHtmlJson);
   }
 
-  var insertEmbed = function (index, type, value) {
+  var insertEmbed = function (index, type, value, source = 'api') {
     var ind = index;
     if (ind === -1) {
       var range = quill.getSelection();
@@ -96,7 +96,7 @@ export const editor_js = `
       ind = range.index;
       }
     }
-    quill.insertEmbed(ind, type, value);
+    quill.insertEmbed(ind, type, value, source);
 
   }
 
@@ -252,7 +252,7 @@ export const editor_js = `
         getLength(msg.key);
         break;
       case 'insertEmbed':
-        insertEmbed(msg.index, msg.type, msg.value);
+        insertEmbed(msg.index, msg.type, msg.value, msg?.source);
         break;
       case 'insertText':
         insertText(msg.index, msg.text, msg.formats);
