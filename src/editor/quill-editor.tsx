@@ -605,6 +605,32 @@ export default class QuillEditor extends React.Component<
 
 
 
+  formatPlaceId = (googlePlaceId: string, placeId: number) => {
+
+
+
+    console.log('formatPlaceId', googlePlaceId, placeId);
+
+    const run = `
+
+    var elems = document.querySelectorAll("[googleplaceid='${googlePlaceId}']");
+    var elem = elems[0];
+    var blot = elem.__blot.blot;
+
+    blot.format("placeId", ${placeId});
+
+    // Attempt to notify caller that procedure is done.
+    var obj = { "command": "formatPlaceId", "value": '${googlePlaceId}' };
+    window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatPlaceId'}));
+
+    true;
+  
+    `;
+    this._webview.current?.injectJavaScript(run);
+
+  }
+
+
   // embedLocation = (object: any, currIndex: number) => {
 
 
