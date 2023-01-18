@@ -59,12 +59,17 @@ export interface DimensionsChangeData {
   height: number;
 }
 
+export interface FormatRemoteSourceChangeData {
+  id: string;
+}
+
 export type EditorChangeHandler = (data: EditorChangeData) => void;
 export type TextChangeHandler = (data: TextChangeData) => void;
 export type SelectionChangeHandler = (data: SelectionChangeData) => void;
 export type FormatChangeHandler = (data: FormatChangeData) => void;
 export type HtmlChangeHandler = (data: HtmlChangeData) => void;
 export type DimensionsChangeHandler = (data: DimensionsChangeData) => void;
+export type FormatRemoteSourceChangeHandler = (data: FormatRemoteSourceChangeData) => void;
 
 export type EditorEventHandler =
   | EditorChangeHandler
@@ -72,6 +77,7 @@ export type EditorEventHandler =
   | SelectionChangeHandler
   | FormatChangeHandler
   | HtmlChangeHandler
-  | DimensionsChangeHandler;
+  | DimensionsChangeHandler
+  | FormatRemoteSourceChangeHandler;
 
 export type Range = { index: number; length: number };

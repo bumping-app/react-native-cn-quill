@@ -28,6 +28,7 @@ import type {
   TextChangeData,
   HtmlChangeData,
   DimensionsChangeData,
+  FormatRemoteSourceChangeData,
   ThumbnailPressData,
   AttachLocPressData,
   ReplaceBlotData,
@@ -68,7 +69,7 @@ export interface EditorProps {
   onThumbnailPress?: (data: ThumbnailPressData) => void;
   onReplaceBlot?: (data: ReplaceBlotData) => void;
   onQuillLoaded?: () => void;
-  onFormatRemoteSource?: () => void;
+  onFormatRemoteSource?: (data: FormatRemoteSourceChangeData) => void;
   onAttachLocPress?: (data: AttachLocPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
@@ -291,7 +292,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    //console.log('quill-editor onMessage', event.nativeEvent.data);
+    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -590,10 +591,10 @@ export default class QuillEditor extends React.Component<
     
 
     // Attempt to notify caller that procedure is done.
-    var obj = { "command": "formatRemoteSource", "value": '${id}' };
+    var obj = { type:'formatRemoteSource', command: 'formatRemoteSource', data: {id: '${id}'} };
     //sendMessage(JSON.stringify({type:'formatRemoteSource'}));
-    window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatRemoteSource'}));
-    //window.ReactNativeWebView.postMessage(JSON.stringify(obj));
+    //window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatRemoteSource'}));
+    window.ReactNativeWebView.postMessage(JSON.stringify(obj));
 
 
     true;
