@@ -603,13 +603,15 @@ export default class QuillEditor extends React.Component<
 
   }
 
-  triggerImageRefresh =(id:string , imgPath:string)=>{
+  triggerImageRefresh = ( id:string, imgPath:string, imgcaption?: string)=>{
     const run = `var elem = document.getElementById("${id}");
     var blot = elem.__blot.blot;
     
     blot.format("src", "${imgPath}");
     blot.format("imgRemotePath", null);
     blot.format("imgLocalPath", "${imgPath}");
+    blot.format("imgcaption", "${imgcaption}");
+    
     var obj = { "command": "formatRemoteSource", "value": '${id}' };
     window.ReactNativeWebView.postMessage(JSON.stringify(obj));
 
