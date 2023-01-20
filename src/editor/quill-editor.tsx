@@ -33,6 +33,7 @@ import type {
   AttachLocPressData,
   ReplaceBlotData,
   Range,
+  FormatChangeData,
 } from '../constants/editor-event';
 import { Loading } from './loading';
 import * as RNFS from 'react-native-fs';
@@ -62,6 +63,7 @@ export interface EditorProps {
   onHtmlChange?: (data: HtmlChangeData) => void;
   onEditorChange?: (data: EditorChangeData) => void;
   onDimensionsChange?: (data: DimensionsChangeData) => void;
+  // onFormatChange?: (data: FormatChangeData) => void;
   webview?: WebViewProps;
   webviewBaseUrl?: string;
   onBlur?: () => void;
@@ -107,6 +109,7 @@ export default class QuillEditor extends React.Component<
       onEditorChange,
       onTextChange,
       onHtmlChange,
+      // onFormatChange,
       onDimensionsChange,
       onBlur,
       onFocus,
@@ -130,6 +133,10 @@ export default class QuillEditor extends React.Component<
       console.log('quill-editor onTextChange');
       this.on('text-change', onTextChange);
     }
+    // if (onFormatChange) {
+    //   console.log('quill-editor onFormatChange');
+    //   this.on('format-change', onFormatChange);
+    // }
     if (onThumbnailPress) {
       this.on('playVideo', onThumbnailPress);
     }
@@ -508,7 +515,7 @@ export default class QuillEditor extends React.Component<
 
     return new Promise(async (resolve, reject) => {
 
-    console.log('formatImageBlot', id, type, imgPath, vidPath);
+    console.log('formatRemoteSource', id, type, imgPath, vidPath);
     // const imageJobs = {};
     // imageJobs[id] = true;
     // this.setState(imageJobs);
