@@ -41,6 +41,7 @@ export interface EditorState {
   webviewContent: string | null;
   height?: number;
   renderedOnce?: boolean;
+  // imageJobs: any;
 }
 
 export interface EditorProps {
@@ -93,7 +94,9 @@ export default class QuillEditor extends React.Component<
     this._webview = React.createRef();
     this.state = {
       webviewContent: '',
-      renderedOnce: false
+      renderedOnce: false,
+      // imageJobs: {},
+    
     };
     
 
@@ -333,7 +336,9 @@ export default class QuillEditor extends React.Component<
       case 'get-leaf':
       case 'remove-format':
       case 'format-text':
+      case 'format-imageblot':
         if (response) {
+          console.log('quill-editor:onMessage', message.type, message.data);
           response.resolve(message.data);
           this._promises = this._promises.filter((x) => x.key !== message.key);
         }
@@ -498,11 +503,17 @@ export default class QuillEditor extends React.Component<
   }
 
 
-  formatRemoteSource = (id: string, type: string, imgPath: string, vidPath: string) => {
+  formatRemoteSource = async (id: string, type: string, imgPath: string, vidPath: string) => {
 
 
+    return new Promise(async (resolve, reject) => {
 
     console.log('formatImageBlot', id, type, imgPath, vidPath);
+    // const imageJobs = {};
+    // imageJobs[id] = true;
+    // this.setState(imageJobs);
+
+
     const run = `
 
     function stringify (x) {
@@ -600,7 +611,13 @@ export default class QuillEditor extends React.Component<
     true;
   
     `;
-    this._webview.current?.injectJavaScript(run);
+
+     this._webview.current?.injectJavaScript(run);
+
+
+
+
+  });
 
   }
 
@@ -865,6 +882,15 @@ export default class QuillEditor extends React.Component<
       source,
     });
   };
+
+  formatImageBlot = (obj:any):Promise<any> => {
+    console.log('formatImageBlot', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatImageBlot',
+      obj: obj
+    });
+  }
+
 
   on = (event: EditorEventType, handler: EditorEventHandler) => {
     this._handlers.push({ event, handler });

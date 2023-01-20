@@ -41,6 +41,10 @@ export const editor_js = `
     getSelectedFormats();
   }
 
+
+
+
+
   var hasFocus = function (key) {
     var hs = quill.hasFocus();
 
@@ -162,6 +166,9 @@ export const editor_js = `
     sendMessage(getFormatJson);
   }
 
+
+  
+
   const getLeaf = function (key, index) {
     const [leaf, offset] = quill.getLeaf(index);
     const getLeafData = leaf ? {
@@ -197,6 +204,29 @@ export const editor_js = `
       data: formatTextData
     });
     sendMessage(formatTextJson);
+  }
+
+
+  const formatImageBlot = function (key, obj) {
+
+    const {id, vidRemotePath, imgRemotePath} = obj;
+    var elem = document.getElementById(id);
+    var blot = elem.__blot.blot;
+    
+    blot.format("vidRemotePath", vidRemotePath);
+    blot.format("imgRemotePath", imgRemotePath);
+    blot.format("vidLocalPath", null);
+    blot.format("imgLocalPath", null);
+    blot.format("src", imgRemotePath);
+    blot.format("imgBase64", null);
+
+    const formatImageBlotJson = JSON.stringify({
+      type: 'format-imageblot',
+      key: key,
+      id: id
+    });
+    sendMessage(formatImageBlotJson);
+
   }
 
 
@@ -274,6 +304,9 @@ export const editor_js = `
         break;
       case 'formatText':
         formatText(msg.key, msg.index, msg.length, msg.formats, msg.source);
+        break;
+      case 'formatImageBlot':
+        formatImageBlot(msg.key, msg.obj);
         break;
       default:
         break;
