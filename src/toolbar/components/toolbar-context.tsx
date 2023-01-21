@@ -133,7 +133,9 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   apply = async (name: string, value: any) => {
     const { format, custom, modalRef } = this.props;
     console.log('toolbar-context:apply setting visibility');
+    if (name === 'image' || name === 'collage') {
     modalRef.current.setVisible(false);
+    }
     if (custom?.actions) custom.actions.find((x) => x === name);
     if (custom?.actions && custom?.actions?.indexOf(name) > -1) {
       if (custom?.handler) {
