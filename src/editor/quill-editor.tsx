@@ -121,7 +121,7 @@ export default class QuillEditor extends React.Component<
       onAttachLocPress,
     } = this.props;
 
-    console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
+    // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
 
     if (onSelectionChange) {
       this.on('selection-change', onSelectionChange);
@@ -165,7 +165,7 @@ export default class QuillEditor extends React.Component<
       this.on('quillLoaded', onQuillLoaded);
     }
 
-    console.log('quill-editor this.props.webviewBaseUrl', this.props.webviewBaseUrl);
+    // console.log('quill-editor this.props.webviewBaseUrl', this.props.webviewBaseUrl);
 
   }
 
@@ -344,6 +344,7 @@ export default class QuillEditor extends React.Component<
       case 'remove-format':
       case 'format-text':
       case 'format-imageblot':
+      case 'insert-embedawait':
         if (response) {
           console.log('quill-editor:onMessage', message.type, message.data);
           response.resolve(message.data);
@@ -846,6 +847,10 @@ export default class QuillEditor extends React.Component<
 
   insertEmbed = (index: number, type: string, value: any, source: string = 'api') => {
     this.post({ command: 'insertEmbed', index, type, value, source});
+  };
+
+  insertEmbedAwait = (index: number, type: string, value: any, source: string = 'api'): Promise<any> => {
+    return this.postAwait({ command: 'insertEmbedAwait', index, type, value, source});
   };
 
   insertText = (index: number, text: string, formats?: Record<string, any>) => {

@@ -104,6 +104,17 @@ export const editor_js = `
 
   }
 
+  var insertEmbedAwait = function (key, index, type, value, source = 'api') {
+    var ind = index;
+    quill.insertEmbed(ind, type, value, source);
+    var insertEmbedAwaitJson = JSON.stringify({
+      type: 'insert-embedawait',
+      key: key
+    });
+    sendMessage(insertEmbedAwaitJson);
+
+  }
+
   var insertText = function (index, text, formats={}) {
     console.log('InsertText TS');
     var ind = index;
@@ -283,6 +294,9 @@ export const editor_js = `
         break;
       case 'insertEmbed':
         insertEmbed(msg.index, msg.type, msg.value, msg?.source);
+        break;
+      case 'insertEmbedAwait':
+        insertEmbedAwait(msg.key, msg.index, msg.type, msg.value, msg?.source);
         break;
       case 'insertText':
         insertText(msg.index, msg.text, msg.formats);
