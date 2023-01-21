@@ -32,6 +32,11 @@ class RBSheetCustom extends Component {
     this.createPanResponder(props);
   }
 
+  setVisible(visible) {
+    console.log('Modal Visibility', visible);
+    this.setState({modalVisible: visible});
+  }
+
   setModalVisible(visible, props) {
     const { height, minClosingHeight, openDuration, closeDuration, onClose, onOpen } = this.props;
     const { animatedHeight, pan } = this.state;
