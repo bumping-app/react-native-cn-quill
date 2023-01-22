@@ -302,7 +302,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -344,9 +344,10 @@ export default class QuillEditor extends React.Component<
       case 'remove-format':
       case 'format-text':
       case 'format-imageblot':
+      case 'format-collageblot':
       case 'insert-embedawait':
         if (response) {
-          console.log('quill-editor:onMessage', message.type, message.data);
+          // console.log('quill-editor:onMessage', message.type, message.data);
           response.resolve(message.data);
           this._promises = this._promises.filter((x) => x.key !== message.key);
         }
@@ -903,6 +904,14 @@ export default class QuillEditor extends React.Component<
     });
   }
 
+  formatCollageBlot = (obj:any):Promise<any> => {
+    console.log('formatCollageBlot', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatCollageBlot',
+      obj: obj
+    });
+  }
+  
 
   on = (event: EditorEventType, handler: EditorEventHandler) => {
     this._handlers.push({ event, handler });

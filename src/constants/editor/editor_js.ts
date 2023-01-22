@@ -240,6 +240,23 @@ export const editor_js = `
 
   }
 
+  const formatCollageBlot = function (key, obj) {
+
+    const {id, images} = obj;
+    var elem = document.getElementById(id);
+    var blot = elem.__blot.blot;
+    
+    blot.format("images", images);
+    
+    const formatCollageBlotJson = JSON.stringify({
+      type: 'format-collageblot',
+      key: key,
+      id: id
+    });
+    sendMessage(formatCollageBlotJson);
+
+  }
+
 
   var getRequest = function (event) {
     var msg = JSON.parse(event.data);
@@ -322,6 +339,9 @@ export const editor_js = `
       case 'formatImageBlot':
         formatImageBlot(msg.key, msg.obj);
         break;
+        case 'formatCollageBlot':
+          formatCollageBlot(msg.key, msg.obj);
+          break;
       default:
         break;
     }
