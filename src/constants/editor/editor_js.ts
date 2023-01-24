@@ -209,16 +209,20 @@ export const editor_js = `
 
   const formatImageBlot = function (key, obj) {
 
-    const {id, vidRemotePath, imgRemotePath} = obj;
+    const { id, imgBlot } = obj;
     var elem = document.getElementById(id);
     var blot = elem.__blot.blot;
+
+    for(let key in imgBlot){
+      blot.format(key , imgBlot[key]);
+    }
     
-    blot.format("vidRemotePath", vidRemotePath);
-    blot.format("imgRemotePath", imgRemotePath);
-    blot.format("vidLocalPath", null);
-    blot.format("imgLocalPath", null);
-    blot.format("src", imgRemotePath);
-    blot.format("imgBase64", null);
+    // blot.format("vidRemotePath", vidRemotePath);
+    // blot.format("imgRemotePath", imgRemotePath);
+    // blot.format("vidLocalPath", null);
+    // blot.format("imgLocalPath", null);
+    // blot.format("src", imgRemotePath);
+    // blot.format("imgBase64", null);
 
     const formatImageBlotJson = JSON.stringify({
       type: 'format-imageblot',
