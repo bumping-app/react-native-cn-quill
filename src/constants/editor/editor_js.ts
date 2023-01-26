@@ -247,6 +247,7 @@ export const editor_js = `
     var blot = elem.__blot.blot;
     
     blot.format("images", images);
+    blot.format("isSaved", true);
     
     const formatCollageBlotJson = JSON.stringify({
       type: 'format-collageblot',
