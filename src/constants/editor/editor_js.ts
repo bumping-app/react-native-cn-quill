@@ -104,6 +104,17 @@ export const editor_js = `
 
   }
 
+  var insertEmbedAwait = function (key, index, type, value, source = 'api') {
+    var ind = index;
+    quill.insertEmbed(ind, type, value, source);
+    var insertEmbedAwaitJson = JSON.stringify({
+      type: 'insert-embedawait',
+      key: key
+    });
+    sendMessage(insertEmbedAwaitJson);
+
+  }
+
   var insertText = function (index, text, formats={}) {
     console.log('InsertText TS');
     var ind = index;
@@ -233,6 +244,24 @@ export const editor_js = `
 
   }
 
+  const formatCollageBlot = function (key, obj) {
+
+    const {id, images} = obj;
+    var elem = document.getElementById(id);
+    var blot = elem.__blot.blot;
+    
+    blot.format("images", images);
+    blot.format("isSaved", true);
+    
+    const formatCollageBlotJson = JSON.stringify({
+      type: 'format-collageblot',
+      key: key,
+      id: id
+    });
+    sendMessage(formatCollageBlotJson);
+
+  }
+
 
   var getRequest = function (event) {
     var msg = JSON.parse(event.data);
@@ -288,6 +317,9 @@ export const editor_js = `
       case 'insertEmbed':
         insertEmbed(msg.index, msg.type, msg.value, msg?.source);
         break;
+      case 'insertEmbedAwait':
+        insertEmbedAwait(msg.key, msg.index, msg.type, msg.value, msg?.source);
+        break;
       case 'insertText':
         insertText(msg.index, msg.text, msg.formats);
         break;
@@ -312,6 +344,9 @@ export const editor_js = `
       case 'formatImageBlot':
         formatImageBlot(msg.key, msg.obj);
         break;
+        case 'formatCollageBlot':
+          formatCollageBlot(msg.key, msg.obj);
+          break;
       default:
         break;
     }

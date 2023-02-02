@@ -20,6 +20,7 @@ export interface ContextProps {
   selectionName: string;
   getSelected: (name: string) => any;
   styles?: CustomStyles;
+  modalRef?: any;
 
   
 }
@@ -34,7 +35,8 @@ const ToolbarContext = React.createContext<ContextProps>({
   theme: lightTheme,
   options: [],
   selectionName: '',
-  getSelected: () => false
+  getSelected: () => false,
+  modalRef: null
   
 });
 
@@ -130,15 +132,22 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
 
   apply = async (name: string, value: any) => {
     const { format, custom, modalRef } = this.props;
-
+    console.log('toolbar-context:apply setting visibility');
+    // if (name === 'image' || name === 'collage') {
+    if (name === 'collage') {
+      modalRef.current.setVisible(false);
+    }
     if (custom?.actions) custom.actions.find((x) => x === name);
     if (custom?.actions && custom?.actions?.indexOf(name) > -1) {
       if (custom?.handler) {
-        custom.handler(name, value, () => {
-          console.log('Toolbar-context:apply callback');
-          modalRef.current.close();
-        });
-        // modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
+        await custom.handler(name, value, 
+          // () => {
+          //   console.log('Toolbar-context:apply callback');
+          //   modalRef.current.close();
+          // }
+        );
+        console.log('toolbar-context:apply about to close modal');
+        modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
       }
     } else {
       await format(name, value);
@@ -168,6 +177,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
           selectionName: name,
           options,
           styles,
+          modalRef: this.props.modalRef,
         }}
       >
         <Animated.View

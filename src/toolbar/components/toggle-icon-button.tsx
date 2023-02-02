@@ -18,10 +18,10 @@ interface Props {
 }
 
 export const ToggleIconButton: React.FC<Props> = (props) => {
-  const { apply, isSelected, theme, styles } = useToolbar();
+  const { apply, isSelected, theme, styles, modalRef } = useToolbar();
   const { name, valueOff, valueOn, source } = props;
   const selected = isSelected(name, valueOn);
-  const handlePresss = () => apply(name, selected ? valueOff : valueOn);
+  const handlePresss = () => {apply(name, selected ? valueOff : valueOn); };
   const defaultStyles = makeStyles(theme);
   const toolStyle = styles?.selection?.iconToggle?.tool
     ? styles.selection.iconToggle.tool(defaultStyles.tool)

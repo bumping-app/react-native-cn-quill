@@ -121,7 +121,7 @@ export default class QuillEditor extends React.Component<
       onAttachLocPress,
     } = this.props;
 
-    console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
+    // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
 
     if (onSelectionChange) {
       this.on('selection-change', onSelectionChange);
@@ -165,7 +165,7 @@ export default class QuillEditor extends React.Component<
       this.on('quillLoaded', onQuillLoaded);
     }
 
-    console.log('quill-editor this.props.webviewBaseUrl', this.props.webviewBaseUrl);
+    // console.log('quill-editor this.props.webviewBaseUrl', this.props.webviewBaseUrl);
 
   }
 
@@ -302,7 +302,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -344,8 +344,10 @@ export default class QuillEditor extends React.Component<
       case 'remove-format':
       case 'format-text':
       case 'format-imageblot':
+      case 'format-collageblot':
+      case 'insert-embedawait':
         if (response) {
-          console.log('quill-editor:onMessage', message.type, message.data);
+          // console.log('quill-editor:onMessage', message.type, message.data);
           response.resolve(message.data);
           this._promises = this._promises.filter((x) => x.key !== message.key);
         }
@@ -848,6 +850,10 @@ export default class QuillEditor extends React.Component<
     this.post({ command: 'insertEmbed', index, type, value, source});
   };
 
+  insertEmbedAwait = (index: number, type: string, value: any, source: string = 'api'): Promise<any> => {
+    return this.postAwait({ command: 'insertEmbedAwait', index, type, value, source});
+  };
+
   insertText = (index: number, text: string, formats?: Record<string, any>) => {
     this.post({ command: 'insertText', index, text, formats });
   };
@@ -898,6 +904,14 @@ export default class QuillEditor extends React.Component<
     });
   }
 
+  formatCollageBlot = (obj:any):Promise<any> => {
+    console.log('formatCollageBlot', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatCollageBlot',
+      obj: obj
+    });
+  }
+  
 
   on = (event: EditorEventType, handler: EditorEventHandler) => {
     this._handlers.push({ event, handler });
