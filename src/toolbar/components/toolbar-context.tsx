@@ -147,7 +147,10 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
           // }
         );
         console.log('toolbar-context:apply about to close modal');
-        modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
+        setTimeout(() => {
+          modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
+        },100);
+        
       }
     } else {
       await format(name, value);
