@@ -132,7 +132,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
 
   apply = async (name: string, value: any) => {
     const { format, custom, modalRef } = this.props;
-    console.log('toolbar-context:apply setting visibility');
+    console.log('toolbar-context:apply setting visibility', name, value);
     if (name === 'image' || name === 'collage') { // 20230206 - Seems if i removed 'image' from this if statement, the app becomes unresponsive after embedding an image
     // if (name === 'collage') {
       modalRef.current.setVisible(false);

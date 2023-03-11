@@ -302,7 +302,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -800,7 +800,19 @@ export default class QuillEditor extends React.Component<
   };
 
   format = (name: string, value: any) => {
-    this.post({ command: 'format', name, value });
+    console.log('quill-editor:format', name, value);
+    
+    let val = value;
+    if (name === 'list' && value === 'check') {
+      // if (formats['list'] === 'checked' || formats['list'] === 'unchecked') {
+      //   this.quill.format('list', false, _quill2.default.sources.USER);
+      // } else {
+      //   this.quill.format('list', 'unchecked', _quill2.default.sources.USER);
+      // }
+      val = 'unchecked';
+    } 
+
+    this.post({ command: 'format', name, value: val });
   };
 
   deleteText = (index: number, length: number) => {
