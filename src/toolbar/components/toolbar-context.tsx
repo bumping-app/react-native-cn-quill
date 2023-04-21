@@ -149,7 +149,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
         console.log('toolbar-context:apply about to close modal');
         setTimeout(() => {
           modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
-        },0);
+        },100);
         
       }
     } else {
