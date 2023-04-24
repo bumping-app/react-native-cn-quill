@@ -308,7 +308,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key

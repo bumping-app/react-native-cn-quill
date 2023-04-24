@@ -265,17 +265,20 @@ export const editor_js = `
 
   const formatQuotationBlot = function (key, obj) {
 
+
     const {id, quote, author} = obj;
     var elem = document.getElementById(id);
     var blot = elem.__blot.blot;
-    
-    blot.format("quote", quote);
-    blot.format("author", author);
+
+   
+    blot.format('reset', {"quote": quote, "author": author});
+    // blot.format("author", author);
     
     const quoteBlotJson = JSON.stringify({
       type: 'format-quotationblot',
       key: key,
-      id: id
+      id: id,
+      data: true
     });
     sendMessage(quoteBlotJson);
 
@@ -284,6 +287,7 @@ export const editor_js = `
 
   var getRequest = function (event) {
     var msg = JSON.parse(event.data);
+    
     switch (msg.command) {
       case 'format':
         formatSelection(msg.name, msg.value);
@@ -367,6 +371,7 @@ export const editor_js = `
           formatCollageBlot(msg.key, msg.obj);
           break;
       case 'formatQuotationBlot':
+          // alert('getRequest ' + msg.command);
           formatQuotationBlot(msg.key, msg.obj);
           break;
       default:
