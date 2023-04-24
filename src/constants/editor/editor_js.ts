@@ -263,6 +263,25 @@ export const editor_js = `
   }
 
 
+  const formatQuotationBlot = function (key, obj) {
+
+    const {id, quote, author} = obj;
+    var elem = document.getElementById(id);
+    var blot = elem.__blot.blot;
+    
+    blot.format("quote", quote);
+    blot.format("author", author);
+    
+    const quoteBlotJson = JSON.stringify({
+      type: 'format-quotationblot',
+      key: key,
+      id: id
+    });
+    sendMessage(quoteBlotJson);
+
+  }
+
+
   var getRequest = function (event) {
     var msg = JSON.parse(event.data);
     switch (msg.command) {
@@ -344,8 +363,11 @@ export const editor_js = `
       case 'formatImageBlot':
         formatImageBlot(msg.key, msg.obj);
         break;
-        case 'formatCollageBlot':
+      case 'formatCollageBlot':
           formatCollageBlot(msg.key, msg.obj);
+          break;
+      case 'formatQuotationBlot':
+          formatQuotationBlot(msg.key, msg.obj);
           break;
       default:
         break;

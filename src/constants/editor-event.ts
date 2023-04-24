@@ -8,6 +8,7 @@ export type EditorEventType =
   | 'blur'
   | 'playVideo'
   | 'attachLoc'
+  | 'attachQuote'
   | 'replaceBlot'
   | 'formatRemoteSource'
   | 'quillLoaded'
@@ -32,6 +33,11 @@ export interface ThumbnailPressData {
 }
 
 export interface AttachLocPressData {
+  eventName: string;
+  args: Array<any>;
+}
+
+export interface AttachQuotePressData {
   eventName: string;
   args: Array<any>;
 }
