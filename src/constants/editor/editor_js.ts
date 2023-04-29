@@ -268,11 +268,27 @@ export const editor_js = `
 
     const {id, quote, author} = obj;
     var elem = document.getElementById(id);
-    var blot = elem.__blot.blot;
 
-   
-    blot.format('reset', {"quote": quote, "author": author});
-    // blot.format("author", author);
+    if (elem) {
+
+      var blot = elem.__blot.blot;
+      blot.format('reset', {"quote": quote, "author": author});
+      // blot.format("author", author);
+
+    } else {
+      // Insert new quotation blot
+      var obj = {
+        id: "Bugs-1234",
+        quote: quote,
+        author: author
+      }
+      // quill.insertText(0, "\\n", {});
+      // quill.removeFormat(0, 0);
+      quill.insertEmbed(0, "pbQuotation", obj, "user");
+        
+     
+      
+    }
     
     const quoteBlotJson = JSON.stringify({
       type: 'format-quotationblot',
