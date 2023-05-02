@@ -31,6 +31,7 @@ import type {
   FormatRemoteSourceChangeData,
   ThumbnailPressData,
   AttachLocPressData,
+  AttachQuotePressData,
   ReplaceBlotData,
   Range,
   FormatChangeData,
@@ -74,6 +75,7 @@ export interface EditorProps {
   onQuillLoaded?: () => void;
   onFormatRemoteSource?: (data: FormatRemoteSourceChangeData) => void;
   onAttachLocPress?: (data: AttachLocPressData) => void;
+  onAttachQuotePress?: (data: AttachQuotePressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill? : string;
@@ -119,6 +121,7 @@ export default class QuillEditor extends React.Component<
       onQuillLoaded,
       onFormatRemoteSource,
       onAttachLocPress,
+      onAttachQuotePress,
     } = this.props;
 
     // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -142,6 +145,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onAttachLocPress) {
       this.on('attachLoc', onAttachLocPress);
+    }
+    if (onAttachQuotePress) {
+      this.on('attachQuote', onAttachQuotePress);
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
@@ -302,7 +308,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -319,6 +325,7 @@ export default class QuillEditor extends React.Component<
       case 'text-change':
       case 'playVideo':
       case 'attachLoc':
+      case 'attachQuote':
       case 'replaceBlot':
       case 'formatRemoteSource':
       case 'selection-change':
@@ -345,6 +352,7 @@ export default class QuillEditor extends React.Component<
       case 'format-text':
       case 'format-imageblot':
       case 'format-collageblot':
+      case 'format-quotationblot':
       case 'insert-embedawait':
         if (response) {
           // console.log('quill-editor:onMessage', message.type, message.data);
@@ -920,6 +928,14 @@ export default class QuillEditor extends React.Component<
     console.log('formatCollageBlot', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatCollageBlot',
+      obj: obj
+    });
+  }
+
+  formatQuotationBlot = (obj:any):Promise<any> => {
+    console.log('formatQuotationBlot', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatQuotationBlot',
       obj: obj
     });
   }
