@@ -411,7 +411,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 borderBottomWidth: 0,
                 borderColor: '#AAAAAA',
                 width: WIDTH-150,
-                minHeight: 300,
+                
+                height: 400,
                 maxHeight: HEIGHT-50,
                 
               },
