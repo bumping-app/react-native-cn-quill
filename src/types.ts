@@ -93,6 +93,7 @@ export interface QuillConfig {
     toolbar: boolean | Array<Array<string | object> | string | object> | string;
     clipboard?: string;
     keyboard?: string;
+    imageDropAndPaste?: string;
   };
   theme?: 'snow' | 'bubble';
   placeholder: string;

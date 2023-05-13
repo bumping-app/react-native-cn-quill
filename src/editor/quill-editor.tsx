@@ -231,6 +231,7 @@ export default class QuillEditor extends React.Component<
       customStyles,
       customJS,
       customJSwithquill,
+      imageDropAndPaste: quill.modules?.imageDropAndPaste,
     });
 
     var htmlFileName = this.getKey() + '.html';

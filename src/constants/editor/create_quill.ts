@@ -5,6 +5,7 @@ export const create_quill = ({
   keyboard,
   placeholder,
   theme,
+  imageDropAndPaste,
   customFonts = [],
   customJS,
   customJSwithquill,
@@ -14,6 +15,7 @@ export const create_quill = ({
   clipboard: string;
   keyboard: string;
   placeholder: string;
+  imageDropAndPaste: string;
   theme: 'snow' | 'bubble';
   customFonts: Array<string>;
   customJS: string;
@@ -43,6 +45,9 @@ export const create_quill = ({
   if (keyboard) {
     modules += `keyboard: ${keyboard},`;
   }
+
+  modules += `imageDropAndPaste: true,`;
+
   if (true) {
     modules += `history: {
       delay: 2000,
