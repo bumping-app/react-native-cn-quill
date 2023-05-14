@@ -32,16 +32,16 @@ export const create_quill = ({
 
     `;
   }
-  let clipboardModule = '';
-  if (clipboard) {
-    clipboardModule = `clipboard: ${clipboard},`;
-  }
+  // let clipboardModule = '';
+  // if (clipboard) {
+  //   clipboardModule = `clipboard: ${clipboard},`;
+  // }
 
   let modules = `toolbar: ${toolbar},`;
 
-  if (clipboard) {
-    modules += `clipboard: ${clipboard},`;
-  }
+  // if (clipboard) {
+  //   modules += `clipboard: ${clipboard},`;
+  // }
   if (keyboard) {
     modules += `keyboard: ${keyboard},`;
   }
