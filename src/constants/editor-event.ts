@@ -12,6 +12,7 @@ export type EditorEventType =
   | 'replaceBlot'
   | 'formatRemoteSource'
   | 'quillLoaded'
+  | 'processBase64'
   | 'focus';
 
 export interface SelectionChangeData {
@@ -38,6 +39,11 @@ export interface AttachLocPressData {
 }
 
 export interface AttachQuotePressData {
+  eventName: string;
+  args: Array<any>;
+}
+
+export interface ProcessBase64PressData {
   eventName: string;
   args: Array<any>;
 }

@@ -32,6 +32,7 @@ import type {
   ThumbnailPressData,
   AttachLocPressData,
   AttachQuotePressData,
+  ProcessBase64PressData,
   ReplaceBlotData,
   Range,
   FormatChangeData,
@@ -76,6 +77,7 @@ export interface EditorProps {
   onFormatRemoteSource?: (data: FormatRemoteSourceChangeData) => void;
   onAttachLocPress?: (data: AttachLocPressData) => void;
   onAttachQuotePress?: (data: AttachQuotePressData) => void;
+  onProcessBase64?: (data: ProcessBase64PressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill? : string;
@@ -122,6 +124,7 @@ export default class QuillEditor extends React.Component<
       onFormatRemoteSource,
       onAttachLocPress,
       onAttachQuotePress,
+      onProcessBase64,
     } = this.props;
 
     // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -151,6 +154,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
+    }
+    if (onProcessBase64) {
+      this.on('processBase64', onProcessBase64);
     }
     if (onFormatRemoteSource) {
       this.on('formatRemoteSource', onFormatRemoteSource);
@@ -231,6 +237,7 @@ export default class QuillEditor extends React.Component<
       customStyles,
       customJS,
       customJSwithquill,
+      // imageDropAndPaste: quill.modules?.imageDropAndPaste,
     });
 
     var htmlFileName = this.getKey() + '.html';
@@ -308,7 +315,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -328,6 +335,7 @@ export default class QuillEditor extends React.Component<
       case 'attachQuote':
       case 'replaceBlot':
       case 'formatRemoteSource':
+      case 'processBase64':
       case 'selection-change':
       case 'html-change':
       case 'editor-change':
@@ -915,6 +923,8 @@ export default class QuillEditor extends React.Component<
       source,
     });
   };
+
+
 
   formatImageBlot = (obj:any):Promise<any> => {
     console.log('formatImageBlot', JSON.stringify(obj));

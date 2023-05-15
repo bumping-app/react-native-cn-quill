@@ -33,6 +33,7 @@ interface CreateHtmlArgs {
   defaultFontFamily?: string;
   customJS?: string;
   customJSwithquill?: string;
+  // imageDropAndPaste?: string;
 }
 
 const Inital_Args = {
@@ -41,6 +42,7 @@ const Inital_Args = {
   toolbar: 'false',
   clipboard: '',
   keyboard: '',
+  // imageDropAndPaste: '',
   libraries: 'local',
   theme: 'snow',
   editorId: 'editor-container',
@@ -104,6 +106,7 @@ export const createHtml = (args: CreateHtmlArgs = Inital_Args) => {
     clipboard: args.clipboard ? args.clipboard : '',
     keyboard: args.keyboard ? args.keyboard : '',
     placeholder: args.placeholder,
+    // imageDropAndPaste: args.imageDropAndPaste ? args.imageDropAndPaste : '',
     theme: args.theme,
     customFonts: args.fonts.map((f) => getFontName(f.name)),
     customJS: args.customJS ? args.customJS : '',
