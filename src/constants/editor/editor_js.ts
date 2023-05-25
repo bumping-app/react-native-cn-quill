@@ -300,6 +300,30 @@ export const editor_js = `
 
   }
 
+  const formatTaskList = function (key, obj) {
+
+
+    const {id, task} = obj;
+    var elem = document.getElementById(id);
+
+    if (elem) {
+
+      var blot = elem.__blot.blot;
+      blot.format('addTask', {"task": task});
+      
+
+    } 
+    
+    const taskJson = JSON.stringify({
+      type: 'format-tasklist',
+      key: key,
+      id: id,
+      data: true
+    });
+    sendMessage(taskJson);
+
+  }
+
 
   var getRequest = function (event) {
     var msg = JSON.parse(event.data);
@@ -390,6 +414,10 @@ export const editor_js = `
           // alert('getRequest ' + msg.command);
           formatQuotationBlot(msg.key, msg.obj);
           break;
+      case 'formatTaskList':
+            // alert('getRequest ' + msg.command);
+            formatTaskList(msg.key, msg.obj);
+            break;
       default:
         break;
     }

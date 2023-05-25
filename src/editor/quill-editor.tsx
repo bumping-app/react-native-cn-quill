@@ -32,6 +32,7 @@ import type {
   ThumbnailPressData,
   AttachLocPressData,
   AttachQuotePressData,
+  AddTaskPressData,
   ProcessBase64PressData,
   ReplaceBlotData,
   Range,
@@ -78,6 +79,7 @@ export interface EditorProps {
   onAttachLocPress?: (data: AttachLocPressData) => void;
   onAttachQuotePress?: (data: AttachQuotePressData) => void;
   onProcessBase64?: (data: ProcessBase64PressData) => void;
+  onAddTaskPress?: (data: AddTaskPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill? : string;
@@ -125,6 +127,7 @@ export default class QuillEditor extends React.Component<
       onAttachLocPress,
       onAttachQuotePress,
       onProcessBase64,
+      onAddTaskPress
     } = this.props;
 
     // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -151,6 +154,11 @@ export default class QuillEditor extends React.Component<
     }
     if (onAttachQuotePress) {
       this.on('attachQuote', onAttachQuotePress);
+    }
+    
+
+    if (onAddTaskPress) {
+      this.on('addTask', onAddTaskPress);
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
@@ -315,7 +323,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -333,6 +341,7 @@ export default class QuillEditor extends React.Component<
       case 'playVideo':
       case 'attachLoc':
       case 'attachQuote':
+      case 'addTask':
       case 'replaceBlot':
       case 'formatRemoteSource':
       case 'processBase64':
@@ -924,8 +933,6 @@ export default class QuillEditor extends React.Component<
     });
   };
 
-
-
   formatImageBlot = (obj:any):Promise<any> => {
     console.log('formatImageBlot', JSON.stringify(obj));
     return this.postAwait({
@@ -946,6 +953,14 @@ export default class QuillEditor extends React.Component<
     console.log('formatQuotationBlot', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatQuotationBlot',
+      obj: obj
+    });
+  }
+
+  formatTaskList = (obj:any):Promise<any> => {
+    console.log('formatTaskList', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatTaskList',
       obj: obj
     });
   }

@@ -9,6 +9,7 @@ export type EditorEventType =
   | 'playVideo'
   | 'attachLoc'
   | 'attachQuote'
+  | 'addTask'
   | 'replaceBlot'
   | 'formatRemoteSource'
   | 'quillLoaded'
@@ -44,6 +45,11 @@ export interface AttachQuotePressData {
 }
 
 export interface ProcessBase64PressData {
+  eventName: string;
+  args: Array<any>;
+}
+
+export interface AddTaskPressData {
   eventName: string;
   args: Array<any>;
 }
