@@ -303,13 +303,13 @@ export const editor_js = `
   const formatTaskList = function (key, obj) {
 
 
-    const {id, task} = obj;
+    const {id, command, value} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
 
       var blot = elem.__blot.blot;
-      blot.format('addTask', {"task": task});
+      blot.format(command, {"value": value});
       
 
     } 

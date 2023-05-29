@@ -9,7 +9,7 @@ export type EditorEventType =
   | 'playVideo'
   | 'attachLoc'
   | 'attachQuote'
-  | 'addTask'
+  | 'TaskHandler'
   | 'replaceBlot'
   | 'formatRemoteSource'
   | 'quillLoaded'
@@ -49,7 +49,7 @@ export interface ProcessBase64PressData {
   args: Array<any>;
 }
 
-export interface AddTaskPressData {
+export interface TaskHandlerPressData {
   eventName: string;
   args: Array<any>;
 }

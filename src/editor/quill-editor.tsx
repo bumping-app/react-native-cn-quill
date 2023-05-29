@@ -32,7 +32,7 @@ import type {
   ThumbnailPressData,
   AttachLocPressData,
   AttachQuotePressData,
-  AddTaskPressData,
+  TaskHandlerPressData,
   ProcessBase64PressData,
   ReplaceBlotData,
   Range,
@@ -79,7 +79,7 @@ export interface EditorProps {
   onAttachLocPress?: (data: AttachLocPressData) => void;
   onAttachQuotePress?: (data: AttachQuotePressData) => void;
   onProcessBase64?: (data: ProcessBase64PressData) => void;
-  onAddTaskPress?: (data: AddTaskPressData) => void;
+  onTaskHandlerPress?: (data: TaskHandlerPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill? : string;
@@ -127,7 +127,7 @@ export default class QuillEditor extends React.Component<
       onAttachLocPress,
       onAttachQuotePress,
       onProcessBase64,
-      onAddTaskPress
+      onTaskHandlerPress
     } = this.props;
 
     // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -157,8 +157,8 @@ export default class QuillEditor extends React.Component<
     }
     
 
-    if (onAddTaskPress) {
-      this.on('addTask', onAddTaskPress);
+    if (onTaskHandlerPress) {
+      this.on('TaskHandler', onTaskHandlerPress);
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
@@ -323,7 +323,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    // console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -341,7 +341,7 @@ export default class QuillEditor extends React.Component<
       case 'playVideo':
       case 'attachLoc':
       case 'attachQuote':
-      case 'addTask':
+      case 'TaskHandler':
       case 'replaceBlot':
       case 'formatRemoteSource':
       case 'processBase64':
