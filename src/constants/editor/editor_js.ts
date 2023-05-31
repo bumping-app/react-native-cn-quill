@@ -305,20 +305,22 @@ export const editor_js = `
 
     const {id, command, value} = obj;
     var elem = document.getElementById(id);
-
+    var returnObj = null;
     if (elem) {
 
       var blot = elem.__blot.blot;
-      blot.format(command, {"value": value});
+      returnObj = blot.format(command, {"value": value});
       
 
     } 
+
+    // alert('editor_js:formatTaskList: ' + returnObj);
     
     const taskJson = JSON.stringify({
       type: 'format-tasklist',
       key: key,
       id: id,
-      data: true
+      data: returnObj
     });
     sendMessage(taskJson);
 

@@ -370,6 +370,7 @@ export default class QuillEditor extends React.Component<
       case 'format-imageblot':
       case 'format-collageblot':
       case 'format-quotationblot':
+      case 'format-tasklist':
       case 'insert-embedawait':
         if (response) {
           // console.log('quill-editor:onMessage', message.type, message.data);
