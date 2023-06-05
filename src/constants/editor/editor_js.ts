@@ -326,10 +326,37 @@ export const editor_js = `
 
   }
 
+  const formatErrandList = function (key, obj) {
+
+
+    const {id, command, value} = obj;
+    alert('formatErrandList: ' + id + ', ' + command + ', ' + JSON.stringify(obj));
+    var elem = document.getElementById(id);
+    var returnObj = null;
+    if (elem) {
+
+      var blot = elem.__blot.blot;
+      returnObj = blot.format(command, {"value": value});
+      
+
+    } 
+
+    // alert('editor_js:formatTaskList: ' + returnObj);
+    
+    const taskJson = JSON.stringify({
+      type: 'format-errandlist',
+      key: key,
+      id: id,
+      data: returnObj
+    });
+    sendMessage(taskJson);
+
+  }
+
 
   var getRequest = function (event) {
     var msg = JSON.parse(event.data);
-    
+    // alert('getRequest ' + event.data );
     switch (msg.command) {
       case 'format':
         formatSelection(msg.name, msg.value);
@@ -420,6 +447,10 @@ export const editor_js = `
             // alert('getRequest ' + msg.command);
             formatTaskList(msg.key, msg.obj);
             break;
+      case 'formatErrandList':
+        // alert('getRequest ' + msg.command);
+        formatErrandList(msg.key, msg.obj);
+        break;
       default:
         break;
     }

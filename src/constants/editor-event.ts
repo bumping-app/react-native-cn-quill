@@ -10,6 +10,7 @@ export type EditorEventType =
   | 'attachLoc'
   | 'attachQuote'
   | 'TaskHandler'
+  | 'ErrandHandler'
   | 'replaceBlot'
   | 'formatRemoteSource'
   | 'quillLoaded'
