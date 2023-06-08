@@ -330,7 +330,7 @@ export const editor_js = `
 
 
     const {id, command, value} = obj;
-    alert('formatErrandList: ' + id + ', ' + command + ', ' + JSON.stringify(obj));
+    // alert('formatErrandList: ' + id + ', ' + command + ', ' + JSON.stringify(obj));
     var elem = document.getElementById(id);
     var returnObj = null;
     if (elem) {
