@@ -973,13 +973,29 @@ export default class QuillEditor extends React.Component<
     });
   }
 
+  // updateOriginalTasks = (obj:any):Promise<any> => {
+  //   console.log('updateOriginalTasks', JSON.stringify(obj));
+  //   return this.postAwait({
+  //     command: 'updateOriginalTasks',
+  //     obj: obj
+  //   });
+  // }
+
   formatErrandList = (obj:any):Promise<any> => {
-    console.log('formatErrandList', JSON.stringify(obj));
+    // console.log('formatErrandList', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatErrandList',
       obj: obj
     });
   }
+
+  // updateOriginalErrands = (obj:any):Promise<any> => {
+  //   console.log('updateOriginalErrands', JSON.stringify(obj));
+  //   return this.postAwait({
+  //     command: 'updateOriginalErrands',
+  //     obj: obj
+  //   });
+  // }
   
 
   on = (event: EditorEventType, handler: EditorEventHandler) => {
