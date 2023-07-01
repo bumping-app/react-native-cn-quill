@@ -246,8 +246,8 @@ export default class QuillEditor extends React.Component<
     //      $selectedFontSize => This can be variable so we have to rebuild everytime this changes
     //      PostBumpTemplate.getBackgroundOpacity() => Greater or less than 0 => fontColor, backgroundOpacity
     //      We create 2 files every time selectedFontSize changes: one for backgroundOpacity < 0 another for backgroundOpacity > 0
-    const {fontSize, backgroundOpacity} = initialHtmlParams;
-    var htmlFileName = 'basePodberry_' + backgroundOpacity + '_' + fontSize.toString() + '.html';
+    const {fontSize, backgroundOpacity, fontFamily} = initialHtmlParams;
+    var htmlFileName = 'basePodberry_' + backgroundOpacity + '_' + fontFamily + '_' + fontSize.toString() + '.html';
     var htmlDirectory = await RNFS.DocumentDirectoryPath + '/htmlDirectory';
     var path = htmlDirectory + '/' + htmlFileName;
 
@@ -287,7 +287,7 @@ export default class QuillEditor extends React.Component<
       });
 
 
-      console.log('getInitalHtml createdHtml', createdHtml);
+      // console.log('getInitalHtml createdHtml', createdHtml);
       await RNFS.writeFile(path, createdHtml, 'utf8')
         .then(() => {
           console.log('FILE WRITTEN!');
