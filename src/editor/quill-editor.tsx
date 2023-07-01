@@ -49,6 +49,7 @@ export interface EditorState {
 }
 
 export interface EditorProps {
+  startTime?: any;
   autoSize?: boolean;
   style?: StyleProp<ViewStyle>;
   quill?: QuillConfig;
@@ -83,8 +84,8 @@ export interface EditorProps {
   onErrandHandlerPress?: (data: TaskHandlerPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
-  customJSwithquill? : string;
-
+  customJSwithquill?: string;
+  initialHtmlParams?: any;
 }
 
 export default class QuillEditor extends React.Component<
@@ -105,13 +106,14 @@ export default class QuillEditor extends React.Component<
       webviewContent: '',
       renderedOnce: false,
       // imageJobs: {},
-    
+
     };
-    
+
 
     this._handlers = [];
     this._promises = [];
     const {
+      startTime,
       onSelectionChange,
       onEditorChange,
       onTextChange,
@@ -131,6 +133,8 @@ export default class QuillEditor extends React.Component<
       onTaskHandlerPress,
       onErrandHandlerPress,
     } = this.props;
+
+    console.log('quill-editor:constructor performance 1:', performance.now() - this.props.startTime);
 
     // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
 
@@ -157,7 +161,7 @@ export default class QuillEditor extends React.Component<
     if (onAttachQuotePress) {
       this.on('attachQuote', onAttachQuotePress);
     }
-    
+
 
     if (onTaskHandlerPress) {
       this.on('TaskHandler', onTaskHandlerPress);
@@ -196,14 +200,16 @@ export default class QuillEditor extends React.Component<
 
   componentDidMount(): void {
     const loadInitialHtml = true;
+    // const startTime = performance.now();
+
     this.getInitalHtml(loadInitialHtml, (path) => {
-      console.log('quill-editor:componentDidMount', path);
+      console.log('quill-editor:componentDidMount performance 2:', performance.now() - this.props.startTime);
       this.setState({
         webviewContent: path
       });
     });
 
-  // this.setState({ renderedOnce: true });
+    // this.setState({ renderedOnce: true });
   }
 
   private getInitalHtml = async (loadInitialHtml?, callback?) => {
@@ -229,62 +235,79 @@ export default class QuillEditor extends React.Component<
       defaultFontFamily = undefined,
       customJS = '',
       customJSwithquill = '',
+      initialHtmlParams = null
     } = this.props;
 
-    const createdHtml = await createHtml({
-      //initialHtml: loadInitialHtml ? initialHtml : '',
-      autoSize: this.props.autoSize,
-      placeholder: quill.placeholder,
-      theme: quill.theme ? quill.theme : 'snow',
-      toolbar: JSON.stringify(quill.modules?.toolbar),
-      clipboard: quill.modules?.clipboard,
-      keyboard: quill.modules?.keyboard,
-      libraries: import3rdParties,
-      editorId: quill.id ? quill.id : 'editor-container',
-      defaultFontFamily,
-      containerId,
-      color: theme.color,
-      fonts: customFonts,
-      backgroundColor: 'rgba(255,255,255,0)',
-      placeholderColor: theme.placeholder,
-      customStyles,
-      customJS,
-      customJSwithquill,
-      // imageDropAndPaste: quill.modules?.imageDropAndPaste,
-    });
 
-    var htmlFileName = this.getKey() + '.html';
+    //var htmlFileName = this.getKey() + '.html';
+
+     // customStyles could dynamically change:
+    // user can change: 
+    //      $selectedFontSize => This can be variable so we have to rebuild everytime this changes
+    //      PostBumpTemplate.getBackgroundOpacity() => Greater or less than 0 => fontColor, backgroundOpacity
+    //      We create 2 files every time selectedFontSize changes: one for backgroundOpacity < 0 another for backgroundOpacity > 0
+    const {fontSize, backgroundOpacity} = initialHtmlParams;
+    var htmlFileName = 'basePodberry_' + backgroundOpacity + '_' + fontSize.toString() + '.html';
     var htmlDirectory = await RNFS.DocumentDirectoryPath + '/htmlDirectory';
     var path = htmlDirectory + '/' + htmlFileName;
 
-    const existsHtmlDirectory = await RNFS.exists(htmlDirectory); 
-    if (existsHtmlDirectory) {
-      await RNFS.unlink(htmlDirectory); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
-    }
-    RNFS.mkdir(htmlDirectory);
-
-    
     const exists = await RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
     console.log('File exists or not: ', exists);
-    if (exists) {
-      await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
-    }
-    //console.log('getInitalHtml createdHtml', createdHtml);
-    await RNFS.writeFile(path, createdHtml, 'utf8')
-      .then(() => {
-        console.log('FILE WRITTEN!');
-        if (callback) {
-          callback(path);
-        }
-        // return Promise.resolve(path);
-        // return path;
-      })
-      .catch((err) => {
-        console.log(err.message);
-        // return Promise.reject(JSON.stringify(err));
+   
+
+    if (!exists) {
+      // await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+      const existsHtmlDirectory = await RNFS.exists(htmlDirectory);
+      if (existsHtmlDirectory) {
+        await RNFS.unlink(htmlDirectory); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+      }
+      RNFS.mkdir(htmlDirectory);
+    
+
+      const createdHtml = await createHtml({
+        //initialHtml: loadInitialHtml ? initialHtml : '',
+        autoSize: this.props.autoSize,
+        placeholder: quill.placeholder,
+        theme: quill.theme ? quill.theme : 'snow',
+        toolbar: JSON.stringify(quill.modules?.toolbar),
+        clipboard: quill.modules?.clipboard,
+        keyboard: quill.modules?.keyboard,
+        libraries: import3rdParties,
+        editorId: quill.id ? quill.id : 'editor-container',
+        defaultFontFamily,
+        containerId,
+        color: theme.color,
+        fonts: customFonts,
+        backgroundColor: 'rgba(255,255,255,0)',
+        placeholderColor: theme.placeholder,
+        customStyles,
+        customJS,
+        customJSwithquill,
+        // imageDropAndPaste: quill.modules?.imageDropAndPaste,
       });
 
-    //return Promise.reject('');
+
+      console.log('getInitalHtml createdHtml', createdHtml);
+      await RNFS.writeFile(path, createdHtml, 'utf8')
+        .then(() => {
+          console.log('FILE WRITTEN!');
+          if (callback) {
+            callback(path);
+          }
+          // return Promise.resolve(path);
+          // return path;
+        })
+        .catch((err) => {
+          console.log(err.message);
+          // return Promise.reject(JSON.stringify(err));
+        });
+
+      //return Promise.reject('');
+    } else {
+      if (callback) {
+        callback(path);
+      }
+    }
 
 
   };
@@ -406,11 +429,11 @@ export default class QuillEditor extends React.Component<
       this.setState({
         webviewContent: path,
       }, () => {
-        setTimeout( async () => {
-           console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
-           await this.setContents(deltaOps);
-           this.setSelection(0, 0);
-          
+        setTimeout(async () => {
+          console.log('rebuuildHtml deltaOps', JSON.stringify(deltaOps));
+          await this.setContents(deltaOps);
+          this.setSelection(0, 0);
+
         }, 500);
       });
     })
@@ -550,13 +573,13 @@ export default class QuillEditor extends React.Component<
 
     return new Promise(async (resolve, reject) => {
 
-    console.log('formatRemoteSource', id, type, imgPath, vidPath);
-    // const imageJobs = {};
-    // imageJobs[id] = true;
-    // this.setState(imageJobs);
+      console.log('formatRemoteSource', id, type, imgPath, vidPath);
+      // const imageJobs = {};
+      // imageJobs[id] = true;
+      // this.setState(imageJobs);
 
 
-    const run = `
+      const run = `
 
     function stringify (x) {
       return (Object.prototype.toString.call(x));
@@ -654,12 +677,12 @@ export default class QuillEditor extends React.Component<
   
     `;
 
-     this._webview.current?.injectJavaScript(run);
+      this._webview.current?.injectJavaScript(run);
 
 
 
 
-  });
+    });
 
   }
 
@@ -702,8 +725,8 @@ export default class QuillEditor extends React.Component<
   //     return (Object.prototype.toString.call(x));
   //   }
 
-    
-    
+
+
 
   //   var elem = document.getElementById("${id}");
   //   //var parent = elem.parentNode;
@@ -720,7 +743,7 @@ export default class QuillEditor extends React.Component<
   //   // });
 
 
-    
+
   //   //var index = blot.offset(quill.scroll);
 
   //   // var arrBlot = Array.from(blot);
@@ -729,25 +752,25 @@ export default class QuillEditor extends React.Component<
   //   //     attribStr  = attribStr + ', ' + elem.name + ':' + elem.value
   //   //   });
 
- 
+
   //     blot.format("vidRemotePath", "${vidPath}");
   //     blot.format("imgRemotePath", "${imgPath}");
   //     blot.format("vidLocalPath", null);
   //     blot.format("imgLocalPath", null);
   //     blot.format("src", "${imgPath}");
   //     blot.format("imgBase64", null);
-    
+
 
 
   //   // Attempt to notify caller that procedure is done.
   //   var obj = { "command": "formatRemoteSource", "value": '${id}' };
-    
+
   //   window.ReactNativeWebView.postMessage(JSON.stringify({type:'formatRemoteSource'}));
-    
+
 
 
   //   true;
-  
+
   //   `;
   //   this._webview.current?.injectJavaScript(run);
 
@@ -834,7 +857,7 @@ export default class QuillEditor extends React.Component<
 
   format = (name: string, value: any) => {
     console.log('quill-editor:format', name, value);
-    
+
     let val = value;
     if (name === 'list' && value === 'check') {
       // if (formats['list'] === 'checked' || formats['list'] === 'unchecked') {
@@ -843,7 +866,7 @@ export default class QuillEditor extends React.Component<
       //   this.quill.format('list', 'unchecked', _quill2.default.sources.USER);
       // }
       val = 'unchecked';
-    } 
+    }
 
     this.post({ command: 'format', name, value: val });
   };
@@ -892,11 +915,11 @@ export default class QuillEditor extends React.Component<
   };
 
   insertEmbed = (index: number, type: string, value: any, source: string = 'api') => {
-    this.post({ command: 'insertEmbed', index, type, value, source});
+    this.post({ command: 'insertEmbed', index, type, value, source });
   };
 
   insertEmbedAwait = (index: number, type: string, value: any, source: string = 'api'): Promise<any> => {
-    return this.postAwait({ command: 'insertEmbedAwait', index, type, value, source});
+    return this.postAwait({ command: 'insertEmbedAwait', index, type, value, source });
   };
 
   insertText = (index: number, text: string, formats?: Record<string, any>) => {
@@ -941,7 +964,7 @@ export default class QuillEditor extends React.Component<
     });
   };
 
-  formatImageBlot = (obj:any):Promise<any> => {
+  formatImageBlot = (obj: any): Promise<any> => {
     console.log('formatImageBlot', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatImageBlot',
@@ -949,7 +972,7 @@ export default class QuillEditor extends React.Component<
     });
   }
 
-  formatCollageBlot = (obj:any):Promise<any> => {
+  formatCollageBlot = (obj: any): Promise<any> => {
     console.log('formatCollageBlot', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatCollageBlot',
@@ -957,7 +980,7 @@ export default class QuillEditor extends React.Component<
     });
   }
 
-  formatQuotationBlot = (obj:any):Promise<any> => {
+  formatQuotationBlot = (obj: any): Promise<any> => {
     console.log('formatQuotationBlot', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatQuotationBlot',
@@ -965,7 +988,7 @@ export default class QuillEditor extends React.Component<
     });
   }
 
-  formatTaskList = (obj:any):Promise<any> => {
+  formatTaskList = (obj: any): Promise<any> => {
     console.log('formatTaskList', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatTaskList',
@@ -981,7 +1004,7 @@ export default class QuillEditor extends React.Component<
   //   });
   // }
 
-  formatErrandList = (obj:any):Promise<any> => {
+  formatErrandList = (obj: any): Promise<any> => {
     // console.log('formatErrandList', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatErrandList',
@@ -996,7 +1019,7 @@ export default class QuillEditor extends React.Component<
   //     obj: obj
   //   });
   // }
-  
+
 
   on = (event: EditorEventType, handler: EditorEventHandler) => {
     this._handlers.push({ event, handler });
@@ -1015,8 +1038,8 @@ export default class QuillEditor extends React.Component<
     this.post({ command: 'dangerouslyPasteHTML', index, html });
   };
 
-  updateSrc=()=>{
-    this.setState({renderedOnce: true});
+  updateSrc = () => {
+    this.setState({ renderedOnce: true });
   }
 
   renderWebview = (
@@ -1039,15 +1062,23 @@ export default class QuillEditor extends React.Component<
       domStorageEnabled={false}
       automaticallyAdjustContentInsets={true}
       bounces={false}
+      cacheEnabled={true}
       dataDetectorTypes="none"
       {...props}
       javaScriptEnabled={true}
       // source={{ html: content, baseUrl: this.props.webviewBaseUrl }}
-      source={this.state.renderedOnce ? { uri: 'file://' + content, baseUrl: this.props.webviewBaseUrl }:undefined}
+      source={this.state.renderedOnce ? { uri: 'file://' + content, baseUrl: this.props.webviewBaseUrl } : undefined}
+      // source={{ uri: 'file://' + content, baseUrl: this.props.webviewBaseUrl }}
       ref={this._webview}
       onMessage={this.onMessage}
       allowingReadAccessToURL={this.props.webviewBaseUrl}
       onLoad={this.updateSrc}
+      onLoadStart={() => {
+        console.log('quill-editor:onLoadStart performance', performance.now() - this.props.startTime);
+      }}
+      onLoadEnd={() => {
+        console.log('quill-editor:onLoadEnd performance', performance.now() - this.props.startTime);
+      }}
     />
   );
 

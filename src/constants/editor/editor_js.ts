@@ -541,7 +541,7 @@ export const editor_js = `
     
     
 
-  }, 250)
+  }, 100)
 
 })(document)
 
