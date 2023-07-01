@@ -32,6 +32,7 @@ import type {
   ThumbnailPressData,
   AttachLocPressData,
   AttachQuotePressData,
+  TaskHandlerPressData,
   ProcessBase64PressData,
   ReplaceBlotData,
   Range,
@@ -78,6 +79,8 @@ export interface EditorProps {
   onAttachLocPress?: (data: AttachLocPressData) => void;
   onAttachQuotePress?: (data: AttachQuotePressData) => void;
   onProcessBase64?: (data: ProcessBase64PressData) => void;
+  onTaskHandlerPress?: (data: TaskHandlerPressData) => void;
+  onErrandHandlerPress?: (data: TaskHandlerPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill? : string;
@@ -125,6 +128,8 @@ export default class QuillEditor extends React.Component<
       onAttachLocPress,
       onAttachQuotePress,
       onProcessBase64,
+      onTaskHandlerPress,
+      onErrandHandlerPress,
     } = this.props;
 
     // console.log('quill-editor onThumbnailPress 1', onThumbnailPress, onTextChange);
@@ -151,6 +156,14 @@ export default class QuillEditor extends React.Component<
     }
     if (onAttachQuotePress) {
       this.on('attachQuote', onAttachQuotePress);
+    }
+    
+
+    if (onTaskHandlerPress) {
+      this.on('TaskHandler', onTaskHandlerPress);
+    }
+    if (onErrandHandlerPress) {
+      this.on('ErrandHandler', onErrandHandlerPress);
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
@@ -304,7 +317,7 @@ export default class QuillEditor extends React.Component<
   }
 
   private post = (obj: object) => {
-    //console.log('quill-editor::post', JSON.stringify(obj));
+    console.log('quill-editor::post', JSON.stringify(obj));
     const jsonString = JSON.stringify(obj);
     this._webview.current?.postMessage(jsonString);
   };
@@ -333,6 +346,8 @@ export default class QuillEditor extends React.Component<
       case 'playVideo':
       case 'attachLoc':
       case 'attachQuote':
+      case 'TaskHandler':
+      case 'ErrandHandler':
       case 'replaceBlot':
       case 'formatRemoteSource':
       case 'processBase64':
@@ -361,6 +376,8 @@ export default class QuillEditor extends React.Component<
       case 'format-imageblot':
       case 'format-collageblot':
       case 'format-quotationblot':
+      case 'format-tasklist':
+      case 'format-errandlist':
       case 'insert-embedawait':
         if (response) {
           // console.log('quill-editor:onMessage', message.type, message.data);
@@ -924,8 +941,6 @@ export default class QuillEditor extends React.Component<
     });
   };
 
-
-
   formatImageBlot = (obj:any):Promise<any> => {
     console.log('formatImageBlot', JSON.stringify(obj));
     return this.postAwait({
@@ -949,6 +964,38 @@ export default class QuillEditor extends React.Component<
       obj: obj
     });
   }
+
+  formatTaskList = (obj:any):Promise<any> => {
+    console.log('formatTaskList', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatTaskList',
+      obj: obj
+    });
+  }
+
+  // updateOriginalTasks = (obj:any):Promise<any> => {
+  //   console.log('updateOriginalTasks', JSON.stringify(obj));
+  //   return this.postAwait({
+  //     command: 'updateOriginalTasks',
+  //     obj: obj
+  //   });
+  // }
+
+  formatErrandList = (obj:any):Promise<any> => {
+    // console.log('formatErrandList', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatErrandList',
+      obj: obj
+    });
+  }
+
+  // updateOriginalErrands = (obj:any):Promise<any> => {
+  //   console.log('updateOriginalErrands', JSON.stringify(obj));
+  //   return this.postAwait({
+  //     command: 'updateOriginalErrands',
+  //     obj: obj
+  //   });
+  // }
   
 
   on = (event: EditorEventType, handler: EditorEventHandler) => {
