@@ -256,12 +256,12 @@ export default class QuillEditor extends React.Component<
    
 
     if (!exists) {
-      await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
-      const existsHtmlDirectory = await RNFS.exists(htmlDirectory);
-      if (existsHtmlDirectory) {
-        await RNFS.unlink(htmlDirectory); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
-      }
-      RNFS.mkdir(htmlDirectory);
+      // await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+      // const existsHtmlDirectory = await RNFS.exists(htmlDirectory);
+      // if (existsHtmlDirectory) {
+      //   await RNFS.unlink(htmlDirectory); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+      // }
+      // RNFS.mkdir(htmlDirectory);
     
 
 
