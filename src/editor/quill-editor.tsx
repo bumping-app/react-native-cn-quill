@@ -241,28 +241,29 @@ export default class QuillEditor extends React.Component<
 
     //var htmlFileName = this.getKey() + '.html';
 
-     // customStyles could dynamically change:
+    // customStyles could dynamically change:
     // user can change: 
     //      $selectedFontSize => This can be variable so we have to rebuild everytime this changes
     //      PostBumpTemplate.getBackgroundOpacity() => Greater or less than 0 => fontColor, backgroundOpacity
     //      We create 2 files every time selectedFontSize changes: one for backgroundOpacity < 0 another for backgroundOpacity > 0
-    const {fontSize, backgroundOpacity, fontFamily} = initialHtmlParams;
+    const { fontSize, backgroundOpacity, fontFamily } = initialHtmlParams;
     var htmlFileName = 'basePodberry_' + backgroundOpacity + '_' + fontFamily + '_' + fontSize.toString() + '.html';
     var htmlDirectory = await RNFS.DocumentDirectoryPath + '/htmlDirectory';
     var path = htmlDirectory + '/' + htmlFileName;
 
     const exists = await RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
     console.log('File exists or not: ', exists);
-   
+
 
     if (!exists) {
       // await RNFS.unlink(path); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
-      // const existsHtmlDirectory = await RNFS.exists(htmlDirectory);
-      // if (existsHtmlDirectory) {
-      //   await RNFS.unlink(htmlDirectory); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
-      // }
-      // RNFS.mkdir(htmlDirectory);
-    
+      const existsHtmlDirectory = await RNFS.exists(htmlDirectory);
+      if (!existsHtmlDirectory) {
+        //   await RNFS.unlink(htmlDirectory); // always delete existing videopath first before making a copy(see below) , unlink will throw an error if file does not exist
+        RNFS.mkdir(htmlDirectory);
+      }
+
+
 
 
       const createdHtml = await createHtml({
