@@ -33,6 +33,7 @@ import type {
   AttachLocPressData,
   AttachQuotePressData,
   TaskHandlerPressData,
+  GenericHandlerPressData,
   ProcessBase64PressData,
   ReplaceBlotData,
   Range,
@@ -82,6 +83,7 @@ export interface EditorProps {
   onProcessBase64?: (data: ProcessBase64PressData) => void;
   onTaskHandlerPress?: (data: TaskHandlerPressData) => void;
   onErrandHandlerPress?: (data: TaskHandlerPressData) => void;
+  onGenericHandlerPress?: (data: GenericHandlerPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
   customJSwithquill?: string;
@@ -132,6 +134,7 @@ export default class QuillEditor extends React.Component<
       onProcessBase64,
       onTaskHandlerPress,
       onErrandHandlerPress,
+      onGenericHandlerPress,
     } = this.props;
 
     console.log('quill-editor:constructor performance 1:', performance.now() - this.props.startTime);
@@ -168,6 +171,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onErrandHandlerPress) {
       this.on('ErrandHandler', onErrandHandlerPress);
+    }
+    if (onGenericHandlerPress) {
+      this.on('GenericHandler', onGenericHandlerPress);
     }
     if (onReplaceBlot) {
       this.on('replaceBlot', onReplaceBlot);
@@ -353,7 +359,7 @@ export default class QuillEditor extends React.Component<
   };
 
   private onMessage = (event: WebViewMessageEvent) => {
-    console.log('quill-editor onMessage', JSON.stringify(event.nativeEvent));
+    console.log('quill-editor onMessage:', JSON.stringify(event.nativeEvent));
     const message = this.toMessage(event.nativeEvent.data);
     const { autoSize } = this.props;
     const response = message.key
@@ -373,6 +379,7 @@ export default class QuillEditor extends React.Component<
       case 'attachQuote':
       case 'TaskHandler':
       case 'ErrandHandler':
+      case 'GenericHandler':
       case 'replaceBlot':
       case 'formatRemoteSource':
       case 'processBase64':

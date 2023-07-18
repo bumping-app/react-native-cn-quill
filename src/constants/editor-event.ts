@@ -11,6 +11,7 @@ export type EditorEventType =
   | 'attachQuote'
   | 'TaskHandler'
   | 'ErrandHandler'
+  | 'GenericHandler'
   | 'replaceBlot'
   | 'formatRemoteSource'
   | 'quillLoaded'
@@ -51,6 +52,11 @@ export interface ProcessBase64PressData {
 }
 
 export interface TaskHandlerPressData {
+  eventName: string;
+  args: Array<any>;
+}
+
+export interface GenericHandlerPressData {
   eventName: string;
   args: Array<any>;
 }
