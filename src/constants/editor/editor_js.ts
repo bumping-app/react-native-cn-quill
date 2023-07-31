@@ -353,6 +353,30 @@ export const editor_js = `
 
   }
 
+  const formatBaby = function (key, obj) {
+
+
+    const {id, command, value} = obj;
+    var elem = document.getElementById(id);
+    var returnObj = null;
+    if (elem) {
+
+      var blot = elem.__blot.blot;
+      returnObj = blot.format(command, {"value": value});
+      
+
+    } 
+    
+    const taskJson = JSON.stringify({
+      type: 'format-baby',
+      key: key,
+      id: id,
+      data: returnObj
+    });
+    sendMessage(taskJson);
+
+  }
+
 
   var getRequest = function (event) {
     var msg = JSON.parse(event.data);
@@ -451,6 +475,10 @@ export const editor_js = `
         // alert('getRequest ' + msg.command);
         formatErrandList(msg.key, msg.obj);
         break;
+      case 'formatBaby':
+          // alert('getRequest ' + msg.command);
+          formatBaby(msg.key, msg.obj);
+          break;
       default:
         break;
     }

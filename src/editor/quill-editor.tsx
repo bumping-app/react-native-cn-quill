@@ -33,6 +33,7 @@ import type {
   AttachLocPressData,
   AttachQuotePressData,
   TaskHandlerPressData,
+  BabyHandlerPressData,
   GenericHandlerPressData,
   ProcessBase64PressData,
   ReplaceBlotData,
@@ -83,6 +84,7 @@ export interface EditorProps {
   onProcessBase64?: (data: ProcessBase64PressData) => void;
   onTaskHandlerPress?: (data: TaskHandlerPressData) => void;
   onErrandHandlerPress?: (data: TaskHandlerPressData) => void;
+  onBabyHandlerPress?: (data: BabyHandlerPressData) => void;
   onGenericHandlerPress?: (data: GenericHandlerPressData) => void;
   //updateInitialHtml?: (html: string) => void;
   customJS?: string;
@@ -134,6 +136,7 @@ export default class QuillEditor extends React.Component<
       onProcessBase64,
       onTaskHandlerPress,
       onErrandHandlerPress,
+      onBabyHandlerPress,
       onGenericHandlerPress,
     } = this.props;
 
@@ -171,6 +174,10 @@ export default class QuillEditor extends React.Component<
     }
     if (onErrandHandlerPress) {
       this.on('ErrandHandler', onErrandHandlerPress);
+    }
+    if (onBabyHandlerPress) {
+      // console.log('Quill-editor:onBabyHandlerPress');
+      this.on('BabyHandler', onBabyHandlerPress);
     }
     if (onGenericHandlerPress) {
       this.on('GenericHandler', onGenericHandlerPress);
@@ -379,6 +386,7 @@ export default class QuillEditor extends React.Component<
       case 'attachQuote':
       case 'TaskHandler':
       case 'ErrandHandler':
+      case 'BabyHandler':
       case 'GenericHandler':
       case 'replaceBlot':
       case 'formatRemoteSource':
@@ -410,6 +418,7 @@ export default class QuillEditor extends React.Component<
       case 'format-quotationblot':
       case 'format-tasklist':
       case 'format-errandlist':
+      case 'format-baby':
       case 'insert-embedawait':
         if (response) {
           // console.log('quill-editor:onMessage', message.type, message.data);
@@ -1021,6 +1030,14 @@ export default class QuillEditor extends React.Component<
     });
   }
 
+
+  formatBaby = (obj: any): Promise<any> => {
+    return this.postAwait({
+      command: 'formatBaby',
+      obj: obj
+    });
+  }
+
   // updateOriginalErrands = (obj:any):Promise<any> => {
   //   console.log('updateOriginalErrands', JSON.stringify(obj));
   //   return this.postAwait({
@@ -1031,6 +1048,7 @@ export default class QuillEditor extends React.Component<
 
 
   on = (event: EditorEventType, handler: EditorEventHandler) => {
+    console.log('quill-editor:on', event);
     this._handlers.push({ event, handler });
   };
 
