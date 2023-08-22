@@ -225,7 +225,7 @@ export default class QuillEditor extends React.Component<
     // this.setState({ renderedOnce: true });
   }
 
-  private getInitalHtml = async (loadInitialHtml?, callback?) => {
+  private getInitalHtml = async (loadInitialHtml?,  callback?) => {
     const {
       initialHtml = '',
       import3rdParties = 'local',
@@ -260,12 +260,15 @@ export default class QuillEditor extends React.Component<
     //      PostBumpTemplate.getBackgroundOpacity() => Greater or less than 0 => fontColor, backgroundOpacity
     //      We create 2 files every time selectedFontSize changes: one for backgroundOpacity < 0 another for backgroundOpacity > 0
     const { fontSize, backgroundOpacity, fontFamily } = initialHtmlParams;
+    // if (isLightBg !== null) {
+    //   backgroundOpacity = isLightBg ? 'gt0' : 'lt0';
+    // }
     var htmlFileName = 'basePodberry_' + backgroundOpacity + '_' + fontFamily + '_' + fontSize.toString() + '.html';
     var htmlDirectory = await RNFS.DocumentDirectoryPath + '/htmlDirectory';
     var path = htmlDirectory + '/' + htmlFileName;
 
     const exists = await RNFS.exists(path); // it will get replaced(if already existing) everytime a thumbnail is being generated
-    console.log('File exists or not: ', exists);
+    console.log('File exists or not: ', exists, path);
 
 
     if (!exists) {

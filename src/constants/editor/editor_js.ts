@@ -266,21 +266,22 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, quote, author} = obj;
+    const {id, quote, author, aboutAuthor} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
 
       var blot = elem.__blot.blot;
-      blot.format('reset', {"quote": quote, "author": author});
+      blot.format('reset', {"id": id, "quote": quote, "author": author, "aboutAuthor": aboutAuthor});
       // blot.format("author", author);
 
     } else {
       // Insert new quotation blot
       var obj = {
-        id: "Bugs-1234",
+        id: id ? id : "Bugs-1234",
         quote: quote,
-        author: author
+        author: author,
+        aboutAuthor: aboutAuthor
       }
       // quill.insertText(0, "\\n", {});
       // quill.removeFormat(0, 0);
