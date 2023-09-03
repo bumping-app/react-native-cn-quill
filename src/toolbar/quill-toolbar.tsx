@@ -542,7 +542,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
             <TouchableOpacity style={{ flex: 1, borderWidth: 0 }} onPress={() => { this.props.infoFieldPressed(); }} >
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
-                <Image source={require('./components/Toolbar_Menu.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} />
+                {/* <Image source={require('./components/Toolbar_Menu.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} /> */}
+                <Text style={{color:'#EE7887', fontSize:24, fontFamily:'nunito', marginLeft: 14, marginRight: 20, width: 18 }}>ai</Text>
                 <InfoField />
                 {/* <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
                   <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text> */}
