@@ -11,7 +11,8 @@ import {
   Animated,
   Easing,
   Image,
-  Keyboard
+  Keyboard,
+  DeviceEventEmitter
 } from 'react-native';
 import { fullOptions, basicOptions } from '../constants/toolbar-options';
 import type {
@@ -36,6 +37,7 @@ import { ToggleColorButton } from './components/toggle-color-button';
 import { ToggleIconButton } from './components/toggle-icon-button';
 import { formatType } from '../constants/formats';
 import RBSheetCustom from '../utils/RBSheetCustom';
+
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -542,7 +544,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
             <TouchableOpacity style={{ flex: 1, borderWidth: 0 }} onPress={() => { this.props.infoFieldPressed(); }} >
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
-                <Image source={require('./components/Toolbar_Menu.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} />
+                {/* <Image source={require('./components/Toolbar_Menu.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} /> */}
+                <Text style={{color:'#EE7887', fontSize:24, fontFamily:'nunito', marginLeft: 14, marginRight: 20, width: 18 }}>ai</Text>
                 <InfoField />
                 {/* <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
                   <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text> */}
@@ -578,7 +581,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
               <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Format.png')} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {  this.editor?.blur()   }}>
+            <TouchableOpacity onPress={() => {  this.editor?.blur(); DeviceEventEmitter.emit('event.blur',{});   }}>
 
               <Image style={{ borderWidth: 0, padding: 0, marginLeft: 0, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Down.png')} />
             </TouchableOpacity>
