@@ -11,7 +11,8 @@ import {
   Animated,
   Easing,
   Image,
-  Keyboard
+  Keyboard,
+  DeviceEventEmitter
 } from 'react-native';
 import { fullOptions, basicOptions } from '../constants/toolbar-options';
 import type {
@@ -36,6 +37,7 @@ import { ToggleColorButton } from './components/toggle-color-button';
 import { ToggleIconButton } from './components/toggle-icon-button';
 import { formatType } from '../constants/formats';
 import RBSheetCustom from '../utils/RBSheetCustom';
+
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -579,7 +581,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
               <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Format.png')} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {  this.editor?.blur()   }}>
+            <TouchableOpacity onPress={() => {  this.editor?.blur(); DeviceEventEmitter.emit('event.blur',{});   }}>
 
               <Image style={{ borderWidth: 0, padding: 0, marginLeft: 0, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Down.png')} />
             </TouchableOpacity>
