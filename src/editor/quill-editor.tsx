@@ -411,6 +411,7 @@ export default class QuillEditor extends React.Component<
       case 'get-bounds':
       case 'get-selection':
       case 'get-dimensions':
+      case 'get-index':
       case 'get-html':
       case 'get-format':
       case 'get-leaf':
@@ -419,12 +420,14 @@ export default class QuillEditor extends React.Component<
       case 'format-imageblot':
       case 'format-collageblot':
       case 'format-quotationblot':
+      case 'format-outlineblot':
       case 'format-tasklist':
       case 'format-errandlist':
       case 'format-baby':
       case 'insert-embedawait':
+      case 'insert-textawait':
         if (response) {
-          // console.log('quill-editor:onMessage', message.type, message.data);
+          console.log('quill-editor:onMessage', message.type, message.data);
           response.resolve(message.data);
           this._promises = this._promises.filter((x) => x.key !== message.key);
         }
@@ -908,6 +911,10 @@ export default class QuillEditor extends React.Component<
     return this.postAwait<any>({ command: 'getContents', index, length });
   };
 
+  getIndexOfId = (id?: string): Promise<any> => {
+    return this.postAwait<any>({ command: 'getIndex', id });
+  };
+
   getHtml = (): Promise<string> => {
     return this.postAwait<any>({ command: 'getHtml' });
   };
@@ -945,6 +952,10 @@ export default class QuillEditor extends React.Component<
 
   insertText = (index: number, text: string, formats?: Record<string, any>) => {
     this.post({ command: 'insertText', index, text, formats });
+  };
+
+  insertTextAwait = (index: number, text: string, formats?: Record<string, any>): Promise<any> => {
+    return this.postAwait({ command: 'insertTextAwait', index, text, formats });
   };
 
   setContents = (delta: any) => {
@@ -1008,6 +1019,15 @@ export default class QuillEditor extends React.Component<
       obj: obj
     });
   }
+
+  formatOutlineBlot = (obj: any): Promise<any> => {
+    console.log('formatOutlineBlot', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatOutlineBlot',
+      obj: obj
+    });
+  }
+
 
   formatTaskList = (obj: any): Promise<any> => {
     console.log('formatTaskList', JSON.stringify(obj));

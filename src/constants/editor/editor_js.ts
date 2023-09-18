@@ -73,6 +73,23 @@ export const editor_js = `
       sendMessage(getTextDataJson);
   }
 
+
+  var getIndex = function (key, id) {
+    var elem = document.getElementById(id);
+    var returnObj = false;
+    if (elem) {
+      returnObj = true;
+    } 
+    const returnJson = JSON.stringify({
+      type: 'get-index',
+      key: key,
+      id: id,
+      data: returnObj
+    });
+    sendMessage(returnJson);
+
+  }
+
   var getLength = function (key) {
     var getLengthData = quill.getLength();
     var getLengthDataJson = JSON.stringify({
@@ -127,6 +144,27 @@ export const editor_js = `
     quill.insertText(ind, text, formats);
 
   }
+
+
+  var insertTextAwait = function (key, index, text, formats={}) {
+    console.log('InsertText TS');
+    var ind = index;
+    if (ind === -1) {
+      var range = quill.getSelection();
+      if (range) { 
+      ind = range.index;
+      }
+    }
+    quill.insertText(ind, text, formats);
+
+    var insertEmbedAwaitJson = JSON.stringify({
+      type: 'insert-textawait',
+      key: key
+    });
+    sendMessage(insertEmbedAwaitJson);
+
+  }
+
 
   var setContents = function (delta) {
     quill.setContents(delta);
@@ -266,7 +304,7 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, quote, author, aboutAuthor} = obj;
+    const {id, quote, author, aboutAuthor, index} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
@@ -283,12 +321,28 @@ export const editor_js = `
         author: author,
         aboutAuthor: aboutAuthor
       }
-      // quill.insertText(0, "\\n", {});
-      // quill.removeFormat(0, 0);
-      quill.insertEmbed(0, "pbQuotation", obj, "user");
-        
-     
       
+      // quill.removeFormat(0, 0);
+
+      // var elemHeaderSection = document.getElementById("HEADER_001");
+      var insertIndex = index ? index : 0;
+      // var insertIndex = {index: index ? index : 0}
+
+      // alert('type of index: ' + typeof insertIndex);
+
+      // if (elemHeaderSection) {
+      //   insertIndex = 2;
+      // }
+      try {
+      // quill.insertEmbed(0, 'image', 'https://www.baidu.com/img/flexible/logo/pc/result.png', 'api'); 
+        quill.insertEmbed(insertIndex, "pbQuotation", obj, "user");
+      // quill.insertEmbed(insertIndex, "caption", quote, "api");
+      } catch (e) {
+        // alert('error:' + e);
+        // ignore error
+      }
+
+        
     }
     
     const quoteBlotJson = JSON.stringify({
@@ -300,6 +354,32 @@ export const editor_js = `
     sendMessage(quoteBlotJson);
 
   }
+
+
+  const formatOutlineBlot = function (key, obj) {
+
+
+    const {id, title, index} = obj;
+    var elem = document.getElementById(id);
+    var data = false;
+    if (elem) {
+
+      var blot = elem.__blot.blot;
+      blot.format('changeTitle', {"id": id, "title": title});
+      data = true;
+
+    } 
+    
+    const quoteBlotJson = JSON.stringify({
+      type: 'format-outlineblot',
+      key: key,
+      id: id,
+      data: data
+    });
+    sendMessage(quoteBlotJson);
+
+  }
+
 
   const formatTaskList = function (key, obj) {
 
@@ -404,6 +484,9 @@ export const editor_js = `
       case 'getDimensions':
         getDimensions(msg.key);
         break;
+      case 'getIndex':
+        getIndex(msg.key, msg.id);
+        break;
       case 'getContents':
         getContents(msg.key, msg.index, msg.length);
         break;
@@ -467,6 +550,9 @@ export const editor_js = `
       case 'formatQuotationBlot':
           // alert('getRequest ' + msg.command);
           formatQuotationBlot(msg.key, msg.obj);
+          break;
+      case 'formatOutlineBlot':
+          formatOutlineBlot(msg.key, msg.obj);
           break;
       case 'formatTaskList':
             // alert('getRequest ' + msg.command);
