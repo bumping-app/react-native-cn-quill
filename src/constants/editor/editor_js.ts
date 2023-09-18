@@ -123,7 +123,12 @@ export const editor_js = `
 
   var insertEmbedAwait = function (key, index, type, value, source = 'api') {
     var ind = index;
+    try {
     quill.insertEmbed(ind, type, value, source);
+    } catch (e) {
+      // do nothing
+      // alert('insertEmbedAwait' + e)
+    }    
     var insertEmbedAwaitJson = JSON.stringify({
       type: 'insert-embedawait',
       key: key
@@ -135,6 +140,7 @@ export const editor_js = `
   var insertText = function (index, text, formats={}) {
     console.log('InsertText TS');
     var ind = index;
+
     if (ind === -1) {
       var range = quill.getSelection();
       if (range) { 
@@ -149,13 +155,18 @@ export const editor_js = `
   var insertTextAwait = function (key, index, text, formats={}) {
     console.log('InsertText TS');
     var ind = index;
-    if (ind === -1) {
-      var range = quill.getSelection();
-      if (range) { 
-      ind = range.index;
+    try {
+      if (ind === -1) {
+        var range = quill.getSelection();
+        if (range) { 
+          ind = range.index;
+        }
       }
+      quill.insertText(ind, text, formats);
+    } catch (e) {
+      //do nothing
+      alert('insertTextAwait: ' + e);
     }
-    quill.insertText(ind, text, formats);
 
     var insertEmbedAwaitJson = JSON.stringify({
       type: 'insert-textawait',
