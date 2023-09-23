@@ -216,6 +216,8 @@ export const editor_js = `
     sendMessage(getSelectionJson);
   }
 
+
+
   const getFormat = function (key, index, length) {
     const getFormatData = quill.getFormat(index, length);
     const getFormatJson = JSON.stringify({
@@ -315,13 +317,13 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, quote, author, aboutAuthor, index} = obj;
+    const {id, quote, author, aboutAuthor, index, isBook} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
 
       var blot = elem.__blot.blot;
-      blot.format('reset', {"id": id, "quote": quote, "author": author, "aboutAuthor": aboutAuthor});
+      blot.format('reset', {"id": id, "quote": quote, "author": author, "aboutAuthor": aboutAuthor, "isBook": isBook});
       // blot.format("author", author);
 
     } else {
@@ -330,7 +332,8 @@ export const editor_js = `
         id: id ? id : "Bugs-1234",
         quote: quote,
         author: author,
-        aboutAuthor: aboutAuthor
+        aboutAuthor: aboutAuthor,
+        isBook: isBook
       }
       
       // quill.removeFormat(0, 0);

@@ -863,6 +863,21 @@ export default class QuillEditor extends React.Component<
     this._webview.current?.injectJavaScript(run);
   }
 
+  deleteBlotByClass = (className: string) => {
+    const run = `
+
+      var elems = document.getElementsByClassName("${className}");
+
+      elems.forEach(elem => {
+        elem.remove();
+      });
+
+      
+    `;
+    this._webview.current?.injectJavaScript(run);
+  }
+
+
   hasFocus = (): Promise<boolean> => {
     return this.postAwait<any>({ command: 'hasFocus' });
   };
