@@ -65,8 +65,13 @@ export const editor_js = `
   }
 
   var getText = function (key, index, length) {
-    var getTextData = quill.getText(index, length);
-    var getTextDataJson = JSON.stringify({
+    try {
+      var getTextData = quill.getText(index, length);
+    } catch (e) {
+      // do nothing
+      alert('getText: ' + e);
+    }
+      var getTextDataJson = JSON.stringify({
       type: 'get-text',
       key: key,
       data: getTextData });
@@ -138,9 +143,9 @@ export const editor_js = `
   }
 
   var insertText = function (index, text, formats={}) {
-    console.log('InsertText TS');
+    
     var ind = index;
-
+    try {
     if (ind === -1) {
       var range = quill.getSelection();
       if (range) { 
@@ -148,13 +153,17 @@ export const editor_js = `
       }
     }
     quill.insertText(ind, text, formats);
+  } catch (e) {
+
+  }
 
   }
 
 
   var insertTextAwait = function (key, index, text, formats={}) {
-    console.log('InsertText TS');
+    
     var ind = index;
+
     try {
       if (ind === -1) {
         var range = quill.getSelection();
@@ -162,10 +171,12 @@ export const editor_js = `
           ind = range.index;
         }
       }
+      // alert('insertTextAwait1: ' + ind, text, formats);
       quill.insertText(ind, text, formats);
+      
     } catch (e) {
       //do nothing
-      alert('insertTextAwait: ' + e);
+      // alert('err insertTextAwait: ' + e);
     }
 
     var insertEmbedAwaitJson = JSON.stringify({
@@ -326,6 +337,8 @@ export const editor_js = `
       blot.format('reset', {"id": id, "quote": quote, "author": author, "aboutAuthor": aboutAuthor, "isBook": isBook});
       // blot.format("author", author);
 
+
+
     } else {
       // Insert new quotation blot
       var obj = {
@@ -350,6 +363,8 @@ export const editor_js = `
       try {
       // quill.insertEmbed(0, 'image', 'https://www.baidu.com/img/flexible/logo/pc/result.png', 'api'); 
         quill.insertEmbed(insertIndex, "pbQuotation", obj, "user");
+
+
       // quill.insertEmbed(insertIndex, "caption", quote, "api");
       } catch (e) {
         // alert('error:' + e);
@@ -537,6 +552,9 @@ export const editor_js = `
       case 'insertText':
         insertText(msg.index, msg.text, msg.formats);
         break;
+      case 'insertTextAwait':
+          insertTextAwait(msg.key, msg.index, msg.text, msg.value, msg?.source);
+          break;
       case 'setContents':
         setContents(msg.delta);
         break;
