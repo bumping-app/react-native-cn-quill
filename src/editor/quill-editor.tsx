@@ -970,6 +970,7 @@ export default class QuillEditor extends React.Component<
   };
 
   insertTextAwait = (index: number, text: string, formats?: Record<string, any>): Promise<any> => {
+    console.log('quill-editor:insertTextAwait', index, text);
     return this.postAwait({ command: 'insertTextAwait', index, text, formats });
   };
 
@@ -1113,6 +1114,7 @@ export default class QuillEditor extends React.Component<
     props: WebViewProps = {}
   ) => (
     <WebView
+      
       scrollEnabled={false}
       nestedScrollEnabled={true}
       hideKeyboardAccessoryView={true}
