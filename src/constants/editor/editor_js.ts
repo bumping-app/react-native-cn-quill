@@ -328,13 +328,22 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, quote, author, aboutAuthor, index, isBook} = obj;
+    const {id, quote, author, aboutAuthor, index, isBook, prompt, videoPoster, videoUrl} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
 
       var blot = elem.__blot.blot;
-      blot.format('reset', {"id": id, "quote": quote, "author": author, "aboutAuthor": aboutAuthor, "isBook": isBook});
+      blot.format('reset', 
+        {"id": id, 
+        "quote": quote, 
+        "author": author, 
+        "aboutAuthor": aboutAuthor, 
+        "isBook": isBook, 
+        "prompt": prompt,
+        "videoPoster": videoPoster,
+        "videoUrl": videoUrl
+      });
       // blot.format("author", author);
 
 
@@ -346,7 +355,10 @@ export const editor_js = `
         quote: quote,
         author: author,
         aboutAuthor: aboutAuthor,
-        isBook: isBook
+        isBook: isBook,
+        prompt: prompt,
+        videoPoster: videoPoster,
+        videoUrl: videoUrl
       }
       
       // quill.removeFormat(0, 0);
