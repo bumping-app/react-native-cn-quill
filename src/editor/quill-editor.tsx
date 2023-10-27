@@ -1117,6 +1117,8 @@ export default class QuillEditor extends React.Component<
       
       scrollEnabled={false}
       nestedScrollEnabled={true}
+      allowsFullscreenVideo={false}
+      allowsInlineMediaPlayback={true}
       hideKeyboardAccessoryView={true}
       keyboardDisplayRequiresUserAction={false}
       originWhitelist={['*']}
