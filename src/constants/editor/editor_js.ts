@@ -328,25 +328,38 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, quote, author, aboutAuthor, index, isBook, prompt, videoPoster, videoPosterShowOnEditor, videoUrl} = obj;
+    const {id, quote, author, aboutAuthor, index, isBook, prompt, videoPoster, videoPosterShowOnEditor, videoUrl, command} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
-
+      // alert('editor_js:formatQuotationBlot: ' + obj.videoUrl);
       var blot = elem.__blot.blot;
-      blot.format('reset', 
-        {"id": id, 
-        "quote": quote, 
-        "author": author, 
-        "aboutAuthor": aboutAuthor, 
-        "isBook": isBook, 
-        "prompt": prompt,
-        "videoPoster": videoPoster,
-        "videoPosterShowOnEditor": videoPosterShowOnEditor,
-        "videoUrl": videoUrl
-      });
-      // blot.format("author", author);
 
+      if (command === 'reset') {
+      
+        blot.format('reset', 
+          {"id": id, 
+          "quote": quote, 
+          "author": author, 
+          "aboutAuthor": aboutAuthor, 
+          "isBook": isBook, 
+          "prompt": prompt,
+          "videoPoster": videoPoster,
+          "videoPosterShowOnEditor": videoPosterShowOnEditor,
+          "videoUrl": videoUrl
+        });
+        // blot.format("author", author);
+      }
+      else if (command === 'changeVideo') {
+        
+        blot.format('changeVideo', 
+          {
+            "id": id, 
+            "videoUrl": obj.videoUrl
+          });
+      } else {
+        blot.format(command, obj);
+      }
 
 
     } else {
