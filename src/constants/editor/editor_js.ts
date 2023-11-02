@@ -328,7 +328,7 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, quote, author, aboutAuthor, index, isBook, prompt, videoPoster, videoPosterShowOnEditor, videoUrl, command} = obj;
+    const {id, quote, author, aboutAuthor, index, isBook, prompt, options, videoPoster, videoPosterShowOnEditor, videoUrl, command} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
@@ -344,6 +344,7 @@ export const editor_js = `
           "aboutAuthor": aboutAuthor, 
           "isBook": isBook, 
           "prompt": prompt,
+          "options": options,
           "videoPoster": videoPoster,
           "videoPosterShowOnEditor": videoPosterShowOnEditor,
           "videoUrl": videoUrl
@@ -363,6 +364,7 @@ export const editor_js = `
 
 
     } else {
+
       // Insert new quotation blot
       var obj = {
         id: id ? id : "Bugs-1234",
@@ -371,6 +373,7 @@ export const editor_js = `
         aboutAuthor: aboutAuthor,
         isBook: isBook,
         prompt: prompt,
+        options: options,
         videoPoster: videoPoster,
         videoPosterShowOnEditor: videoPosterShowOnEditor,
         videoUrl: videoUrl
@@ -433,6 +436,43 @@ export const editor_js = `
       data: data
     });
     sendMessage(quoteBlotJson);
+
+  }
+
+  const formatCheckboxBlot = function (key, obj) {
+
+
+    const {id, command, value} = obj;
+    if (command === 'create') {
+      try {
+        const options = value.options;
+        for (let i = 0; i < options.length; i++) {
+          const optionVal = options[i];
+          quill.insertEmbed(value.index + i, 'pbCheckbox', {id: value.nodeId + i.toString(), text: optionVal, 'dataChecked': false}, 'api');
+        }
+      } catch (e) {
+        // do nothing
+        // alert('insertEmbedAwait' + e)
+      }    
+    }
+    else {
+      var elem = document.getElementById(id);
+      var returnObj = null;
+      if (elem) {
+
+        var blot = elem.__blot.blot;
+        returnObj = blot.format(command, {"value": value});
+        
+      } 
+    }
+    
+    const checkboxJson = JSON.stringify({
+      type: 'format-checkboxblot',
+      key: key,
+      id: id,
+      data: returnObj
+    });
+    sendMessage(checkboxJson);
 
   }
 
@@ -613,6 +653,9 @@ export const editor_js = `
       case 'formatOutlineBlot':
           formatOutlineBlot(msg.key, msg.obj);
           break;
+      case 'formatCheckboxBlot':
+          formatCheckboxBlot(msg.key, msg.obj);
+            break;
       case 'formatTaskList':
             // alert('getRequest ' + msg.command);
             formatTaskList(msg.key, msg.obj);

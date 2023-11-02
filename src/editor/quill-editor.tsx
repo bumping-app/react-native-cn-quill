@@ -421,6 +421,7 @@ export default class QuillEditor extends React.Component<
       case 'format-collageblot':
       case 'format-quotationblot':
       case 'format-outlineblot':
+      case 'format-checkboxblot':
       case 'format-tasklist':
       case 'format-errandlist':
       case 'format-baby':
@@ -590,6 +591,8 @@ export default class QuillEditor extends React.Component<
     this._webview.current?.injectJavaScript(run);
 
   }
+
+
 
 
   formatRemoteSource = async (id: string, type: string, imgPath: string, vidPath: string) => {
@@ -1040,6 +1043,14 @@ export default class QuillEditor extends React.Component<
     console.log('formatOutlineBlot', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatOutlineBlot',
+      obj: obj
+    });
+  }
+
+  formatCheckboxBlot = (obj: any): Promise<any> => {
+    console.log('formatCheckboxBlot', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatCheckboxBlot',
       obj: obj
     });
   }
