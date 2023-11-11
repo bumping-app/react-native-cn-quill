@@ -416,6 +416,7 @@ export default class QuillEditor extends React.Component<
       case 'get-format':
       case 'get-leaf':
       case 'remove-format':
+      case 'remove-blot':
       case 'format-text':
       case 'format-imageblot':
       case 'format-collageblot':
@@ -847,7 +848,7 @@ export default class QuillEditor extends React.Component<
   }
 
 
-  deleteBlot = (id: string) => {
+  deleteBlot = async (id: string) => {
     const run = `
       // import Quill from 'quill';
       
@@ -864,7 +865,24 @@ export default class QuillEditor extends React.Component<
       
     `;
     this._webview.current?.injectJavaScript(run);
+
+    // var deltaOps = await this.getContents();
+    // console.log('deleteBlot', JSON.stringify(deltaOps));
+
+    //     setTimeout(async () => {
+    //       await this.setContents(deltaOps);
+    //       this.setSelection(0, 0);
+
+    //     }, 500);
+   
+
+
   }
+
+  removeBlot = (id: string) => {
+    return this.postAwait({ command: 'removeBlot', id });
+  };
+
 
   deleteBlotByClass = (className: string) => {
     const run = `
@@ -878,6 +896,9 @@ export default class QuillEditor extends React.Component<
       
     `;
     this._webview.current?.injectJavaScript(run);
+
+    
+
   }
 
 

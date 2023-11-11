@@ -259,6 +259,21 @@ export const editor_js = `
     sendMessage(getLeafJson);
   }
 
+  const removeBlot = function (key, id) {
+
+    var elem = document.getElementById(id);
+    let blot = elem.__blot.blot;
+
+    blot.remove();
+
+    const removeJson = JSON.stringify({
+      type: 'remove-blot',
+      key: key
+    });
+    sendMessage(removeJson);
+  }
+
+
   const removeFormat = function (key, index, length) {
     const removeFormatData = quill.removeFormat(index, length);
     const removeFormatJson = JSON.stringify({
@@ -636,6 +651,9 @@ export const editor_js = `
       case 'dangerouslyPasteHTML':
         dangerouslyPasteHTML(msg.index, msg.html);
         break;
+      case 'removeBlot':
+          removeBlot(msg.key, msg.id);
+          break;
       case 'removeFormat':
         removeFormat(msg.key, msg.index, msg.length);
         break;
