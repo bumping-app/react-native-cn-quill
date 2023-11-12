@@ -942,9 +942,9 @@ export const quill_snow_css = (cdn: boolean) =>
    .ql-snow .ql-tooltip[data-mode=video]::before {
      content: "Enter video:";
    }
-   .ql-snow a {
-     color: #06c;
-   }
+  //  .ql-snow a {
+  //    color: #06c;
+  //  }
    .ql-container.ql-snow {
      border: 1px solid #ccc;
    }

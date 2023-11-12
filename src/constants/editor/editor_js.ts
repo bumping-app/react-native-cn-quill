@@ -494,6 +494,38 @@ export const editor_js = `
   }
 
 
+  const formatLinkBlot = function (key, obj) {
+
+
+    const {id, command, value} = obj;
+    if (command === 'update') {
+      try {
+        var elem = document.getElementById(id);
+        var returnObj = null;
+        if (elem) {
+
+          var blot = elem.__blot.blot;
+          returnObj = blot.format(command, value);
+          
+        } 
+      } catch (e) {
+        // do nothing
+        // alert('insertEmbedAwait' + e)
+      }    
+    }
+    
+    
+    const returnJson = JSON.stringify({
+      type: 'format-linkblot',
+      key: key,
+      id: id,
+      data: returnObj
+    });
+    sendMessage(returnJson);
+
+  }
+
+
   const formatTaskList = function (key, obj) {
 
 
@@ -675,6 +707,9 @@ export const editor_js = `
           break;
       case 'formatCheckboxBlot':
           formatCheckboxBlot(msg.key, msg.obj);
+            break;
+      case 'formatLinkBlot':
+          formatLinkBlot(msg.key, msg.obj);
             break;
       case 'formatTaskList':
             // alert('getRequest ' + msg.command);

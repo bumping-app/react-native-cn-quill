@@ -423,6 +423,7 @@ export default class QuillEditor extends React.Component<
       case 'format-quotationblot':
       case 'format-outlineblot':
       case 'format-checkboxblot':
+      case 'format-linkblot':
       case 'format-tasklist':
       case 'format-errandlist':
       case 'format-baby':
@@ -1072,6 +1073,14 @@ export default class QuillEditor extends React.Component<
     console.log('formatCheckboxBlot', JSON.stringify(obj));
     return this.postAwait({
       command: 'formatCheckboxBlot',
+      obj: obj
+    });
+  }
+
+  formatLinkBlot = (obj: any): Promise<any> => {
+    console.log('formatLinkBlot', JSON.stringify(obj));
+    return this.postAwait({
+      command: 'formatLinkBlot',
       obj: obj
     });
   }
