@@ -84,6 +84,7 @@ export interface EditorProps {
   onProcessBase64?: (data: ProcessBase64PressData) => void;
   onTaskHandlerPress?: (data: TaskHandlerPressData) => void;
   onErrandHandlerPress?: (data: TaskHandlerPressData) => void;
+  
   onBabyHandlerPress?: (data: BabyHandlerPressData) => void;
   onGenericHandlerPress?: (data: GenericHandlerPressData) => void;
   //updateInitialHtml?: (html: string) => void;
