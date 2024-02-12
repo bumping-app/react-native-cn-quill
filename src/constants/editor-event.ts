@@ -11,6 +11,7 @@ export type EditorEventType =
   | 'attachQuote'
   | 'TaskHandler'
   | 'ErrandHandler'
+  | 'UserValueHandler'
   | 'BabyHandler'
   | 'GenericHandler'
   | 'replaceBlot'

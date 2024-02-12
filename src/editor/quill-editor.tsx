@@ -84,7 +84,7 @@ export interface EditorProps {
   onProcessBase64?: (data: ProcessBase64PressData) => void;
   onTaskHandlerPress?: (data: TaskHandlerPressData) => void;
   onErrandHandlerPress?: (data: TaskHandlerPressData) => void;
-  
+  onUserValueHandlerPress?: (data: TaskHandlerPressData) => void;
   onBabyHandlerPress?: (data: BabyHandlerPressData) => void;
   onGenericHandlerPress?: (data: GenericHandlerPressData) => void;
   //updateInitialHtml?: (html: string) => void;
@@ -137,6 +137,7 @@ export default class QuillEditor extends React.Component<
       onProcessBase64,
       onTaskHandlerPress,
       onErrandHandlerPress,
+      onUserValueHandlerPress,
       onBabyHandlerPress,
       onGenericHandlerPress,
     } = this.props;
@@ -175,6 +176,9 @@ export default class QuillEditor extends React.Component<
     }
     if (onErrandHandlerPress) {
       this.on('ErrandHandler', onErrandHandlerPress);
+    }
+    if (onUserValueHandlerPress) {
+      this.on('UserValueHandler', onUserValueHandlerPress);
     }
     if (onBabyHandlerPress) {
       // console.log('Quill-editor:onBabyHandlerPress');
@@ -390,6 +394,7 @@ export default class QuillEditor extends React.Component<
       case 'attachQuote':
       case 'TaskHandler':
       case 'ErrandHandler':
+      case 'UserValueHandler':
       case 'BabyHandler':
       case 'GenericHandler':
       case 'replaceBlot':
@@ -427,6 +432,7 @@ export default class QuillEditor extends React.Component<
       case 'format-linkblot':
       case 'format-tasklist':
       case 'format-errandlist':
+      case 'format-userValuelist':
       case 'format-baby':
       case 'insert-embedawait':
       case 'insert-textawait':
@@ -1105,8 +1111,19 @@ export default class QuillEditor extends React.Component<
 
   formatErrandList = (obj: any): Promise<any> => {
     // console.log('formatErrandList', JSON.stringify(obj));
+    // alert('formatErrandList from quill-editor.tsx'+ JSON.stringify(obj))
+
     return this.postAwait({
       command: 'formatErrandList',
+      obj: obj
+    });
+  }
+
+  formatUserValueList = (obj: any): Promise<any> => {
+    // console.log('formatUserValueList', JSON.stringify(obj));
+    // alert('formatUserValueList from quill-editor.tsx'+ JSON.stringify(obj))
+    return this.postAwait({
+      command: 'formatUserValueList',
       obj: obj
     });
   }

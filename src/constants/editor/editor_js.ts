@@ -578,6 +578,36 @@ export const editor_js = `
     sendMessage(taskJson);
 
   }
+  
+  const formatUserValueList = function (key, obj) {
+
+
+    const {id, command, value} = obj;
+    // alert('formatUserValueList obj: ' + id + ', ' + command + ', ' + JSON.stringify(obj));
+    var elem = document.getElementById(id);
+    var returnObj = null;
+    // alert('formatUserValueList elemnt: ' + id + ', ' + command + ', ' + JSON.stringify(elem));
+
+    if (elem) {
+      // alert('called')
+
+      var blot = elem.__blot.blot;
+      returnObj = blot.format(command, {"value": value});
+      
+
+    } 
+
+    // alert('editor_js:formatTaskList: ' + returnObj);
+    
+    const taskJson = JSON.stringify({
+      type: 'format-userValuelist',
+      key: key,
+      id: id,
+      data: returnObj
+    });
+    sendMessage(taskJson);
+
+  }
 
   const formatBaby = function (key, obj) {
 
@@ -718,6 +748,10 @@ export const editor_js = `
       case 'formatErrandList':
         // alert('getRequest ' + msg.command);
         formatErrandList(msg.key, msg.obj);
+        break;
+      case 'formatUserValueList':
+        // alert('getRequest ' + msg.command);
+        formatUserValueList(msg.key, msg.obj);
         break;
       case 'formatBaby':
           // alert('getRequest ' + msg.command);
