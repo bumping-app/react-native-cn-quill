@@ -38,6 +38,7 @@ import type {
 import { Loading } from './loading';
 import * as RNFS from 'react-native-fs';
 
+
 export interface EditorState {
   webviewContent: string | null;
   height?: number;
