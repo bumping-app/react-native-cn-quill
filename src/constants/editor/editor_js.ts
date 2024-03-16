@@ -343,7 +343,7 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, quote, author, aboutAuthor, index, isBook, prompt, options, videoPoster, videoPosterShowOnEditor, videoUrl, command, mute} = obj;
+    const {id, bumpTypeId, quotationId, quotationTypeId, quote, author, aboutAuthor, index, isBook, prompt, options, videoPoster, videoPosterShowOnEditor, videoUrl, command, mute} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
@@ -354,6 +354,9 @@ export const editor_js = `
       
         blot.format('reset', 
           {"id": id, 
+          "bumpTypeId": bumpTypeId,
+          "quotationId": quotationId,
+          "quotationTypeId": quotationTypeId,
           "quote": quote, 
           "author": author, 
           "aboutAuthor": aboutAuthor, 
@@ -384,6 +387,9 @@ export const editor_js = `
       // Insert new quotation blot
       var obj = {
         id: id ? id : "Bugs-1234",
+        bumpTypeId: bumpTypeId,
+        quotationId: quotationId,
+        quotationTypeId: quotationTypeId,
         quote: quote,
         author: author,
         aboutAuthor: aboutAuthor,
