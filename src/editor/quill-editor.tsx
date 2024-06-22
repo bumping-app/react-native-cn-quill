@@ -268,7 +268,8 @@ export default class QuillEditor extends React.Component<
     // if (isLightBg !== null) {
     //   backgroundOpacity = isLightBg ? 'gt0' : 'lt0';
     // }
-    var htmlFileName = 'basePodberry_' + backgroundOpacity + '_' + fontFamily + '_' + fontSize.toString() + '.html';
+    const pholder = quill.placeholder ? quill.placeholder.substring(0,8) : 'none';
+    var htmlFileName = 'basePodberry_' + backgroundOpacity + '_' + fontFamily + '_' + fontSize.toString() + '_' + pholder  + '.html';
     var htmlDirectory = await RNFS.DocumentDirectoryPath + '/htmlDirectory';
     var path = htmlDirectory + '/' + htmlFileName;
 
@@ -456,8 +457,9 @@ export default class QuillEditor extends React.Component<
     // if (html && this.props.updateInitialHtml) {
     //   await this.props.updateInitialHtml(html);
     // }
+    console.log('rebuildHtml1');
     var deltaOps = await this.getContents();
-    console.log('rebuildHtml', JSON.stringify(deltaOps));
+    console.log('rebuildHtml2', JSON.stringify(deltaOps));
     const loadInitialHtml = false;
     this.getInitalHtml(loadInitialHtml, (path) => {
       this.setState({
@@ -957,6 +959,7 @@ export default class QuillEditor extends React.Component<
   getContents = (index?: number, length?: number): Promise<any> => {
     return this.postAwait<any>({ command: 'getContents', index, length });
   };
+
 
   getIndexOfId = (id?: string): Promise<any> => {
     return this.postAwait<any>({ command: 'getIndex', id });
