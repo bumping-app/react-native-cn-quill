@@ -343,7 +343,7 @@ export const editor_js = `
   const formatQuotationBlot = function (key, obj) {
 
 
-    const {id, bumpTypeId, quotationId, quotationTypeId, quote, author, aboutAuthor, index, isBook, prompt, options, videoPoster, videoPosterShowOnEditor, videoUrl, command, mute} = obj;
+    const {id, bumpTypeId, quotationId, quotationTypeId, quote, author, aboutAuthor, index, isBook, prompt, options, videoPoster, videoPosterShowOnEditor, videoUrl, command, mute, subTitle} = obj;
     var elem = document.getElementById(id);
 
     if (elem) {
@@ -367,6 +367,7 @@ export const editor_js = `
           "videoPosterShowOnEditor": videoPosterShowOnEditor,
           "videoUrl": videoUrl,
           "mute": mute,
+          "subTitle": subTitle,
         });
         // blot.format("author", author);
       }
@@ -400,6 +401,7 @@ export const editor_js = `
         videoPosterShowOnEditor: videoPosterShowOnEditor,
         videoUrl: videoUrl,
         mute: mute,
+        subTitle: subTitle,
       }
       
       // quill.removeFormat(0, 0);
