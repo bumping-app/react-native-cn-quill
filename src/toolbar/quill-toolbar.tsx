@@ -41,8 +41,7 @@ import RBSheetCustom from '../utils/RBSheetCustom';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
+
 //const deviceHeight = Dimensions.get('window').height;
 
 
@@ -66,7 +65,8 @@ export interface Counts {
   characterCount: number;
 }
 
-
+const WIDTH = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
 
 
 interface QuillToolbarProps {
@@ -98,6 +98,8 @@ interface ToolbarState {
   heightAux: number;
   borderWidth: number;
   wrapperHeight: number;
+  deviceWidth: number;
+  deviceHeight: number;
 }
 
 export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
@@ -105,11 +107,16 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     theme: 'dark',
   };
 
+   
+
+
+
   animatedValue: Animated.Value;
   animatedValueOut: Animated.Value;
   keyboardShowListener;
   keyboardHideListener;
   keyboardDidShowListener;
+  dimensionsListener;
   RBSheetHolder;
   RBSheetHolderBound;
   scrollRef;
@@ -122,6 +129,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this._keyboardDidShow = this._keyboardDidShow.bind(this);
     this._keyboardWillShow = this._keyboardWillShow.bind(this);
     this._keyboardDidHide = this._keyboardDidHide.bind(this);
+    this._dimensionsListener = this._dimensionsListener.bind(this);
 
     this.state = {
       toolSets: [],
@@ -137,7 +145,9 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
       normalHeight: 0,
       heightAux: 0,
       borderWidth: 0,
-      wrapperHeight: 0
+      wrapperHeight: 0,
+      deviceWidth: Dimensions.get('window').width,
+      deviceHeight: Dimensions.get('window').height
     };
     this.animatedValue = new Animated.Value(0);
     this.animatedValueOut = new Animated.Value(43);
@@ -155,7 +165,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.keyboardShowListener = Keyboard.addListener('keyboardWillShow', (e) => this._keyboardWillShow(e));
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => this._keyboardDidShow(e));
     this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', (e) => this._keyboardDidHide(e));
-
+    this.dimensionsListener =  Dimensions.addEventListener('change', ({window:{width,height}})=> this._dimensionsListener(width, height));
     // this.format('color', '#000000');
     // this.setState({ formats: { "color": "#000000" } });
 
@@ -170,6 +180,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.keyboardShowListener.remove();
     this.keyboardHideListener.remove();
     this.keyboardDidShowListener.remove();
+    this.dimensionsListener.remove();
   }
 
   componentDidUpdate(prevProps: QuillToolbarProps, prevState: ToolbarState) {
@@ -182,6 +193,13 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     if (prevProps.theme !== this.props.theme) {
       this.changeTheme();
     }
+  }
+
+  _dimensionsListener = (width, height) => {
+    
+    this.setState({deviceWidth: width, deviceHeight: height},
+      () => {}
+    );
   }
 
 
@@ -368,7 +386,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     //   : defaultStyles.toolbar;
 
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
-    const modalHeight = menuType === 'format' ? HEIGHT-150 : 200;
+    const modalHeight = menuType === 'format' ? this.state.deviceHeight-150 : 200;
    
 
     //const {  options, hide, selectionName } = useToolbar();
@@ -412,9 +430,10 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 borderTopWidth: borderWidth,
                 borderBottomWidth: 0,
                 borderColor: '#AAAAAA',
-                width: WIDTH-150,
+                width: this.state.deviceWidth-150,
+                maxWidth: 300,
                 minHeight: 500,
-                maxHeight: HEIGHT-50,
+                maxHeight: Platform.isPad ? 850 : this.state.deviceHeight-50,
                 
               },
               wrapper: {
@@ -446,7 +465,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 borderColor: 'blue',
                 zIndex: 10,
                 backgroundColor: '#ffffff',
-                width: WIDTH-152,
+                width: this.state.deviceWidth-152,
+                maxWidth: 300,
                 
                 // height: 300
                 // flexGrow: 1,
@@ -540,7 +560,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
 
 
-          <View style={{ width: WIDTH, flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.5, justifyContent: 'flex-end', height: 40, borderWidth: 1, backgroundColor: 'rgba(255,255,255,1)' }}>
+          <View style={{ width: this.state.deviceWidth, flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.5, justifyContent: 'flex-end', height: 40, borderWidth: 1, backgroundColor: 'rgba(255,255,255,1)' }}>
 
             {/* <TouchableOpacity style={{ flex: 1, borderWidth: 0 }} onPress={() => { this.props.infoFieldPressed(); }} > */}
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
@@ -619,13 +639,13 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   }
 }
 
-const makeStyles = (theme: ToolbarTheme) =>
+const makeStyles = (theme: ToolbarTheme, width) =>
   StyleSheet.create({
     toolbar: {
       position: 'absolute',
       bottom: 0,
       left: 0,
-      width: WIDTH,
+      width: width,
       padding: 2,
       backgroundColor: theme.background,
       flexDirection: 'row',
