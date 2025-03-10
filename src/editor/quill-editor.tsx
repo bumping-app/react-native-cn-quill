@@ -1176,7 +1176,7 @@ export default class QuillEditor extends React.Component<
     props: WebViewProps = {}
   ) => (
     <WebView
-      
+      useWebView2={true}
       scrollEnabled={false}
       nestedScrollEnabled={true}
       allowsFullscreenVideo={false}
