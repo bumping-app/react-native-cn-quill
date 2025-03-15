@@ -433,7 +433,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
                 width: this.state.deviceWidth-150,
                 maxWidth: 300,
                 minHeight: 500,
-                maxHeight: Platform.isPad ? 850 : this.state.deviceHeight-50,
+                maxHeight: this.state.deviceHeight-50, // Platform.isPad ? 850 : this.state.deviceHeight-50,
                 
               },
               wrapper: {
