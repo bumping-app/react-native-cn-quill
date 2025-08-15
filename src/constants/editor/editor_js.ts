@@ -299,10 +299,12 @@ export const editor_js = `
 
     const { id, imgBlot } = obj;
     var elem = document.getElementById(id);
-    var blot = elem.__blot.blot;
+    if (elem) {
+        var blot = elem.__blot.blot;
 
-    for(let key in imgBlot){
-      blot.format(key , imgBlot[key]);
+        for(let key in imgBlot){
+          blot.format(key , imgBlot[key]);
+        }
     }
     
     // blot.format("vidRemotePath", vidRemotePath);
