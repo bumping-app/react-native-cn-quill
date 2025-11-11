@@ -34,8 +34,9 @@ export const ToggleIconButton: React.FC<Props> = (props) => {
     : defaultStyles.image;
   return (
     <TouchableWithoutFeedback onPress={handlePresss}>
-      <View style={[toolStyle, {flexDirection:'row', justifyContent:'space-between', width:'100%'}]}>
-        <Text style={{textTransform: 'capitalize'}}>{name}</Text><Image source={source} style={imageStyle} />
+      <View style={[toolStyle, {flexDirection:'row', justifyContent:'center', borderWidth:0, }]}>
+        {/* <Text style={{textTransform: 'capitalize'}}>{name}</Text> */}
+        <Image source={source} style={[imageStyle, {tintColor:'white'}]}  />
         {selected && <View style={overlayStyle} />}
       </View>
     </TouchableWithoutFeedback>
@@ -54,14 +55,16 @@ const makeStyles = (theme: ToolbarTheme) =>
       alignItems: 'center',
       justifyContent: 'center',
       padding: 2,
-      marginRight: 4,
-      marginLeft: 4,
-      height: Math.round(theme.size),
-      width: Math.round(theme.size),
+      marginRight: 0,
+      marginLeft: 8,
+      height: 30, // Math.round(theme.size),
+      width: 30, //Math.round(theme.size),
+      borderColor:'black',
+      borderWidth:0,
     },
     image: {
-      height: Math.round(theme.size * 0.6),
-      width: Math.round(theme.size * 0.6),
+      height: 16, // Math.round(theme.size * 0.6),
+      width: 16, // Math.round(theme.size * 0.6),
       tintColor: theme.color,
     },
   });
