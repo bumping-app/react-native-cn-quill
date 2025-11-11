@@ -107,7 +107,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     theme: 'dark',
   };
 
-   
+
 
 
 
@@ -122,7 +122,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   scrollRef;
 
 
-  
+
 
   constructor(props: QuillToolbarProps) {
     super(props);
@@ -165,7 +165,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     this.keyboardShowListener = Keyboard.addListener('keyboardWillShow', (e) => this._keyboardWillShow(e));
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => this._keyboardDidShow(e));
     this.keyboardHideListener = Keyboard.addListener('keyboardDidHide', (e) => this._keyboardDidHide(e));
-    this.dimensionsListener =  Dimensions.addEventListener('change', ({window:{width,height}})=> this._dimensionsListener(width, height));
+    this.dimensionsListener = Dimensions.addEventListener('change', ({ window: { width, height } }) => this._dimensionsListener(width, height));
     // this.format('color', '#000000');
     // this.setState({ formats: { "color": "#000000" } });
 
@@ -196,9 +196,9 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   }
 
   _dimensionsListener = (width, height) => {
-    
-    this.setState({deviceWidth: width, deviceHeight: height},
-      () => {}
+
+    this.setState({ deviceWidth: width, deviceHeight: height },
+      () => { }
     );
   }
 
@@ -291,7 +291,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
   //     && Object.getPrototypeOf(data.formats) === Object.prototype)) {
 
   //     this.setState({ formats: data.formats });
-      
+
   //   }
   // };
 
@@ -386,8 +386,8 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     //   : defaultStyles.toolbar;
 
     const toolSetsSelected = menuType === 'format' ? toolSets : toolSetsAttach;
-    const modalHeight = menuType === 'format' ? this.state.deviceHeight-150 : 200;
-   
+    const modalHeight = menuType === 'format' ? this.state.deviceHeight - 150 : 200;
+
 
     //const {  options, hide, selectionName } = useToolbar();
     //console.log('Toolbar:renderToolbar', JSON.stringify(formats), '%%%%%%%%', JSON.stringify(this.format));
@@ -404,209 +404,163 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
           modalRef={this.RBSheetHolder}
         >
 
-          <RBSheetCustom
-            ref={ref => {
-              this.RBSheetHolder.current = ref;
-            }}
-            keyboardAvoidingViewEnabled={true} // Need to set to false otherwise blank space appears when keyboard disappears
-            closeOnDragDown={true}
-            dragFromTopOnly={true}
-            closeOnPressMask={true}
-            // width={WIDTH-30}
-            openDuration={250}
-            height={modalHeight}
-            customStyles={{
-              container: {
-                overflow: 'hidden',
-                justifyContent: 'flex-end',
-                alignItems: 'flex-end',
-                paddingLeft: 0,
-                paddingRight: 0,
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-                backgroundColor: '#FFFFFF',
-                borderLeftWidth: borderWidth,
-                borderRightWidth: borderWidth,
-                borderTopWidth: borderWidth,
-                borderBottomWidth: 0,
-                borderColor: '#AAAAAA',
-                width: this.state.deviceWidth-150,
-                maxWidth: 300,
-                minHeight: 500,
-                maxHeight: this.state.deviceHeight-50, // Platform.isPad ? 850 : this.state.deviceHeight-50,
-                
-              },
-              wrapper: {
-                flex:1,
-                width: '100%',
-                alignItems: 'flex-end',
-                justifyContent: 'flex-end',
-                borderWidth: 0,
-                borderColor: 'orange',
-                backgroundColor: 'rgba(0,0,0,0)',
-                
-                
-              },
-              draggableIcon: {
-                backgroundColor: 'grey',
-              },
-            }}
-            onClose={() => {this.setState({ showMenu: false, borderWidth: 0})}}
-            onOpen={() => {this.setState({ showMenu: true, borderWidth: 0.5})}}
-          >
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderColor: 'black',
+            justifyContent: 'center',
+            height: 'auto',
+            borderWidth: 0,
+            padding:8,
+            borderRadius:20,
+            backgroundColor: '#FF7180',
+            shadowColor: '#888888',
+            shadowOffset: {
+              width: 3,
+              height: 3,
+            },
+            shadowOpacity: 0.5,
+            shadowRadius: 20,
+          }}>
 
-            <KeyboardAwareScrollView
-              ref={this.scrollRef}
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode="on-drag"
-              contentContainerStyle={{ borderWidth: 0, padding: 15, margin: 0, }} //do not put flex:1 here as it would prevent the scroll from working
-              style={{
-                borderWidth: 0,
-                borderColor: 'blue',
-                zIndex: 10,
-                backgroundColor: '#ffffff',
-                width: this.state.deviceWidth-152,
-                maxWidth: 300,
-                
-                // height: 300
-                // flexGrow: 1,
-              }}
-              viewIsInsideTabBar={false}
-              scrollEnabled={true}
-              nestedScrollEnabled={true}
-              extraHeight={0} // change it according to TextInput Height
-            >
-
-              {toolSetsSelected.map((object, index) => {
-
-                //console.log('looping', JSON.stringify(object));
-                return (
-                  object.length > 0 && object.map((grp, grpIndex) => {
-
-                    if (grp.name === 'separator') {
-                      return (
-                        <View key={`ToolVal_${index}_${grpIndex}`} style={{ height: 2, backgroundColor: 'rgba(0,0,0,0.1)' }} />
-                      )
-                    }
-
-                    else if (grp.type === formatType.toggle) {
-
-                      return (
-                        <ToggleIconButton
-                          key={`ToolVal_${index}_${grpIndex}`}
-                          name={grp.name}
-                          source={grp.source}
-                          valueOff={grp.valueOff}
-                          valueOn={grp.valueOn}
-                        />
-                      )
-
-                    } else {
-                      return (
-                        object.length > 0 &&
-                        grp.values?.map((item: any, index: number) => {
-                          //console.log('looping 2', grp.name, JSON.stringify(item));
-                          if (
-                            item.type === formatType.color &&
-                            item.valueOn !== true &&
-                            typeof item.valueOn !== 'number'
-                          ) {
-                            return (
-                              <ToggleColorButton
-                                key={`GrpVal_${index}`}
-                                name={grp.name}
-                                valueOff={false}
-                                valueOn={item.valueOn}
-                              />
-                            );
-                          } else if (item.type === formatType.icon) {
-                            return (
-                              <ToggleIconButton
-                                key={`GrpVal_${index}`}
-                                source={item.source}
-                                name={grp.name}
-                                valueOff={false}
-                                valueOn={item.valueOn}
-                              />
-                            );
-                          } else
-                            return (
-                              <ToggleTextButton
-                                key={`GrpVal_${index}`}
-                                name={grp.name}
-                                valueOff={false}
-                                valueOn={item.valueOn}
-                                valueName={item.name}
-                              />
-                            );
-                        })
-                      )
-                    }
-
-                  }))
-
-              })}
-            </KeyboardAwareScrollView>
-
-          </RBSheetCustom>
-
-
-
-
-
-
-
-
-
-
-
-          <View style={{ width: this.state.deviceWidth, flexDirection: 'row', alignItems: 'center', borderColor: '#dddddd', borderTopWidth: 0.5, justifyContent: 'flex-end', height: 40, borderWidth: 1, backgroundColor: 'rgba(255,255,255,1)' }}>
-
-            {/* <TouchableOpacity style={{ flex: 1, borderWidth: 0 }} onPress={() => { this.props.infoFieldPressed(); }} > */}
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
-                {/* <Image source={require('./components/Toolbar_Menu.png')} style={{ marginLeft: 10, marginRight: 20, width: 18, resizeMode: 'contain' }} /> */}
-                {/* <Text style={{color:'#EE7887', fontSize:24, fontFamily:'nunito', marginLeft: 14, marginRight: 20, width: 18 }}>ai</Text> */}
-                <InfoField />
-                {/* <Text style={{ fontSize: 12 }}>Words: {this.props.counts.wordCount} </Text>
-                  <Text style={{ fontSize: 12 }}>Chars: {this.props.counts.characterCount}</Text> */}
-              </View>
-            {/* </TouchableOpacity> */}
-
-            {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}> */}
 
             <TouchableOpacity onPress={() => this.editor?.undo()}>
+              <View style={
+                {
+
+                  borderRadius: 3,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 2,
+                  marginRight: 0,
+                  marginLeft: 0,
+                  height: 30, // Math.round(theme.size),
+                  width: 30 , // Math.round(theme.size),
+                  borderColor: 'black',
+                  borderWidth: 0,
+
+                }
+              }>
                 <Image
                   source={require('./components/Toolbar_Undo.png')}
                   style={
                     {
-                      width: 24,
+
+                      tintColor:'white',
                       height: 24,
-                      marginRight: 15
+                      width: 24,
+
+
                     }
                   }
                 />
+              </View>
+            </TouchableOpacity>
+
+            {toolSetsAttach.map((object, index) => {
+
+              //console.log('looping', JSON.stringify(object));
+              return (
+                object.length > 0 && object.map((grp, grpIndex) => {
+
+                  if (grp.name === 'separator') {
+                    return (
+                      <View key={`ToolVal_${index}_${grpIndex}`} style={{ height: 2, backgroundColor: 'rgba(0,0,0,0.1)' }} />
+                    )
+                  }
+
+                  else if (grp.type === formatType.toggle) {
+
+                    return (
+                      <ToggleIconButton
+                        key={`ToolVal_${index}_${grpIndex}`}
+                        name={grp.name}
+                        source={grp.source}
+                        valueOff={grp.valueOff}
+                        valueOn={grp.valueOn}
+                      />
+                    )
+
+                  } else {
+                    return (
+                      object.length > 0 &&
+                      grp.values?.map((item: any, index: number) => {
+                        //console.log('looping 2', grp.name, JSON.stringify(item));
+                        if (
+                          item.type === formatType.color &&
+                          item.valueOn !== true &&
+                          typeof item.valueOn !== 'number'
+                        ) {
+                          return (
+                            <ToggleColorButton
+                              key={`GrpVal_${index}`}
+                              name={grp.name}
+                              valueOff={false}
+                              valueOn={item.valueOn}
+                            />
+                          );
+                        } else if (item.type === formatType.icon) {
+                          return (
+                            <ToggleIconButton
+                              key={`GrpVal_${index}`}
+                              source={item.source}
+                              name={grp.name}
+                              valueOff={false}
+                              valueOn={item.valueOn}
+                            />
+                          );
+                        } else
+                          return (
+                            <ToggleTextButton
+                              key={`GrpVal_${index}`}
+                              name={grp.name}
+                              valueOff={false}
+                              valueOn={item.valueOn}
+                              valueName={item.name}
+                            />
+                          );
+                      })
+                    )
+                  }
+
+                }))
+
+            })}
+
+
+
+
+
+            {/* <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10, borderWidth: 0, backgroundColor: 'rgba(255,255,255,1)' }}>
+                <InfoField />
+              </View> */}
+
+
+            {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('attach') }}> */}
+
+
+
+
+            {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({ menuType: 'attach' }, () => this.RBSheetHolder.current.open()) }}>
+
+
+                <Image style={{ borderWidth: 0, paddingLeft: 0, marginLeft: 0, height: 24, width: 24 }} source={require('./components/Toolbar_Attach.png')} />
+
               </TouchableOpacity>
 
+            
+              <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({ menuType: 'format' }, () => this.RBSheetHolder.current.open()) }}>
 
-            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({menuType:'attach'}, () => this.RBSheetHolder.current.open())  }}>
+                <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Format.png')} />
+              </TouchableOpacity> */}
 
+            {/* <TouchableOpacity onPress={() => { this.editor?.blur(); DeviceEventEmitter.emit('event.blur', {}); }}>
 
-              <Image style={{ borderWidth: 0, paddingLeft: 0, marginLeft: 0, height: 24, width: 24 }} source={require('./components/Toolbar_Attach.png')} />
-
-            </TouchableOpacity>
-
-            {/* <TouchableOpacity onPress={() => { this.state.showMenu ? this.hide() : this.show('format') }}> */}
-            <TouchableOpacity onPress={() => { this.state.showMenu ? this.RBSheetHolder.current.close() : this.setState({menuType:'format'}, () => this.RBSheetHolder.current.open())   }}>
-
-              <Image style={{ borderWidth: 0, padding: 0, marginLeft: 15, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Format.png')} />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => {  this.editor?.blur(); DeviceEventEmitter.emit('event.blur',{});   }}>
-
-              <Image style={{ borderWidth: 0, padding: 0, marginLeft: 0, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Down.png')} />
-            </TouchableOpacity>
+                <Image style={{ borderWidth: 0, padding: 0, marginLeft: 0, marginRight: 15, height: 24, width: 24 }} source={require('./components/Toolbar_Down.png')} />
+              </TouchableOpacity> */}
 
           </View>
+
 
           {/* </Animated.View>
           </TouchableOpacity> */}
@@ -628,7 +582,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
         // >
         <>
           {this.renderToolbar()}
-          </>
+        </>
         // </KeyboardAvoidingView>
       );
     else if (container === false) return this.renderToolbar();

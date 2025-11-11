@@ -135,7 +135,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
     console.log('toolbar-context:apply setting visibility', name, value);
     if (name === 'image' || name === 'collage') { // 20230206 - Seems if i removed 'image' from this if statement, the app becomes unresponsive after embedding an image
     // if (name === 'collage') {
-      modalRef.current.setVisible(false);
+      modalRef?.current?.setVisible(false);
     }
     if (custom?.actions) custom.actions.find((x) => x === name);
     if (custom?.actions && custom?.actions?.indexOf(name) > -1) {
@@ -148,13 +148,13 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
         );
         console.log('toolbar-context:apply about to close modal');
         setTimeout(() => {
-          modalRef.current.close(); // This statement causes the screen to be unresponsive after image picker
+          modalRef?.current?.close(); // This statement causes the screen to be unresponsive after image picker
         },100);
         
       }
     } else {
       await format(name, value);
-      modalRef.current.close();
+      modalRef?.current?.close();
     }
   };
 
@@ -184,12 +184,16 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
         }}
       >
         <Animated.View
-          // style={[
-          //   rootStyle,
-          //   {
-          //     height: this.animatedValue,
-          //   },
-          // ]}
+          style={[
+            // rootStyle,
+            {
+              flex:1,
+              marginHorizontal:16,
+              // height: this.animatedValue,
+              alignItems:'flex-start',
+              justifyContent:'center'
+            },
+          ]}
         >
           {children}
         </Animated.View>
