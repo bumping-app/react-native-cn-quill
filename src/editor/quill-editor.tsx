@@ -97,7 +97,7 @@ export default class QuillEditor extends React.Component<
   EditorProps,
   EditorState
 > {
-  private _webview: React.RefObject<WebView>;
+  private _webview: React.RefObject<WebView<any>>;
   private _handlers: Array<{
     event: EditorEventType;
     handler: EditorEventHandler;
@@ -1174,7 +1174,9 @@ export default class QuillEditor extends React.Component<
     content: string,
     style: StyleProp<ViewStyle>,
     props: WebViewProps = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => (
+  // @ts-ignore - useWebView2 is valid at runtime but absent from type definitions
     <WebView
       useWebView2={true}
       scrollEnabled={false}
@@ -1211,7 +1213,7 @@ export default class QuillEditor extends React.Component<
         console.log('quill-editor:onLoadEnd performance', performance.now() - this.props.startTime);
       }}
     />
-  );
+  ) as React.ReactElement;
 
   render() {
     const { webviewContent, height } = this.state;
