@@ -413,8 +413,9 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
             borderWidth: 0,
             padding:8,
             borderRadius:20,
-            backgroundColor: '#FF7180',
-            shadowColor: '#888888',
+            backgroundColor: '#81992F',
+
+            shadowColor: '#444444',
             shadowOffset: {
               width: 3,
               height: 3,
