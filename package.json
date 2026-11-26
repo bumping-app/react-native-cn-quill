@@ -64,7 +64,7 @@
     "react-native-builder-bob": "^0.18.1",
     "react-native-webview": "^13.12.0",
     "release-it": "^14.2.2",
-    "typescript": "4.1.5"
+    "typescript": "4.9.5"
   },
   "peerDependencies": {
     "react": "*",
@@ -74,14 +74,12 @@
   "resolutions": {
     "@types/babel__traverse": "7.11.0",
     "@types/node": "14.14.25",
-    "@types/react": "16.14.3",
-    "@babel/types": "7.23.9"
+    "@types/react": "16.14.3"
   },
   "overrides": {
     "@types/babel__traverse": "7.11.0",
     "@types/node": "14.14.25",
-    "@types/react": "16.14.3",
-    "@babel/types": "7.23.9"
+    "@types/react": "16.14.3"
   },
   "jest": {
     "preset": "react-native",
